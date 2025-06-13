@@ -3,8 +3,8 @@ package ec.edu.ups;
 
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.Producto;
-import ec.edu.ups.servicio.CarritoService;
-import ec.edu.ups.servicio.CarritoServiceImpl;
+import ec.edu.ups.modelo.servicio.CarritoService;
+import ec.edu.ups.modelo.servicio.CarritoServiceImpl;
 
 public class CarritoTest {
 

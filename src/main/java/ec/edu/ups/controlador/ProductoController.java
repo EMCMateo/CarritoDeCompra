@@ -2,40 +2,62 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.vista.ProductoListaView;
 import ec.edu.ups.vista.ProductoView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductoController {
 
-    private final ProductoView productoView;
+    private final ProductoView productoAnadirView;
+    private final ProductoListaView productoListaView;
     private final ProductoDAO productoDAO;
 
-    public ProductoController(ProductoDAO productoDAO, ProductoView productoView) {
+    public ProductoController(ProductoDAO productoDAO, ProductoView productoAnadirView, ProductoListaView productoListaView) {
         this.productoDAO = productoDAO;
-        this.productoView = productoView;
+        this.productoAnadirView = productoAnadirView;
+        this.productoListaView = productoListaView;
         configurarEventos();
     }
 
     private void configurarEventos() {
-        productoView.getBtnAceptar().addActionListener(new ActionListener() {
+        productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 guardarProducto();
             }
         });
+        productoListaView.getBtnBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscarProducto();
+            }
+        });
     }
 
+
+
     private void guardarProducto() {
-        int codigo = Integer.parseInt(productoView.getTxtCodigo().getText());
-        String nombre = productoView.getTxtNombre().getText();
-        double precio = Double.parseDouble(productoView.getTxtPrecio().getText());
+        int codigo = Integer.parseInt(productoAnadirView.getTxtCodigo().getText());
+        String nombre = productoAnadirView.getTxtNombre().getText();
+        double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
 
         productoDAO.crear(new Producto(codigo, nombre, precio));
-        productoView.mostrarMensaje("Producto guardado correctamente");
-        productoView.limpiarCampos();
-        productoView.mostrarProductos(productoDAO.listarTodos());
+        productoAnadirView.mostrarMensaje("Producto guardado correctamente");
+        productoAnadirView.limpiarCampos();
+        productoAnadirView.mostrarProductos(productoDAO.listarTodos());
+    }
+    private void buscarProducto(){
+        String nombre = productoListaView.getTxtBuscar().getText();
+
+        List<Producto> productosEncontrados = new ArrayList<>();
+        productoListaView.mostrarProductos(productosEncontrados);
+
+
+
     }
 
 }

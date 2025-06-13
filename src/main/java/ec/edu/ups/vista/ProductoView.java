@@ -98,4 +98,7 @@ public class ProductoView extends JFrame {
             System.out.println(producto);
         }
     }
+    public static void main(String [] args){
+        new ProductoView();
+    }
 }

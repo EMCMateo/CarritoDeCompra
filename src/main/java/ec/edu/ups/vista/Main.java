@@ -12,8 +12,10 @@ public class Main {
             public void run() {
 
                 ProductoView productoView = new ProductoView();
+
+                ProductoListaView productoListaView = new ProductoListaView();
                 ProductoDAO productoDAO = new ProductoDAOMemoria();
-                new ProductoController(productoDAO, productoView);
+                new ProductoController(productoDAO, productoView, productoListaView);
                 CarritoView carrito = new CarritoView();
 
                 }
