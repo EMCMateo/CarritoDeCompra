@@ -14,7 +14,9 @@ public class Main {
                 ProductoView productoView = new ProductoView();
                 ProductoDAO productoDAO = new ProductoDAOMemoria();
                 new ProductoController(productoDAO, productoView);
-            }
+                CarritoView carrito = new CarritoView();
+
+                }
         });
     }
 }
