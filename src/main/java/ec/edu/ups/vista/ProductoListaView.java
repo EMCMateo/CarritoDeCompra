@@ -4,6 +4,8 @@ import ec.edu.ups.modelo.Producto;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ProductoListaView extends JFrame {
@@ -13,6 +15,8 @@ public class ProductoListaView extends JFrame {
     private JTable tblProductos;
     private JPanel panelPrincipal;
     private JButton btnListar;
+    private JButton btnModificar;
+    private JButton btnEliminar;
     private DefaultTableModel modelo;
 
     public ProductoListaView() {
@@ -28,6 +32,20 @@ public class ProductoListaView extends JFrame {
         Object[] columnas = {"Codigo", "Nombre", "Precio"};
         modelo.setColumnIdentifiers(columnas);
         tblProductos.setModel(modelo);
+
+        btnModificar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+            }
+        });
+        btnEliminar.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
+
+            }
+        });
     }
 
     public JTextField getTxtBuscar() {
@@ -76,6 +94,14 @@ public class ProductoListaView extends JFrame {
 
     public void setModelo(DefaultTableModel modelo) {
         this.modelo = modelo;
+    }
+
+    public JButton getBtnModificar() {
+        return btnModificar;
+    }
+
+    public void setBtnModificar(JButton btnModificar) {
+        this.btnModificar = btnModificar;
     }
 
     public void cargarDatos(List<Producto> listaProductos) {
