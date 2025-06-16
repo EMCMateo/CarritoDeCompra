@@ -2,24 +2,29 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
-import ec.edu.ups.vista.ProductoView;
+import ec.edu.ups.vista.ProductoAnadirView;
+import ec.edu.ups.vista.ProductoEliminarView;
+import ec.edu.ups.vista.ProductoActualizarView;
+import ec.edu.ups.vista.ProductoListaView;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class ProductoController {
 
-    private final ProductoView productoView;
+    private  ProductoAnadirView productoAnadirView;
+    private  ProductoListaView productoListaView;
     private final ProductoDAO productoDAO;
+    private  ProductoActualizarView productoActualizarView;
+    private ProductoEliminarView productoEliminarView;
 
-    public ProductoController(ProductoDAO productoDAO, ProductoView productoView) {
+    public ProductoController(ProductoDAO productoDAO) {
         this.productoDAO = productoDAO;
-        this.productoView = productoView;
-        configurarEventos();
     }
 
-    private void configurarEventos() {
-        productoView.getBtnAceptar().addActionListener(new ActionListener() {
+    public void anadirEventos(){
+        productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 guardarProducto();
@@ -27,15 +32,126 @@ public class ProductoController {
         });
     }
 
-    private void guardarProducto() {
-        int codigo = Integer.parseInt(productoView.getTxtCodigo().getText());
-        String nombre = productoView.getTxtNombre().getText();
-        double precio = Double.parseDouble(productoView.getTxtPrecio().getText());
+    public void listaEventos(){
+        productoListaView.getBtnBuscar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                buscarProducto();
+            }
+        });
 
-        productoDAO.crear(new Producto(codigo, nombre, precio));
-        productoView.mostrarMensaje("Producto guardado correctamente");
-        productoView.limpiarCampos();
-        productoView.mostrarProductos(productoDAO.listarTodos());
+        productoListaView.getBtnListar().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                listarProductos();
+            }
+        });
     }
 
+    public void eliminarEventos(){
+        productoEliminarView.getBtnEliminar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto != null) {
+                productoEliminarView.mostrarMensaje("Producto no encontrado.");
+                productoEliminarView.limpiarCampos();
+            }
+
+        });
+        productoEliminarView.getBtnEliminar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
+            productoDAO.eliminar(codigo);
+            productoEliminarView.mostrarMensajeEliminar("Está seguro?"); //Falta el mensaje de confirmar
+            productoEliminarView.limpiarCampos();
+        });
+    }
+
+
+    public void actualizarEventos () {
+
+
+        productoActualizarView.getBtnBuscar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoActualizarView.getTxtCodigo().getText());
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto != null) {
+                productoActualizarView.getTxtNombre().setText(producto.getNombre());
+                productoActualizarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+            } else {
+                productoActualizarView.mostrarMensaje("Producto no encontrado.");
+                productoActualizarView.limpiarCampos();
+            }
+        });
+
+        productoActualizarView.getBtnActualizar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoActualizarView.getTxtCodigo().getText());
+            String nombre = productoActualizarView.getTxtNombre().getText();
+            double precio = Double.parseDouble(productoActualizarView.getTxtPrecio().getText());
+            Producto producto = new Producto(codigo, nombre, precio);
+            productoDAO.actualizar(producto);
+            productoActualizarView.mostrarMensaje("Producto actualizado.");
+        });
+
+
+
+    }
+
+    public ProductoAnadirView getProductoAnadirView() {
+        return productoAnadirView;
+    }
+
+    public void setProductoAnadirView(ProductoAnadirView productoAnadirView) {
+        this.productoAnadirView = productoAnadirView;
+    }
+
+    public ProductoListaView getProductoListaView() {
+        return productoListaView;
+    }
+
+    public void setProductoListaView(ProductoListaView productoListaView) {
+        this.productoListaView = productoListaView;
+    }
+
+    public ProductoActualizarView getProductoActualizarView() {
+        return productoActualizarView;
+    }
+
+    public void setProductoActualizarView(ProductoActualizarView productoActualizarView) {
+        this.productoActualizarView = productoActualizarView;
+    }
+
+    public ProductoEliminarView getProductoEliminarView() {
+        return productoEliminarView;
+    }
+
+    public void setProductoEliminarView(ProductoEliminarView productoEliminarView) {
+        this.productoEliminarView = productoEliminarView;
+    }
+
+
+
+
+
+    private void guardarProducto() {
+        int codigo = Integer.parseInt(productoAnadirView.getTxtCodigo().getText());
+        String nombre = productoAnadirView.getTxtNombre().getText();
+        double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
+
+        productoDAO.crear(new Producto(codigo, nombre, precio));
+        productoAnadirView.mostrarMensaje("Producto guardado correctamente");
+        productoAnadirView.limpiarCampos();
+        productoAnadirView.mostrarProductos(productoDAO.listarTodos());
+    }
+
+    private void buscarProducto() {
+        String nombre = productoListaView.getTxtBuscar().getText();
+
+        List<Producto> productosEncontrados = productoDAO.buscarPorNombre(nombre);
+        productoListaView.cargarDatos(productosEncontrados);
+    }
+
+
+    private void listarProductos() {
+        List<Producto> productos = productoDAO.listarTodos();
+        productoListaView.cargarDatos(productos);
+    }
 }
