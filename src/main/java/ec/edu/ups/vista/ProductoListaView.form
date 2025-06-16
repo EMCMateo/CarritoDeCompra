@@ -16,6 +16,7 @@
         </constraints>
         <properties>
           <font name="Roboto Light" style="1"/>
+          <foreground color="-328705"/>
           <text value="Nombre"/>
         </properties>
       </component>
