@@ -10,7 +10,7 @@ import java.util.List;
 
 import ec.edu.ups.vista.*;
 
-public class ProductoListaView extends JFrame {
+public class ProductoListaView extends JInternalFrame {
 
     private JTextField txtBuscar;
     private JButton btnBuscar;
@@ -23,9 +23,11 @@ public class ProductoListaView extends JFrame {
 
         setContentPane(panelPrincipal);
         setTitle("Listado de Productos");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(500, 500);
-        setLocationRelativeTo(null);
+        setClosable(true);
+        setIconifiable(true);
+        setResizable(true);
         setVisible(true);
 
         modelo = new DefaultTableModel();

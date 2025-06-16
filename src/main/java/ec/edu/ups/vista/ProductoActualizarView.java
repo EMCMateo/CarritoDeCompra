@@ -2,7 +2,7 @@ package ec.edu.ups.vista;
 
 import javax.swing.*;
 
-public class ProductoGestionView extends JFrame {
+public class ProductoActualizarView extends JInternalFrame {
     private JTextField txtCodigo;
     private JTextField txtNombre;
     private JTextField txtPrecio;
@@ -14,15 +14,15 @@ public class ProductoGestionView extends JFrame {
     private JLabel lblNombre;
     private JLabel lblPrecio;
 
-    public ProductoGestionView() {
+    public ProductoActualizarView() {
         setContentPane(panelPrincipal);
         setTitle("Gestion del Producto");
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(500, 500);
-        //setResizable(false);
-        setLocationRelativeTo(null);
+        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setResizable(true);
+        setClosable(true);
+        setIconifiable(true);
         setVisible(true);
-        //pack();
+        pack();
     }
 
     // Métodos públicos para acceder a los componentes

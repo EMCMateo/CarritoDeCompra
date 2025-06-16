@@ -3,7 +3,8 @@ package ec.edu.ups.controlador;
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.vista.ProductoAnadirView;
-import ec.edu.ups.vista.ProductoGestionView;
+import ec.edu.ups.vista.ProductoEliminarView;
+import ec.edu.ups.vista.ProductoActualizarView;
 import ec.edu.ups.vista.ProductoListaView;
 
 import java.awt.event.ActionEvent;
@@ -12,32 +13,26 @@ import java.util.List;
 
 public class ProductoController {
 
-    private final ProductoAnadirView productoAnadirView;
-    private final ProductoListaView productoListaView;
+    private  ProductoAnadirView productoAnadirView;
+    private  ProductoListaView productoListaView;
     private final ProductoDAO productoDAO;
-    private final ProductoGestionView productoGestionView;
+    private  ProductoActualizarView productoActualizarView;
+    private ProductoEliminarView productoEliminarView;
 
-
-    public ProductoController(ProductoDAO productoDAO,
-                              ProductoAnadirView productoAnadirView,
-                              ProductoListaView productoListaView,
-                              ProductoGestionView productoGestionView) {
+    public ProductoController(ProductoDAO productoDAO) {
         this.productoDAO = productoDAO;
-        this.productoAnadirView = productoAnadirView;
-        this.productoListaView = productoListaView;
-        this.productoGestionView = productoGestionView;
-        configurarEventos();
     }
 
-
-    private void configurarEventos() {
+    public void anadirEventos(){
         productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 guardarProducto();
             }
         });
+    }
 
+    public void listaEventos(){
         productoListaView.getBtnBuscar().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -51,36 +46,88 @@ public class ProductoController {
                 listarProductos();
             }
         });
+    }
 
-        productoGestionView.getBtnBuscar().addActionListener(e -> {
-            int codigo = Integer.parseInt(productoGestionView.getTxtCodigo().getText());
+    public void eliminarEventos(){
+        productoEliminarView.getBtnEliminar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
             Producto producto = productoDAO.buscarPorCodigo(codigo);
             if (producto != null) {
-                productoGestionView.getTxtNombre().setText(producto.getNombre());
-                productoGestionView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+                productoEliminarView.mostrarMensaje("Producto no encontrado.");
+                productoEliminarView.limpiarCampos();
+            }
+
+        });
+        productoEliminarView.getBtnEliminar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
+            productoDAO.eliminar(codigo);
+            productoEliminarView.mostrarMensajeEliminar("Está seguro?"); //Falta el mensaje de confirmar
+            productoEliminarView.limpiarCampos();
+        });
+    }
+
+
+    public void actualizarEventos () {
+
+
+        productoActualizarView.getBtnBuscar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoActualizarView.getTxtCodigo().getText());
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto != null) {
+                productoActualizarView.getTxtNombre().setText(producto.getNombre());
+                productoActualizarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
             } else {
-                productoGestionView.mostrarMensaje("Producto no encontrado.");
-                productoGestionView.limpiarCampos();
+                productoActualizarView.mostrarMensaje("Producto no encontrado.");
+                productoActualizarView.limpiarCampos();
             }
         });
 
-        productoGestionView.getBtnActualizar().addActionListener(e -> {
-            int codigo = Integer.parseInt(productoGestionView.getTxtCodigo().getText());
-            String nombre = productoGestionView.getTxtNombre().getText();
-            double precio = Double.parseDouble(productoGestionView.getTxtPrecio().getText());
+        productoActualizarView.getBtnActualizar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoActualizarView.getTxtCodigo().getText());
+            String nombre = productoActualizarView.getTxtNombre().getText();
+            double precio = Double.parseDouble(productoActualizarView.getTxtPrecio().getText());
             Producto producto = new Producto(codigo, nombre, precio);
             productoDAO.actualizar(producto);
-            productoGestionView.mostrarMensaje("Producto actualizado.");
+            productoActualizarView.mostrarMensaje("Producto actualizado.");
         });
 
-        productoGestionView.getBtnEliminar().addActionListener(e -> {
-            int codigo = Integer.parseInt(productoGestionView.getTxtCodigo().getText());
-            productoDAO.eliminar(codigo);
-            productoGestionView.mostrarMensaje("Producto eliminado.");
-            productoGestionView.limpiarCampos();
-        });
+
 
     }
+
+    public ProductoAnadirView getProductoAnadirView() {
+        return productoAnadirView;
+    }
+
+    public void setProductoAnadirView(ProductoAnadirView productoAnadirView) {
+        this.productoAnadirView = productoAnadirView;
+    }
+
+    public ProductoListaView getProductoListaView() {
+        return productoListaView;
+    }
+
+    public void setProductoListaView(ProductoListaView productoListaView) {
+        this.productoListaView = productoListaView;
+    }
+
+    public ProductoActualizarView getProductoActualizarView() {
+        return productoActualizarView;
+    }
+
+    public void setProductoActualizarView(ProductoActualizarView productoActualizarView) {
+        this.productoActualizarView = productoActualizarView;
+    }
+
+    public ProductoEliminarView getProductoEliminarView() {
+        return productoEliminarView;
+    }
+
+    public void setProductoEliminarView(ProductoEliminarView productoEliminarView) {
+        this.productoEliminarView = productoEliminarView;
+    }
+
+
 
 
 
