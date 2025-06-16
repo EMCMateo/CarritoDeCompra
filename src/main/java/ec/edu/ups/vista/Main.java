@@ -12,8 +12,9 @@ public class Main {
                 ProductoAnadirView productoView = new ProductoAnadirView();
                 ProductoListaView productoListaView = new ProductoListaView();
                 ProductoDAO productoDAO = new ProductoDAOMemoria();
+                ProductoGestionView gestionView = new ProductoGestionView();
 
-                new ProductoController(productoDAO, productoView, productoListaView);
+                new ProductoController(productoDAO, productoView, productoListaView, gestionView);
             }
         });
     }
