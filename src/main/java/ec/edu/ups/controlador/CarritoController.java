@@ -2,6 +2,9 @@
 package ec.edu.ups.controlador;
 
 public class CarritoController {
+
+
+
     /*
 
     private final Carrito carrito;
@@ -91,5 +94,9 @@ public class CarritoController {
     private void actualizarVista() {
         carritoView.mostrarCarrito(carrito.getListaItems());
         carritoView.mostrarTotal(carrito.calcularCosto());
-    }*/
+    }
+
+     */
+
+
 }

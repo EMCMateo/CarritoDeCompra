@@ -40,6 +40,8 @@ public class Main {
                     }
                 });
 
+
+
                 principalView.getMenuItemEliminarProducto().addActionListener(new ActionListener() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
@@ -61,6 +63,17 @@ public class Main {
                         productoController.actualizarEventos();
                         principalView.getjDesktopPane().add(productoActualizarView);
 
+                    }
+                });
+
+                principalView.getMenuItemCrearCarrito().addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        CarritoAñadirView carritoAñadirView = new CarritoAñadirView();
+                        ProductoController productoController = new ProductoController(productoDAO);
+                        productoController.setCarritoAñadirView(carritoAñadirView);
+                        productoController.carritoEventos();
+                        principalView.getjDesktopPane().add(carritoAñadirView);
                     }
                 });
 

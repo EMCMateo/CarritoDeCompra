@@ -7,7 +7,9 @@ import java.awt.event.ActionListener;
 
 public class PrincipalView extends JFrame {
     private JMenuBar menuBar;
+    private JMenuItem menuItemCrearCarrito;
     private JMenu menuProducto;
+    private JMenu menuCarrito;
     private JMenuItem menuItemCrearProducto;
     private JMenuItem menuItemEliminarProducto;
     private JMenuItem menuItemActualizarProducto;
@@ -19,14 +21,18 @@ public class PrincipalView extends JFrame {
 
         jDesktopPane = new JDesktopPane();
         menuBar = new JMenuBar();
+        menuCarrito = new JMenu("Carrito");
         menuProducto = new JMenu("Producto ");
+        menuItemCrearCarrito = new JMenuItem("Añadir Carrito");
         menuItemCrearProducto = new JMenuItem("Crear Producto");
         menuItemEliminarProducto = new JMenuItem("Eliminar Producto");
         menuItemActualizarProducto = new JMenuItem("Actualizar Producto");
         menuItemBuscarProducto = new JMenuItem("Buscar Producto");
 
         menuBar.add(menuProducto);
+        menuBar.add(menuCarrito);
         menuProducto.add(menuItemCrearProducto);
+        menuCarrito.add(menuItemCrearCarrito);
         menuProducto.add(menuItemEliminarProducto);
         menuProducto.add(menuItemActualizarProducto);
         menuProducto.add(menuItemBuscarProducto);
@@ -93,6 +99,10 @@ public class PrincipalView extends JFrame {
 
     public void setMenuItemBuscarProducto(JMenuItem menuItemBuscarProducto) {
         this.menuItemBuscarProducto = menuItemBuscarProducto;
+    }
+
+    public JMenuItem getMenuItemCrearCarrito() {
+        return menuItemCrearCarrito;
     }
 
     public JDesktopPane getjDesktopPane() {

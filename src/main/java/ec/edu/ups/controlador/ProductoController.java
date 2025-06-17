@@ -2,10 +2,7 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
-import ec.edu.ups.vista.ProductoAnadirView;
-import ec.edu.ups.vista.ProductoEliminarView;
-import ec.edu.ups.vista.ProductoActualizarView;
-import ec.edu.ups.vista.ProductoListaView;
+import ec.edu.ups.vista.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -19,10 +16,30 @@ public class ProductoController {
     private final ProductoDAO productoDAO;
     private  ProductoActualizarView productoActualizarView;
     private ProductoEliminarView productoEliminarView;
+    private CarritoAñadirView carritoAñadirView;
 
     public ProductoController(ProductoDAO productoDAO) {
         this.productoDAO = productoDAO;
     }
+
+    public void carritoEventos(){
+        carritoAñadirView.getBtnBuscar().addActionListener(e -> {
+            int codigo = Integer.parseInt(carritoAñadirView.getTxtCodigo().getText());
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto != null) {
+                carritoAñadirView.getTxtNombre().setText(producto.getNombre());
+                carritoAñadirView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+            } else {
+                carritoAñadirView.mostrarMensaje("Producto no encontrado.");
+                carritoAñadirView.limpiarCampos();
+            }
+        });
+
+        carritoAñadirView.getBtnAnadir().addActionListener(e -> {
+            añadirTablaCarrito();
+        });
+    }
+
 
     public void anadirEventos(){
         productoAnadirView.getBtnAceptar().addActionListener(new ActionListener() {
@@ -49,12 +66,14 @@ public class ProductoController {
         });
     }
 
+
+
     public void eliminarEventos() {
         productoEliminarView.getBtnEliminar().addActionListener(e -> {
 
                 int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
-
                 Producto producto = productoDAO.buscarPorCodigo(codigo);
+
 
                 if (producto == null) {
                     productoEliminarView.mostrarMensaje("Producto no encontrado.");
@@ -72,6 +91,18 @@ public class ProductoController {
 
                 productoEliminarView.limpiarCampos();
 
+        });
+
+        productoEliminarView.getBtnBuscar().addActionListener(e -> {
+            int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
+            Producto producto = productoDAO.buscarPorCodigo(codigo);
+            if (producto != null) {
+                productoEliminarView.getTxtNombre().setText(producto.getNombre());
+                productoEliminarView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
+            } else {
+                productoEliminarView.mostrarMensaje("Producto no encontrado.");
+                productoEliminarView.limpiarCampos();
+            }
         });
     }
 
@@ -137,9 +168,13 @@ public class ProductoController {
         this.productoEliminarView = productoEliminarView;
     }
 
+    public CarritoAñadirView getCarritoAñadirView() {
+        return carritoAñadirView;
+    }
 
-
-
+    public void setCarritoAñadirView(CarritoAñadirView carritoAñadirView) {
+        this.carritoAñadirView = carritoAñadirView;
+    }
 
     private void guardarProducto() {
         int codigo = Integer.parseInt(productoAnadirView.getTxtCodigo().getText());
@@ -163,5 +198,14 @@ public class ProductoController {
     private void listarProductos() {
         List<Producto> productos = productoDAO.listarTodos();
         productoListaView.cargarDatos(productos);
+    }
+
+    private void añadirTablaCarrito(){
+        int codigo = Integer.parseInt(carritoAñadirView.getTxtCodigo().getText());
+        Producto producto = productoDAO.buscarPorCodigo(codigo);
+        int cantidad = Integer.parseInt(carritoAñadirView.getCmBoxCantidad().getSelectedItem().toString());
+        if (producto != null) {
+            carritoAñadirView.cargarDatosTabla(producto, cantidad);
+        }
     }
 }
