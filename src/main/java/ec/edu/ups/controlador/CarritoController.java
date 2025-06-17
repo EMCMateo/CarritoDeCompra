@@ -1,17 +1,6 @@
 
 package ec.edu.ups.controlador;
 
-import ec.edu.ups.dao.ProductoDAO;
-import ec.edu.ups.modelo.Carrito;
-import ec.edu.ups.modelo.ItemCarrito;
-import ec.edu.ups.modelo.Producto;
-import ec.edu.ups.vista.CarritoView;
-
-import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.ArrayList;
-
 public class CarritoController {
     /*
 

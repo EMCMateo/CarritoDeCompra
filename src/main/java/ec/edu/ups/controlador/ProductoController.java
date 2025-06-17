@@ -7,6 +7,7 @@ import ec.edu.ups.vista.ProductoEliminarView;
 import ec.edu.ups.vista.ProductoActualizarView;
 import ec.edu.ups.vista.ProductoListaView;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.List;
@@ -48,23 +49,32 @@ public class ProductoController {
         });
     }
 
-    public void eliminarEventos(){
+    public void eliminarEventos() {
         productoEliminarView.getBtnEliminar().addActionListener(e -> {
-            int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
-            Producto producto = productoDAO.buscarPorCodigo(codigo);
-            if (producto != null) {
-                productoEliminarView.mostrarMensaje("Producto no encontrado.");
+
+                int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
+
+                Producto producto = productoDAO.buscarPorCodigo(codigo);
+
+                if (producto == null) {
+                    productoEliminarView.mostrarMensaje("Producto no encontrado.");
+                    productoEliminarView.limpiarCampos();
+                    return;
+                }
+                int respuesta = productoEliminarView.mostrarConfirmacion("¿Está seguro que desea eliminar el producto?");
+
+                if (respuesta == JOptionPane.YES_OPTION) {
+                    productoDAO.eliminar(codigo);
+                    productoEliminarView.mostrarMensaje("Producto eliminado correctamente.");
+                } else {
+                    productoEliminarView.mostrarMensaje("Eliminación cancelada.");
+                }
+
                 productoEliminarView.limpiarCampos();
-            }
 
         });
-        productoEliminarView.getBtnEliminar().addActionListener(e -> {
-            int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
-            productoDAO.eliminar(codigo);
-            productoEliminarView.mostrarMensajeEliminar("Está seguro?"); //Falta el mensaje de confirmar
-            productoEliminarView.limpiarCampos();
-        });
     }
+
 
 
     public void actualizarEventos () {
