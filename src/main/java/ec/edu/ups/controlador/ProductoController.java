@@ -1,3 +1,4 @@
+
 package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
@@ -18,27 +19,23 @@ public class ProductoController {
     private ProductoEliminarView productoEliminarView;
     private CarritoAñadirView carritoAñadirView;
 
-    public ProductoController(ProductoDAO productoDAO) {
+    public ProductoController(ProductoDAO productoDAO,
+                              ProductoAnadirView productoAnadirView,
+                              ProductoListaView productoListaView,
+                              CarritoAñadirView carritoAnadirView,
+                              ProductoEliminarView productoEliminarView,
+                              ProductoActualizarView productoActualizarView) {
         this.productoDAO = productoDAO;
+        this.productoAnadirView = productoAnadirView;
+        this.productoListaView = productoListaView;
+        this.carritoAñadirView = carritoAnadirView;
+        this.productoEliminarView = productoEliminarView;
+        this.productoActualizarView = productoActualizarView;
+
     }
 
-    public void carritoEventos(){
-        carritoAñadirView.getBtnBuscar().addActionListener(e -> {
-            int codigo = Integer.parseInt(carritoAñadirView.getTxtCodigo().getText());
-            Producto producto = productoDAO.buscarPorCodigo(codigo);
-            if (producto != null) {
-                carritoAñadirView.getTxtNombre().setText(producto.getNombre());
-                carritoAñadirView.getTxtPrecio().setText(String.valueOf(producto.getPrecio()));
-            } else {
-                carritoAñadirView.mostrarMensaje("Producto no encontrado.");
-                carritoAñadirView.limpiarCampos();
-            }
-        });
 
-        carritoAñadirView.getBtnAnadir().addActionListener(e -> {
-            añadirTablaCarrito();
-        });
-    }
+
 
 
     public void anadirEventos(){
@@ -200,12 +197,4 @@ public class ProductoController {
         productoListaView.cargarDatos(productos);
     }
 
-    private void añadirTablaCarrito(){
-        int codigo = Integer.parseInt(carritoAñadirView.getTxtCodigo().getText());
-        Producto producto = productoDAO.buscarPorCodigo(codigo);
-        int cantidad = Integer.parseInt(carritoAñadirView.getCmBoxCantidad().getSelectedItem().toString());
-        if (producto != null) {
-            carritoAñadirView.cargarDatosTabla(producto, cantidad);
-        }
-    }
 }

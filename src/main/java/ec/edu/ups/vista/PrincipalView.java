@@ -1,9 +1,6 @@
 package ec.edu.ups.vista;
 
 import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 
 public class PrincipalView extends JFrame {
     private JMenuBar menuBar;
@@ -15,6 +12,7 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemActualizarProducto;
     private JMenuItem menuItemBuscarProducto;
     private JPanel panelPrincipal;
+    private JTable tblCarrito;
     private JDesktopPane jDesktopPane;
 
     public PrincipalView(){

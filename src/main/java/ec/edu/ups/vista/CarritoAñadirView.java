@@ -1,14 +1,17 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.modelo.Carrito;
+import ec.edu.ups.modelo.ItemCarrito;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.util.List;
 
 public class CarritoAñadirView extends JInternalFrame {
     private JTextField txtCodigo;
     private JButton btnBuscar;
-    private JLabel lblNombre;
+       private JLabel lblNombre;
     private JLabel lblPrecio;
     private JButton btnAnadir;
     private JTextField txtNombre;
@@ -24,6 +27,12 @@ public class CarritoAñadirView extends JInternalFrame {
     private JLabel lblTotal;
     private JPanel panelPrincipal;
     private JComboBox cmBoxCantidad;
+    private JTextField txtCodigoCarrito;
+    private JTextField txtFecha;
+    private JButton btnBorrar;
+    private JButton btnGuardar;
+    private JButton btnEliminarProductoC;
+    private JButton btnActualizarProductoC;
     private DefaultTableModel modelo;
 
     public CarritoAñadirView(){
@@ -33,12 +42,27 @@ public class CarritoAñadirView extends JInternalFrame {
         setSize(500, 400);
         setVisible(true);
         cargarDatos();
+        if (txtNombre.getText() == "" && txtPrecio.getText() == ""){
+            btnAnadir.setEnabled(false);
+        }
+        txtCodigoCarrito.setEditable(false);
+        txtFecha.setEditable(false);
+
         //pack();
 
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad"};
+        Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad", "SubTotal","Opciones"};
         modelo.setColumnIdentifiers(columnas);
         tblCarrito.setModel(modelo);
+        /*
+        cargarProductos();
+        */
+
+        btnEliminarProductoC = new JButton("Eliminar");
+        btnActualizarProductoC = new JButton("Editar");
+
+
+
 
 
     }
@@ -49,18 +73,37 @@ public class CarritoAñadirView extends JInternalFrame {
         }
     }
 
-    public void cargarDatosTabla(Producto producto, int cantidad) {
-        modelo.setNumRows(0);
+    public void cargarProductos(){
+        cmBoxCantidad.removeAllItems();
+        for(int i = 0; i<20;i++){
+            cmBoxCantidad.addItem(String.valueOf(i+1));
+        }
+    }
 
+
+    public void cargarDatosTabla(List<ItemCarrito> items) {
+        modelo.setRowCount(0); // Borra la tabla
+        for (ItemCarrito item : items) {
             Object[] fila = {
-                    producto.getCodigo(),
-                    producto.getNombre(),
-                    producto.getPrecio(),
-                    cantidad
+                    item.getProducto().getCodigo(),
+                    item.getProducto().getNombre(),
+                    item.getProducto().getPrecio(),
+                    item.getCantidad(),
+                    String.format("%.2f", item.getProducto().getPrecio() * item.getCantidad()),
+                    btnEliminarProductoC , btnActualizarProductoC
             };
             modelo.addRow(fila);
+        }
 
 
+    }
+
+    public void setDatosCarrito(Carrito carrito) {
+        txtCodigoCarrito.setText(String.valueOf(carrito.getCodigo()));
+
+        // Formatear la fecha
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        txtFecha.setText(sdf.format(carrito.getFechaCreacion().getTime()));
     }
 
     public void limpiarCampos(){
@@ -217,8 +260,53 @@ public class CarritoAñadirView extends JInternalFrame {
         this.panelPrincipal = panelPrincipal;
     }
 
+    public JTextField getTxtFecha() {
+        return txtFecha;
+    }
 
-    public static void main(String [] args){
-        new CarritoAñadirView();
+    public void setTxtFecha(JTextField txtFecha) {
+        this.txtFecha = txtFecha;
+    }
+
+    public JTextField getTxtCodigoCarrito() {
+        return txtCodigoCarrito;
+    }
+
+    public JButton getBtnGuardar() {
+        return btnGuardar;
+    }
+
+    public void setBtnGuardar(JButton btnGuardar) {
+        this.btnGuardar = btnGuardar;
+    }
+
+    public JButton getBtnBorrar() {
+        return btnBorrar;
+    }
+
+    public void setBtnBorrar(JButton btnBorrar) {
+        this.btnBorrar = btnBorrar;
+    }
+
+    public void setTxtCodigoCarrito(JTextField txtCodigoCarrito) {
+        this.txtCodigoCarrito = txtCodigoCarrito;
+    }
+
+    public JButton getBtnEliminarProductoC() {
+        return btnEliminarProductoC;
+    }
+
+    public void setBtnEliminarProductoC(JButton btnEliminarProductoC) {
+        this.btnEliminarProductoC = btnEliminarProductoC;
+    }
+
+    public JButton getBtnActualizarProductoC() {
+        return btnActualizarProductoC;
+    }
+
+    public void setBtnActualizarProductoC(JButton btnActualizarProductoC) {
+        this.btnActualizarProductoC = btnActualizarProductoC;
     }
 }
+
+
