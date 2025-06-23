@@ -7,7 +7,10 @@ import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.vista.CarritoAñadirView;
 
+import javax.swing.*;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -65,6 +68,64 @@ public class CarritoController {
             carritoAñadirView.getTxtTotal().setText("");
             carritoAñadirView.limpiarCampos(); // Limpia campos de texto
         });
+
+        carritoAñadirView.getTblCarrito().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                JTable tabla = carritoAñadirView.getTblCarrito();
+                int fila = tabla.rowAtPoint(e.getPoint());
+
+                if (fila >= 0) {
+                    int codigoProducto = (int) tabla.getValueAt(fila, 0);
+
+                    // Mostrar el diálogo
+                    Object[] opciones = {"Editar", "Eliminar", "Cancelar"};
+                    int respuesta = JOptionPane.showOptionDialog(
+                            null,
+                            "¿Qué desea hacer con el producto?",
+                            "Opciones",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            opciones,
+                            opciones[2]
+                    );
+
+                    if (respuesta == JOptionPane.YES_OPTION) {
+                        // Editar
+                        int nuevaCantidad = Integer.parseInt(JOptionPane.showInputDialog("Ingrese la nueva cantidad:"));
+
+                        if (nuevaCantidad > 0) {
+                            for (ItemCarrito item : carrito.obtenerItems()) {
+                                if (item.getProducto().getCodigo() == codigoProducto) {
+                                    item.setCantidad(nuevaCantidad);
+                                    break;
+                                }
+                            }
+                            carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
+                            mostrarTotales();
+                        }
+
+                    } else if (respuesta == JOptionPane.NO_OPTION) {
+                        // Eliminar (con confirmación)
+                        int confirmar = JOptionPane.showConfirmDialog(null,
+                                "¿Está seguro que desea eliminar el producto?",
+                                "Confirmar eliminación",
+                                JOptionPane.YES_NO_OPTION);
+
+                        if (confirmar == JOptionPane.YES_OPTION) {
+                            carrito.eliminarProducto(codigoProducto);
+                            carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
+                            mostrarTotales();
+                        }
+                    }
+                }
+            }
+        });
+
+
+
+
 
 
     }
@@ -127,5 +188,28 @@ public class CarritoController {
         carritoAñadirView.getTxtIVA().setText("");
         carritoAñadirView.getTxtTotal().setText("");
     }
+
+    private void editarProducto(int codigoProducto) {
+        for (ItemCarrito item : carrito.obtenerItems()) {
+            if (item.getProducto().getCodigo() == codigoProducto) {
+                carritoAñadirView.getTxtCodigo().setText(String.valueOf(item.getProducto().getCodigo()));
+                carritoAñadirView.getTxtNombre().setText(item.getProducto().getNombre());
+                carritoAñadirView.getTxtPrecio().setText(String.valueOf(item.getProducto().getPrecio()));
+                carritoAñadirView.getCmBoxCantidad().setSelectedItem(String.valueOf(item.getCantidad()));
+                carrito.eliminarProducto(codigoProducto); // Lo quitamos y se reañade cuando el usuario presione "Añadir"
+                carritoAñadirView.getBtnAnadir().setEnabled(true);
+                break;
+            }
+        }
+        carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
+        mostrarTotales();
+    }
+
+    private void eliminarProducto(int codigoProducto) {
+        carrito.eliminarProducto(codigoProducto);
+        carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
+        mostrarTotales();
+    }
+
 
 }

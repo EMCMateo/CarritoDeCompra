@@ -50,10 +50,16 @@ public class CarritoAñadirView extends JInternalFrame {
 
         //pack();
 
-        modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad", "SubTotal","Opciones"};
+        modelo = new DefaultTableModel() {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad", "SubTotal"};
         modelo.setColumnIdentifiers(columnas);
         tblCarrito.setModel(modelo);
+
         /*
         cargarProductos();
         */
@@ -90,7 +96,7 @@ public class CarritoAñadirView extends JInternalFrame {
                     item.getProducto().getPrecio(),
                     item.getCantidad(),
                     String.format("%.2f", item.getProducto().getPrecio() * item.getCantidad()),
-                    btnEliminarProductoC , btnActualizarProductoC
+
             };
             modelo.addRow(fila);
         }
