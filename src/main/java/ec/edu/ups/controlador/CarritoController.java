@@ -6,6 +6,7 @@ import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.vista.CarritoAñadirView;
+import ec.edu.ups.vista.ListarCarritoView;
 
 import javax.swing.*;
 import java.awt.event.ActionListener;
@@ -21,14 +22,16 @@ public class CarritoController {
 
     private final ProductoDAO productoDAO;
     private final CarritoAñadirView carritoAñadirView;
-    private final Carrito carrito;
+    private final ListarCarritoView listarCarritoView;
+    private Carrito carrito;
     private final CarritoDAO carritoDAO;
 
-    public CarritoController(CarritoDAO carritoDAO, CarritoAñadirView carritoAñadirView, ProductoDAO productoDAO, Carrito carrito){
+    public CarritoController(CarritoDAO carritoDAO, CarritoAñadirView carritoAñadirView, ProductoDAO productoDAO, Carrito carrito, ListarCarritoView listarCarritoView){
 
         this.productoDAO = productoDAO;
         this.carritoAñadirView = carritoAñadirView;
         this.carritoDAO = carritoDAO;
+        this.listarCarritoView = listarCarritoView;
         this.carrito = new Carrito();
         carritoAñadirView.setDatosCarrito(carrito);
     }
@@ -123,6 +126,13 @@ public class CarritoController {
             }
         });
 
+    listarCarritoView.getBtnListar().addActionListener(e -> {
+        listarCarrito();
+    });
+
+    listarCarritoView.getBtnBuscar().addActionListener(e -> {
+        buscarCarrito();
+    });
 
 
 
@@ -155,8 +165,21 @@ public class CarritoController {
 
     private void listarCarrito() {
         List<Carrito> carritos = carritoDAO.listarTodos();
-        carritoAñadirView.cargarDatos();
+        listarCarritoView.cargarDatos(carritos);
     }
+    private void buscarCarrito() {
+        int codigo = Integer.parseInt(listarCarritoView.getTxtCodigo().getText());
+
+        Carrito carrito = carritoDAO.buscarPorCodigo(codigo);
+
+        if (carrito != null) {
+            listarCarritoView.cargarDatos(List.of(carrito)); // Java 9+, convierte a lista
+        } else {
+            listarCarritoView.mostrarMensaje("Carrito no encontrado.");
+            listarCarritoView.cargarDatos(List.of());
+        }
+    }
+
 
 
     private void guardarCarrito() throws ParseException {
@@ -181,13 +204,20 @@ public class CarritoController {
 
         carritoAñadirView.mostrarMensaje("Carrito guardado correctamente");
 
-        // Limpia para siguiente uso
-        carrito.vaciarCarrito();
-        carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
+        // Crear un nuevo carrito para seguir añadiendo productos
+        this.carrito = new Carrito();
+
+        // Actualizar la vista con el nuevo carrito vacío
+        carritoAñadirView.setDatosCarrito(this.carrito);
+        carritoAñadirView.cargarDatosTabla(this.carrito.obtenerItems());
+
         carritoAñadirView.getTxtSubtotal().setText("");
         carritoAñadirView.getTxtIVA().setText("");
         carritoAñadirView.getTxtTotal().setText("");
+        carritoAñadirView.limpiarCampos();
     }
+
+
 
     private void editarProducto(int codigoProducto) {
         for (ItemCarrito item : carrito.obtenerItems()) {
@@ -210,6 +240,8 @@ public class CarritoController {
         carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
         mostrarTotales();
     }
+
+
 
 
 }

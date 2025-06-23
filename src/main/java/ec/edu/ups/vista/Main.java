@@ -27,6 +27,7 @@ public class Main {
                 LoginView loginView = new LoginView();
                 UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView);
 
+                
                 loginView.setVisible(true);
             }
             });
@@ -41,7 +42,7 @@ public class Main {
         CarritoAñadirView carritoAnadirView = new CarritoAñadirView();
         ProductoEliminarView productoEliminarView = new ProductoEliminarView();
         ProductoActualizarView productoActualizarView = new ProductoActualizarView();
-
+        ListarCarritoView listarCarritoView = new ListarCarritoView();
         // Instanciamos Controladores
         ProductoController productoController = new ProductoController(
                 productoDAO,
@@ -60,7 +61,9 @@ public class Main {
                 carritoDAO,
                 carritoAnadirView,
                 productoDAO,
-                carrito
+                carrito,
+                listarCarritoView
+
         );
 
         principalView.getMenuItemCrearProducto().addActionListener(new ActionListener() {
@@ -106,9 +109,18 @@ public class Main {
         principalView.getMenuItemCrearCarrito().addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                carritoController.carritoEventos(); // Corregido el nombre
+                carritoController.carritoEventos();
                 principalView.getjDesktopPane().add(carritoAnadirView);
                 carritoAnadirView.setVisible(true);
+            }
+        });
+
+        principalView.getMenuItemListarCarrito().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                carritoController.carritoEventos();
+                principalView.getjDesktopPane().add(listarCarritoView);
+                listarCarritoView.setVisible(true);
             }
         });
 
