@@ -75,6 +75,7 @@ public class CarritoController {
         carritoAñadirView.getTblCarrito().addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() != 1) return;
                 JTable tabla = carritoAñadirView.getTblCarrito();
                 int fila = tabla.rowAtPoint(e.getPoint());
 
@@ -134,9 +135,60 @@ public class CarritoController {
         buscarCarrito();
     });
 
+        listarCarritoView.getTblCarrito().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() != 1) return;
+                JTable tabla = listarCarritoView.getTblCarrito();
+                int fila = tabla.rowAtPoint(e.getPoint());
 
+                if (fila >= 0) {
+                    int codigoCarrito = (int) tabla.getValueAt(fila, 0);
 
+                    // Mostrar el diálogo
+                    Object[] opciones = {"Editar", "Eliminar", "Cancelar"};
+                    int respuesta = JOptionPane.showOptionDialog(
+                            null,
+                            "¿Qué desea hacer con el carrito?",
+                            "Opciones",
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null,
+                            opciones,
+                            opciones[2]
+                    );
+                    if (respuesta == JOptionPane.YES_OPTION) {
+                        Carrito carritoExistente = carritoDAO.buscarPorCodigo(codigoCarrito);
 
+                        if (carritoExistente != null) {
+                            carrito = carritoExistente;
+
+                            // Mostrar datos en la vista
+                            carritoAñadirView.setDatosCarrito(carrito);
+                            carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
+                            carritoAñadirView.getTxtSubtotal().setText(String.format("%.2f", carrito.calcularSubTotal()));
+                            carritoAñadirView.getTxtIVA().setText(String.format("%.2f", carrito.calcularIVA()));
+                            carritoAñadirView.getTxtTotal().setText(String.format("%.2f", carrito.calcularTotal()));
+
+                            // Bloquear campos de código y fecha
+                            carritoAñadirView.getTxtCodigoCarrito().setEditable(false);
+                            carritoAñadirView.getTxtFecha().setEditable(false);
+
+                            // Agregar al desktop si no está añadido aún
+                            if (!carritoAñadirView.isShowing()) {
+                                listarCarritoView.getParent().add(carritoAñadirView); // <--- Esto es clave
+                            }
+
+                            carritoAñadirView.setVisible(true);
+                            carritoAñadirView.toFront();
+                        } else {
+                            listarCarritoView.mostrarMensaje("No se encontró el carrito.");
+                        }
+                    }
+
+                }
+            }
+        });
 
     }
 
@@ -200,17 +252,20 @@ public class CarritoController {
         carrito.setCodigo(codigo);
         carrito.setFechaCreacion(fecha);
 
-        carritoDAO.crear(carrito);
+        // Verificamos si ya existe → actualizamos, si no → creamos
+        Carrito existente = carritoDAO.buscarPorCodigo(codigo);
+        if (existente != null) {
+            carritoDAO.actualizar(carrito);
+            carritoAñadirView.mostrarMensaje("Carrito actualizado correctamente.");
+        } else {
+            carritoDAO.crear(carrito);
+            carritoAñadirView.mostrarMensaje("Carrito guardado correctamente.");
+        }
 
-        carritoAñadirView.mostrarMensaje("Carrito guardado correctamente");
-
-        // Crear un nuevo carrito para seguir añadiendo productos
+        // Limpiar para siguiente uso
         this.carrito = new Carrito();
-
-        // Actualizar la vista con el nuevo carrito vacío
         carritoAñadirView.setDatosCarrito(this.carrito);
         carritoAñadirView.cargarDatosTabla(this.carrito.obtenerItems());
-
         carritoAñadirView.getTxtSubtotal().setText("");
         carritoAñadirView.getTxtIVA().setText("");
         carritoAñadirView.getTxtTotal().setText("");
