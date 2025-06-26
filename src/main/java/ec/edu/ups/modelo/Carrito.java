@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Carrito {
 
-    private static int ultimoCodigo = 0;
     private final double IVA = 0.12;
     private GregorianCalendar fechaCreacion;
     private int codigo;
@@ -15,10 +14,11 @@ public class Carrito {
     private List<ItemCarrito> items;
 
     public Carrito() {
-        this.codigo = ++ultimoCodigo;
-        this.fechaCreacion = new GregorianCalendar(); // ✅ ahora no será null
+        this.fechaCreacion = new GregorianCalendar();
         this.items = new ArrayList<>();
+
     }
+
 
 
     public int getCodigo() {

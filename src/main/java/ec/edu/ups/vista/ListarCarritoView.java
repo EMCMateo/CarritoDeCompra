@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Carrito;
+import ec.edu.ups.modelo.ItemCarrito;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -21,14 +22,15 @@ public class ListarCarritoView extends JInternalFrame {
         setContentPane(panelPrincipal);
         setTitle("Listado de Carritos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 500);
+        setSize(1000, 400);
+        setLocation(320 , 0);
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
         setVisible(true);
 
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Fecha"};
+        Object[] columnas = {"Codigo", "Fecha",  "Total", "Productos"};
         modelo.setColumnIdentifiers(columnas);
         tblCarrito.setModel(modelo);
         modelo.setNumRows(0);
@@ -89,17 +91,30 @@ public class ListarCarritoView extends JInternalFrame {
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         for (Carrito carrito : listaCarritos) {
-            // Obtener la fecha como Date desde GregorianCalendar
             String fechaFormateada = sdf.format(carrito.getFechaCreacion().getTime());
+
+            StringBuilder productosTexto = new StringBuilder();
+            for (ItemCarrito item : carrito.obtenerItems()) {
+                productosTexto.append(item.getProducto().getNombre())
+                        .append(" x").append(item.getCantidad())
+                        .append(", ");
+            }
+
+            if (productosTexto.length() > 0) {
+                productosTexto.setLength(productosTexto.length() - 2); // quitar la última coma
+            }
 
             Object[] fila = {
                     carrito.getCodigo(),
                     fechaFormateada,
-                    carrito.calcularTotal()
+                    String.format("%.2f", carrito.calcularTotal()),
+                    productosTexto.toString()
             };
+
             modelo.addRow(fila);
         }
     }
+
 }
 
 

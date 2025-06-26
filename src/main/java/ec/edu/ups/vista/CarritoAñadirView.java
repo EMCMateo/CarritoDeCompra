@@ -39,7 +39,8 @@ public class CarritoAñadirView extends JInternalFrame {
         super("Datos del Carrito", true , true, false, true);
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setSize(500, 400);
+        setSize(1000, 600);
+        setLocation(200 , 125);
         setVisible(true);
         cargarDatos();
         if (txtNombre.getText() == "" && txtPrecio.getText() == ""){
@@ -107,11 +108,10 @@ public class CarritoAñadirView extends JInternalFrame {
     public void setDatosCarrito(Carrito carrito) {
         txtCodigoCarrito.setText(String.valueOf(carrito.getCodigo()));
 
-        // Formatear la fecha
+        // También podrías poner la fecha si lo deseas:
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         txtFecha.setText(sdf.format(carrito.getFechaCreacion().getTime()));
     }
-
     public void limpiarCampos(){
         txtNombre.setText("");
         txtCodigo.setText("");

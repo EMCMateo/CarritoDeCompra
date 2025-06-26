@@ -7,11 +7,19 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemCrearCarrito;
     private JMenu menuProducto;
     private JMenu menuCarrito;
+    private JMenu menuSalir;
+    private JMenu menuIdiomas;
     private JMenuItem menuItemCrearProducto;
     private JMenuItem menuItemEliminarProducto;
     private JMenuItem menuItemActualizarProducto;
     private JMenuItem menuItemBuscarProducto;
     private JMenuItem menuItemListarCarrito;
+    private JMenuItem menuItemSalir;
+    private JMenuItem menuItemCerrarSesion;
+    private JMenuItem menuItemES;
+    private JMenuItem menuItemEN;
+    private JMenuItem menuItemFR;
+
     private JPanel panelPrincipal;
     private JTable tblCarrito;
     private JDesktopPane jDesktopPane;
@@ -22,21 +30,36 @@ public class PrincipalView extends JFrame {
         menuBar = new JMenuBar();
         menuCarrito = new JMenu("Carrito");
         menuProducto = new JMenu("Producto ");
+        menuIdiomas = new JMenu("Idiomas");
+        menuSalir = new JMenu("Salir");
+
         menuItemCrearCarrito = new JMenuItem("Añadir Carrito");
         menuItemCrearProducto = new JMenuItem("Crear Producto");
         menuItemEliminarProducto = new JMenuItem("Eliminar Producto");
         menuItemActualizarProducto = new JMenuItem("Actualizar Producto");
         menuItemBuscarProducto = new JMenuItem("Buscar Producto");
         menuItemListarCarrito = new JMenuItem("Listar Carritos");
+        menuItemSalir = new JMenuItem("Salir");
+        menuItemCerrarSesion = new JMenuItem("Cerrar Sesion");
+        menuItemES = new JMenuItem("Español");
+        menuItemEN = new JMenuItem("Inglés");
+        menuItemFR = new JMenuItem("Francés");
 
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);
+        menuBar.add(menuIdiomas);
+        menuBar.add(menuSalir);
         menuProducto.add(menuItemCrearProducto);
         menuCarrito.add(menuItemCrearCarrito);
         menuProducto.add(menuItemEliminarProducto);
         menuProducto.add(menuItemActualizarProducto);
         menuProducto.add(menuItemBuscarProducto);
         menuCarrito.add(menuItemListarCarrito);
+        menuSalir.add(menuItemSalir);
+        menuSalir.add(menuItemCerrarSesion);
+        menuIdiomas.add(menuItemES);
+        menuIdiomas.add(menuItemEN);
+        menuIdiomas.add(menuItemFR);
 
         setJMenuBar(menuBar);
         setContentPane(jDesktopPane);
@@ -120,5 +143,41 @@ public class PrincipalView extends JFrame {
 
     public void setMenuItemListarCarrito(JMenuItem menuItemListarCarrito) {
         this.menuItemListarCarrito = menuItemListarCarrito;
+    }
+
+    public JMenu getMenuProducto() {
+        return menuProducto;
+    }
+
+    public JMenu getMenuCarrito() {
+        return menuCarrito;
+    }
+
+    public JMenu getMenuSalir() {
+        return menuSalir;
+    }
+
+    public JMenu getMenuIdiomas() {
+        return menuIdiomas;
+    }
+
+    public JMenuItem getMenuItemSalir() {
+        return menuItemSalir;
+    }
+
+    public JMenuItem getMenuItemCerrarSesion() {
+        return menuItemCerrarSesion;
+    }
+
+    public JMenuItem getMenuItemES() {
+        return menuItemES;
+    }
+
+    public JMenuItem getMenuItemEN() {
+        return menuItemEN;
+    }
+
+    public JMenuItem getMenuItemFR() {
+        return menuItemFR;
     }
 }

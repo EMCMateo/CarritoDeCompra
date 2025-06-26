@@ -26,6 +26,10 @@ public class LoginView extends JFrame {
     public void mostrarMensaje(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
+    public void limpiarCampos() {
+        txtUsername.setText("");
+        txtPassword.setText("");
+    }
 
 
 

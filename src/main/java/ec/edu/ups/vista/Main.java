@@ -10,32 +10,59 @@ import ec.edu.ups.dao.impl.CarritoDAOMemoria;
 import ec.edu.ups.dao.impl.ProductoDAOMemoria;
 import ec.edu.ups.dao.impl.UsuarioDAOMemoria;
 import ec.edu.ups.modelo.Carrito;
+import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 
+import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 public class Main {
+
+    private static final UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
+    private static final ProductoDAO productoDAO = new ProductoDAOMemoria();
+    private static final CarritoDAO carritoDAO = new CarritoDAOMemoria();
+
     public static void main(String[] args) {
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
 
                 //Iniciar Sesion
-                UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
                 LoginView loginView = new LoginView();
-                UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView);
+                UserRegistroView userRegistroView = new UserRegistroView();
 
-                
+                // Configurar controlador
+                UsuarioController usuarioController = new UsuarioController(
+                        usuarioDAO,
+                        loginView,
+                        userRegistroView
+                );
+
+
                 loginView.setVisible(true);
+
+
             }
             });
+
     }
-    public static void iniciarApp(){
+    public static void configurarAccesoPorRol(Usuario usuario, PrincipalView principalView) {
+        if (usuario.getRol() == Rol.CLIENTE) {
+            // Cliente: desactivar todas las opciones excepto Crear Carrito
+            principalView.getMenuItemCrearProducto().setEnabled(false);
+            principalView.getMenuItemBuscarProducto().setEnabled(false);
+            principalView.getMenuItemEliminarProducto().setEnabled(false);
+            principalView.getMenuItemActualizarProducto().setEnabled(false);
+            principalView.getMenuItemListarCarrito().setEnabled(false);
+        }
+    }
+
+    public static void iniciarApp(Usuario usuario){
+
         PrincipalView principalView = new PrincipalView();
-        ProductoDAO productoDAO = new ProductoDAOMemoria();
-        CarritoDAO carritoDAO = new CarritoDAOMemoria();
+        Main.configurarAccesoPorRol(usuario, principalView);
 
         ProductoAnadirView productoAnadirView = new ProductoAnadirView();
         ProductoListaView productoListaView = new ProductoListaView();
@@ -123,7 +150,35 @@ public class Main {
                 listarCarritoView.setVisible(true);
             }
         });
+        principalView.getMenuItemSalir().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                System.exit(0);
+            }
+        });
 
+        principalView.getMenuItemCerrarSesion().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                int confirm = JOptionPane.showConfirmDialog(
+                        principalView,
+                        "¿Está seguro que desea cerrar sesión?",
+                        "Cerrar Sesión",
+                        JOptionPane.YES_NO_OPTION
+                );
+
+                if (confirm == JOptionPane.YES_OPTION) {
+                    principalView.dispose();
+
+                    LoginView loginView = new LoginView();
+                    UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
+                    UserRegistroView userRegistroView = new UserRegistroView();
+                    UsuarioController usuarioController = new UsuarioController(usuarioDAO, loginView, userRegistroView);
+
+                    loginView.setVisible(true);
+                }
+            }
+        });
         principalView.setVisible(true);
     }
 
