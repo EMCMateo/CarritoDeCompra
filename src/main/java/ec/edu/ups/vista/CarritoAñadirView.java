@@ -80,12 +80,6 @@ public class CarritoAñadirView extends JInternalFrame {
         }
     }
 
-    public void cargarProductos(){
-        cmBoxCantidad.removeAllItems();
-        for(int i = 0; i<20;i++){
-            cmBoxCantidad.addItem(String.valueOf(i+1));
-        }
-    }
 
 
     public void cargarDatosTabla(List<ItemCarrito> items) {

@@ -30,7 +30,7 @@ public class ListarCarritoView extends JInternalFrame {
         setVisible(true);
 
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Codigo", "Fecha",  "Total", "Productos"};
+        Object[] columnas = {"Usuario","", "Fecha",  "Total", };
         modelo.setColumnIdentifiers(columnas);
         tblCarrito.setModel(modelo);
         modelo.setNumRows(0);
@@ -87,33 +87,27 @@ public class ListarCarritoView extends JInternalFrame {
 
     public void cargarDatos(List<Carrito> listaCarritos) {
         modelo.setNumRows(0);
-
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
         for (Carrito carrito : listaCarritos) {
             String fechaFormateada = sdf.format(carrito.getFechaCreacion().getTime());
 
-            StringBuilder productosTexto = new StringBuilder();
-            for (ItemCarrito item : carrito.obtenerItems()) {
-                productosTexto.append(item.getProducto().getNombre())
-                        .append(" x").append(item.getCantidad())
-                        .append(", ");
-            }
 
-            if (productosTexto.length() > 0) {
-                productosTexto.setLength(productosTexto.length() - 2); // quitar la última coma
-            }
+
+
+            String nombreUsuario = carrito.getUsuario() != null ? carrito.getUsuario().toString() : "Desconocido";
 
             Object[] fila = {
+                    nombreUsuario,
                     carrito.getCodigo(),
                     fechaFormateada,
-                    String.format("%.2f", carrito.calcularTotal()),
-                    productosTexto.toString()
+                    String.format("%.2f", carrito.calcularTotal())
             };
 
             modelo.addRow(fila);
         }
     }
+
 
 }
 

@@ -1,7 +1,6 @@
 package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.UsuarioDAO;
-import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 
@@ -24,10 +23,11 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         usuarios.add(usuario);
     }
 
-
-    public Usuario autenticar(String username, String password){
-        for (Usuario usuario : usuarios){
-            if (usuario.getUsername().equalsIgnoreCase(username) && usuario.getPassword().equals(password)){
+    @Override
+    public Usuario autenticar(String username, String password) {
+        for (Usuario usuario : usuarios) {
+            if (usuario.getUsername().equalsIgnoreCase(username)
+                    && usuario.getPassword().equals(password)) {
                 return usuario;
             }
         }
@@ -44,12 +44,12 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         return null;
     }
 
-
     @Override
     public void actualizar(Usuario usuario) {
         for (int i = 0; i < usuarios.size(); i++) {
-            if (usuarios.get(i).getUsername() == usuario.getUsername()) {
+            if (usuarios.get(i).getUsername().equalsIgnoreCase(usuario.getUsername())) {
                 usuarios.set(i, usuario);
+                return;
             }
         }
     }
@@ -61,13 +61,14 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
             Usuario usuario = iterator.next();
             if (usuario.getUsername().equalsIgnoreCase(username)) {
                 iterator.remove();
+                return;
             }
         }
     }
 
     @Override
     public List<Usuario> listarTodos() {
-        return usuarios;
+        return new ArrayList<>(usuarios);
     }
 
     @Override
@@ -91,9 +92,4 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         }
         return clientes;
     }
-
-
 }
-
-
-

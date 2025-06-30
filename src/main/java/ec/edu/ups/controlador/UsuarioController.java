@@ -3,11 +3,13 @@ package ec.edu.ups.controlador;
 import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.vista.ListarUsuarioView;
 import ec.edu.ups.vista.LoginView;
-import ec.edu.ups.vista.Main;    // importa tu Main
+import ec.edu.ups.vista.Main;
 import ec.edu.ups.vista.UserRegistroView;
 
 import javax.swing.*;
+import java.util.List;
 
 public class UsuarioController {
 
@@ -15,33 +17,30 @@ public class UsuarioController {
     private final LoginView loginView;
     private final UserRegistroView userRegistroView;
     private Usuario usuario;
+    private ListarUsuarioView listarUsuarioView;
 
-    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, UserRegistroView userRegistroView){
+    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, UserRegistroView userRegistroView, ListarUsuarioView listarUsuarioView){
         this.usuarioDAO = usuarioDAO;
         this.loginView = loginView;
         this.userRegistroView = userRegistroView;
-        this.usuario = null;
+        this.listarUsuarioView = listarUsuarioView;
         cargarEventos();
         eventosRegistro();
+        eventosListar(); // ACTIVAR BOTONES DE LISTADO
     }
 
     private void cargarEventos(){
-       loginView.getBtnIniciarSesion().addActionListener(e -> {
+        loginView.getBtnIniciarSesion().addActionListener(e -> {
             autenticar();
             userRegistroView.limpiarCampos();
             loginView.limpiarCampos();
-
-
         });
-
 
         loginView.getBtnRegistro().addActionListener(e -> {
             loginView.dispose();
             userRegistroView.setVisible(true);
-
         });
     }
-
 
     private void eventosRegistro() {
         userRegistroView.getBtnConfirmar().addActionListener(e -> {
@@ -72,7 +71,6 @@ public class UsuarioController {
             loginView.limpiarCampos();
             userRegistroView.dispose();
             loginView.setVisible(true);
-
         });
 
         userRegistroView.getBtnCancelar().addActionListener(e -> {
@@ -81,6 +79,29 @@ public class UsuarioController {
         });
     }
 
+    private void eventosListar() {
+        listarUsuarioView.getBtnListarTodos().addActionListener(e -> {
+            listarUsuarioView.cargarDatos(usuarioDAO.listarTodos());
+        });
+
+        listarUsuarioView.getBtnClientes().addActionListener(e -> {
+            listarUsuarioView.cargarDatos(usuarioDAO.listarClientes());
+        });
+
+        listarUsuarioView.getBtnAdmin().addActionListener(e -> {
+            listarUsuarioView.cargarDatos(usuarioDAO.listarAdmin());
+        });
+
+        listarUsuarioView.getBtnBuscar().addActionListener(e -> {
+            String username = listarUsuarioView.getTxtUsername().getText().trim();
+            Usuario u = usuarioDAO.buscarPorUsername(username);
+            if (u != null) {
+                listarUsuarioView.cargarDatos(List.of(u));
+            } else {
+                listarUsuarioView.mostrarMensaje("Usuario no encontrado.");
+            }
+        });
+    }
 
     public boolean autenticar() {
         String username = loginView.getTxtUsername().getText();
@@ -88,24 +109,15 @@ public class UsuarioController {
 
         usuario = usuarioDAO.autenticar(username, password);
 
-
-
         if (usuario == null) {
             loginView.mostrarMensaje("Usuario no encontrado!");
             return false;
         } else {
             loginView.dispose();
-
             Main.iniciarApp(usuario);
-
             return true;
         }
     }
-
-
-
-
-
 
     public Usuario getUsuarioAuteticado(){
         return usuario;

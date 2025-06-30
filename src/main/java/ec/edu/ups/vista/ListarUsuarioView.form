@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ec.edu.ups.vista.ListarUsuarioView">
+  <grid id="27dc6" binding="panelPrincipal" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="508" height="400"/>
+    </constraints>
+    <properties>
+      <background color="-16761789"/>
+    </properties>
+    <border type="bevel-lowered" title="Listar Usuarios" title-justification="2" title-position="2">
+      <font name="Century Gothic" style="1"/>
+      <title-color color="-262913"/>
+    </border>
+    <children>
+      <grid id="f55d6" layout-manager="GridLayoutManager" row-count="3" column-count="9" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16766928"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="3f608" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-262913"/>
+              <text value="Usuario: "/>
+            </properties>
+          </component>
+          <component id="d89e6" class="javax.swing.JTextField" binding="txtUsername">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="5" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <enabled value="true"/>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-16777216"/>
+            </properties>
+          </component>
+          <scrollpane id="f83bb">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="9" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-16766928"/>
+            </properties>
+            <border type="none"/>
+            <children>
+              <component id="965a1" class="javax.swing.JTable" binding="tblUsuarios">
+                <constraints/>
+                <properties>
+                  <background color="-16766928"/>
+                  <font name="Century Gothic" style="1"/>
+                  <foreground color="-262913"/>
+                </properties>
+              </component>
+            </children>
+          </scrollpane>
+          <component id="8c1f8" class="javax.swing.JButton" binding="btnBuscar">
+            <constraints>
+              <grid row="0" column="6" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13684173"/>
+              <font name="Century Gothic" style="2"/>
+              <foreground color="-262913"/>
+              <text value="Buscar"/>
+            </properties>
+          </component>
+          <component id="79738" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-262913"/>
+              <text value="Listar:"/>
+            </properties>
+          </component>
+          <component id="99b46" class="javax.swing.JButton" binding="btnClientes">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13684173"/>
+              <font name="Century Gothic" style="2"/>
+              <foreground color="-262913"/>
+              <text value="Clientes"/>
+            </properties>
+          </component>
+          <component id="48997" class="javax.swing.JButton" binding="btnAdmin">
+            <constraints>
+              <grid row="1" column="3" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13684173"/>
+              <font name="Century Gothic" style="2"/>
+              <foreground color="-262913"/>
+              <text value="Administradores"/>
+            </properties>
+          </component>
+          <component id="12560" class="javax.swing.JButton" binding="btnListarTodos">
+            <constraints>
+              <grid row="1" column="6" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-13684173"/>
+              <font name="Century Gothic" style="2"/>
+              <foreground color="-262913"/>
+              <text value="Listar Todos"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <vspacer id="7d6e4">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+        </constraints>
+      </vspacer>
+    </children>
+  </grid>
+</form>

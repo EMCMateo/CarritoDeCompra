@@ -9,11 +9,13 @@ public class PrincipalView extends JFrame {
     private JMenu menuCarrito;
     private JMenu menuSalir;
     private JMenu menuIdiomas;
+    private JMenu menuUsuarios;
     private JMenuItem menuItemCrearProducto;
     private JMenuItem menuItemEliminarProducto;
     private JMenuItem menuItemActualizarProducto;
     private JMenuItem menuItemBuscarProducto;
     private JMenuItem menuItemListarCarrito;
+    private JMenuItem menuItemListarUsuarios;
     private JMenuItem menuItemSalir;
     private JMenuItem menuItemCerrarSesion;
     private JMenuItem menuItemES;
@@ -30,6 +32,7 @@ public class PrincipalView extends JFrame {
         menuBar = new JMenuBar();
         menuCarrito = new JMenu("Carrito");
         menuProducto = new JMenu("Producto ");
+        menuUsuarios = new JMenu("Usuarios");
         menuIdiomas = new JMenu("Idiomas");
         menuSalir = new JMenu("Salir");
 
@@ -41,18 +44,21 @@ public class PrincipalView extends JFrame {
         menuItemListarCarrito = new JMenuItem("Listar Carritos");
         menuItemSalir = new JMenuItem("Salir");
         menuItemCerrarSesion = new JMenuItem("Cerrar Sesion");
+        menuItemListarUsuarios = new JMenuItem("Listar Usuarios");
         menuItemES = new JMenuItem("Español");
         menuItemEN = new JMenuItem("Inglés");
         menuItemFR = new JMenuItem("Francés");
 
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);
+        menuBar.add(menuUsuarios);
         menuBar.add(menuIdiomas);
         menuBar.add(menuSalir);
         menuProducto.add(menuItemCrearProducto);
         menuCarrito.add(menuItemCrearCarrito);
         menuProducto.add(menuItemEliminarProducto);
         menuProducto.add(menuItemActualizarProducto);
+        menuUsuarios.add(menuItemListarUsuarios);
         menuProducto.add(menuItemBuscarProducto);
         menuCarrito.add(menuItemListarCarrito);
         menuSalir.add(menuItemSalir);
@@ -179,5 +185,13 @@ public class PrincipalView extends JFrame {
 
     public JMenuItem getMenuItemFR() {
         return menuItemFR;
+    }
+
+    public JMenuItem getMenuItemListarUsuarios() {
+        return menuItemListarUsuarios;
+    }
+
+    public void setMenuItemListarUsuarios(JMenuItem menuItemListarUsuarios) {
+        this.menuItemListarUsuarios = menuItemListarUsuarios;
     }
 }

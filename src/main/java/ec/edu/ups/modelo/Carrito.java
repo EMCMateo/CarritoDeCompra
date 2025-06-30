@@ -10,16 +10,24 @@ public class Carrito {
     private final double IVA = 0.12;
     private GregorianCalendar fechaCreacion;
     private int codigo;
-
+    private Usuario usuario; // ✅ Nuevo atributo
     private List<ItemCarrito> items;
+    private static int ultimoCodigo = 1;
 
     public Carrito() {
+        this.codigo = ultimoCodigo++;
         this.fechaCreacion = new GregorianCalendar();
         this.items = new ArrayList<>();
-
     }
 
 
+    public Usuario getUsuario() {
+        return usuario;
+    }
+
+    public void setUsuario(Usuario usuario) {
+        this.usuario = usuario;
+    }
 
     public int getCodigo() {
         return codigo;
@@ -69,16 +77,13 @@ public class Carrito {
         return calcularSubTotal() + calcularIVA();
     }
 
-
-    public double calcularSubTotal(){
+    public double calcularSubTotal() {
         double total = 0;
         for (ItemCarrito item : items) {
             total += item.getProducto().getPrecio() * item.getCantidad();
         }
         return total;
     }
-
-
 
     public List<ItemCarrito> obtenerItems() {
         return items;
@@ -87,71 +92,7 @@ public class Carrito {
     public boolean estaVacio() {
         return items.isEmpty();
     }
+
 }
 
 
-/*
-package ec.edu.ups.modelo;
-
-
-
-import java.util.ArrayList;
-import java.util.GregorianCalendar;
-import java.util.List;
-
-public class Carrito {
-    private ArrayList<ItemCarrito> listaItems;
-    private int codigo;
-    private GregorianCalendar fechaCreacion;
-
-
-    public Carrito(ArrayList<ItemCarrito> listaItems, int codigo, GregorianCalendar fechaCreacion) {
-        this.listaItems = listaItems;
-        this.codigo = codigo;
-
-    }
-
-    public List<ItemCarrito> getListaItems() {
-        return listaItems;
-    }
-
-    public void setListaItems(ArrayList<ItemCarrito> listaItems) {
-        this.listaItems = listaItems;
-    }
-
-
-
-    public void agregarItem(ItemCarrito items){
-        listaItems.add(items);
-
-
-    }
-
-    public double calcularCosto() {
-        double total = 0;
-        for (ItemCarrito items : listaItems) {
-            total = total + (items.getProducto().getPrecio() * items.getCantidad());
-
-        }
-        return total;
-    }
-
-    public void imprimirCarrito(ArrayList<ItemCarrito> listaItems){
-        System.out.println("Carrito: ");
-        for (ItemCarrito items: listaItems){
-            System.out.println(items);
-        }
-        System.out.println("Costo Total del carrito: "+calcularCosto());
-
-    }
-
-    @Override
-    public String toString() {
-        return "Carrito" +
-                "listaItems=" + listaItems +
-                ", totalCompra=" + calcularCosto() +
-                '}';
-    }
-}
-
- */
