@@ -68,7 +68,7 @@
           <text value="Limpiar"/>
         </properties>
       </component>
-      <component id="d83ac" class="javax.swing.JLabel">
+      <component id="d83ac" class="javax.swing.JLabel" binding="lblCodigo">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -78,7 +78,7 @@
           <text value="Codigo:"/>
         </properties>
       </component>
-      <component id="9663b" class="javax.swing.JLabel">
+      <component id="9663b" class="javax.swing.JLabel" binding="lblNombre">
         <constraints>
           <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="4" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
@@ -88,7 +88,7 @@
           <text value="Nombre:"/>
         </properties>
       </component>
-      <component id="f347c" class="javax.swing.JLabel">
+      <component id="f347c" class="javax.swing.JLabel" binding="lblPrecio">
         <constraints>
           <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>

@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
@@ -15,9 +16,14 @@ public class ProductoAnadirView extends JInternalFrame {
     private JTextField txtCodigo;
     private JButton btnAceptar;
     private JButton btnLimpiar;
+    private JLabel lblCodigo;
+    private JLabel lblNombre;
+    private JLabel lblPrecio;
+    private MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler;
 
-    public ProductoAnadirView() {
-
+    public ProductoAnadirView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
+        this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
+        setTextos(mensajeInternacionalizacionHandler);
         setContentPane(panelPrincipal);
         setTitle("Datos del Producto");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -99,4 +105,13 @@ public class ProductoAnadirView extends JInternalFrame {
             System.out.println(producto);
         }
     }
+    public void setTextos(ec.edu.ups.util.MensajeInternacionalizacionHandler mensajeHandler) {
+        setTitle(mensajeHandler.get("producto.anadir.titulo"));
+        lblCodigo.setText(mensajeHandler.get("producto.anadir.lbl.codigo"));
+        lblNombre.setText(mensajeHandler.get("producto.anadir.lbl.nombre"));
+        lblPrecio.setText(mensajeHandler.get("producto.anadir.lbl.precio"));
+        btnAceptar.setText(mensajeHandler.get("producto.anadir.btn.aceptar"));
+        btnLimpiar.setText(mensajeHandler.get("producto.anadir.btn.limpiar"));
+    }
+
 }

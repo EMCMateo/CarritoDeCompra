@@ -1,12 +1,14 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Carrito;
-import ec.edu.ups.modelo.ItemCarrito;
+import ec.edu.ups.util.FormateadorUtils;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class ListarCarritoView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -15,102 +17,106 @@ public class ListarCarritoView extends JInternalFrame {
     private JButton btnBuscar;
     private JButton btnListar;
     private JScrollPane ScrollPane;
+    private JLabel lblCodigo;
+    private JLabel lblConsejo;
     private DefaultTableModel modelo;
 
-    public ListarCarritoView() {
+    private MensajeInternacionalizacionHandler mensajeHandler;
+
+    public ListarCarritoView(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajeHandler = mensajeHandler;
+        inicializarComponentes(); // primero inicializa el modelo y tabla
+        setTextos(mensajeHandler); // luego cambia textos internacionales
 
         setContentPane(panelPrincipal);
-        setTitle("Listado de Carritos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
-        setLocation(320 , 0);
+        setLocation(320, 0);
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
         setVisible(true);
+    }
 
+    private void inicializarComponentes() {
         modelo = new DefaultTableModel();
-        Object[] columnas = {"Usuario","", "Fecha",  "Total", };
-        modelo.setColumnIdentifiers(columnas);
         tblCarrito.setModel(modelo);
+
+        // Puedes inicializar cabeceras básicas aquí si quieres
+        modelo.setColumnIdentifiers(new Object[]{
+                "Usuario",
+                "Código",
+                "Fecha",
+                "Total"
+        });
+    }
+
+    public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
+        setTitle(mensajeHandler.get("carrito.listar.titulo"));
+        lblCodigo.setText(mensajeHandler.get("carrito.listar.lbl.codigo"));
+        lblConsejo.setText(mensajeHandler.get("carrito.listar.lbl.consejo"));
+        btnBuscar.setText(mensajeHandler.get("carrito.listar.btn.buscar"));
+        btnListar.setText(mensajeHandler.get("carrito.listar.btn.listar"));
+
+        // Ahora modelo nunca es null aquí
+        modelo.setColumnIdentifiers(new Object[]{
+                mensajeHandler.get("carrito.listar.col.usuario"),
+                mensajeHandler.get("carrito.listar.col.codigo"),
+                mensajeHandler.get("carrito.listar.col.fecha"),
+                mensajeHandler.get("carrito.listar.col.total")
+        });
+    }
+
+    public void cargarDatos(List<Carrito> listaCarritos) {
         modelo.setNumRows(0);
+        Locale locale = mensajeHandler.getLocale();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
 
+        for (Carrito carrito : listaCarritos) {
+            String fechaFormateada = sdf.format(carrito.getFechaCreacion().getTime());
+            String nombreUsuario = carrito.getUsuario() != null ? carrito.getUsuario().toString() :
+                    mensajeHandler.get("carrito.listar.desconocido");
+            String totalFormateado = FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale);
 
-
-
+            modelo.addRow(new Object[]{
+                    nombreUsuario,
+                    carrito.getCodigo(),
+                    fechaFormateada,
+                    totalFormateado
+            });
+        }
     }
 
     public void mostrarMensaje(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
 
-
-    public JPanel getPanelPrincipal() {
-        return panelPrincipal;
-    }
-
-    public void setPanelPrincipal(JPanel panelPrincipal) {
-        this.panelPrincipal = panelPrincipal;
-    }
-
+    // Getters
     public JTable getTblCarrito() {
         return tblCarrito;
-    }
-
-    public void setTblCarrito(JTable tblCarrito) {
-        this.tblCarrito = tblCarrito;
     }
 
     public JTextField getTxtCodigo() {
         return txtCodigo;
     }
 
-    public void setTxtCodigo(JTextField txtCodigo) {
-        this.txtCodigo = txtCodigo;
-    }
-
     public JButton getBtnBuscar() {
         return btnBuscar;
-    }
-
-    public void setBtnBuscar(JButton btnBuscar) {
-        this.btnBuscar = btnBuscar;
     }
 
     public JButton getBtnListar() {
         return btnListar;
     }
 
-    public void setBtnListar(JButton btnListar) {
-        this.btnListar = btnListar;
+    public JScrollPane getScrollPane() {
+        return ScrollPane;
     }
 
-    public void cargarDatos(List<Carrito> listaCarritos) {
-        modelo.setNumRows(0);
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-
-        for (Carrito carrito : listaCarritos) {
-            String fechaFormateada = sdf.format(carrito.getFechaCreacion().getTime());
-
-
-
-
-            String nombreUsuario = carrito.getUsuario() != null ? carrito.getUsuario().toString() : "Desconocido";
-
-            Object[] fila = {
-                    nombreUsuario,
-                    carrito.getCodigo(),
-                    fechaFormateada,
-                    String.format("%.2f", carrito.calcularTotal())
-            };
-
-            modelo.addRow(fila);
-        }
+    public JLabel getLblCodigo() {
+        return lblCodigo;
     }
 
-
+    public JLabel getLblConsejo() {
+        return lblConsejo;
+    }
 }
-
-
-
-

@@ -1,5 +1,7 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class ProductoActualizarView extends JInternalFrame {
@@ -14,15 +16,22 @@ public class ProductoActualizarView extends JInternalFrame {
     private JLabel lblNombre;
     private JLabel lblPrecio;
 
-    public ProductoActualizarView() {
+    private MensajeInternacionalizacionHandler mensajeHandler;
+
+    public ProductoActualizarView(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajeHandler = mensajeHandler;
+
+
         setContentPane(panelPrincipal);
-        setTitle("Gestion del Producto");
+        setTitle(mensajeHandler.get("producto.actualizar.titulo"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
         setClosable(true);
         setIconifiable(true);
         setVisible(true);
         pack();
+
+        setTextos(mensajeHandler);
     }
 
     // Métodos públicos para acceder a los componentes
@@ -40,5 +49,15 @@ public class ProductoActualizarView extends JInternalFrame {
     public void limpiarCampos() {
         txtNombre.setText("");
         txtPrecio.setText("");
+    }
+
+    public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
+        setTitle(mensajeHandler.get("producto.actualizar.titulo"));
+        lblCodigo.setText(mensajeHandler.get("producto.actualizar.lbl.codigo"));
+        lblNombre.setText(mensajeHandler.get("producto.actualizar.lbl.nombre"));
+        lblPrecio.setText(mensajeHandler.get("producto.actualizar.lbl.precio"));
+
+        btnBuscar.setText(mensajeHandler.get("producto.actualizar.btn.buscar"));
+        btnActualizar.setText(mensajeHandler.get("producto.actualizar.btn.actualizar"));
     }
 }

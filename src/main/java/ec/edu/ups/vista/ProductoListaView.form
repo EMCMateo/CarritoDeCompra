@@ -8,14 +8,17 @@
     <properties>
       <background color="-16766928"/>
     </properties>
-    <border type="none"/>
+    <border type="bevel-raised" title="Listar Productos" title-justification="2" title-position="2">
+      <font name="Century Gothic" style="1"/>
+      <title-color color="-262913"/>
+    </border>
     <children>
-      <component id="29d45" class="javax.swing.JLabel">
+      <component id="29d45" class="javax.swing.JLabel" binding="lblNombre">
         <constraints>
           <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <font name="Georgia" style="3"/>
+          <font name="Century Gothic" style="3"/>
           <foreground color="-328705"/>
           <text value="Nombre"/>
         </properties>
@@ -32,7 +35,7 @@
           </grid>
         </constraints>
         <properties>
-          <font name="Georgia" style="3"/>
+          <font name="Century Gothic" style="1"/>
         </properties>
       </component>
       <component id="4fef7" class="javax.swing.JButton" binding="btnBuscar">
@@ -40,7 +43,7 @@
           <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <font name="Georgia" style="3"/>
+          <font name="Century Gothic" style="2"/>
           <text value="Buscar"/>
         </properties>
       </component>
@@ -62,7 +65,7 @@
               <component id="2687e" class="javax.swing.JTable" binding="tblProductos">
                 <constraints/>
                 <properties>
-                  <font name="Georgia" style="3"/>
+                  <font name="Century Gothic" style="3"/>
                 </properties>
                 <clientProperties>
                   <JTable.autoStartsEdit class="java.lang.Boolean" value="false"/>
@@ -77,7 +80,7 @@
           <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
         </constraints>
         <properties>
-          <font name="Georgia" style="3"/>
+          <font name="Century Gothic" style="2"/>
           <text value="Listar"/>
         </properties>
       </component>

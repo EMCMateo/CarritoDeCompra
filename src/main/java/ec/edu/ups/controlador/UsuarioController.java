@@ -3,6 +3,7 @@ package ec.edu.ups.controlador;
 import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.ListarUsuarioView;
 import ec.edu.ups.vista.LoginView;
 import ec.edu.ups.vista.Main;
@@ -18,12 +19,14 @@ public class UsuarioController {
     private final UserRegistroView userRegistroView;
     private Usuario usuario;
     private ListarUsuarioView listarUsuarioView;
+    private final MensajeInternacionalizacionHandler mensajeHandler;
 
-    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, UserRegistroView userRegistroView, ListarUsuarioView listarUsuarioView){
+    public UsuarioController(UsuarioDAO usuarioDAO, LoginView loginView, UserRegistroView userRegistroView, ListarUsuarioView listarUsuarioView, MensajeInternacionalizacionHandler mensajeHandler){
         this.usuarioDAO = usuarioDAO;
         this.loginView = loginView;
         this.userRegistroView = userRegistroView;
         this.listarUsuarioView = listarUsuarioView;
+        this.mensajeHandler = mensajeHandler;
         cargarEventos();
         eventosRegistro();
         eventosListar(); // ACTIVAR BOTONES DE LISTADO
@@ -101,7 +104,10 @@ public class UsuarioController {
                 listarUsuarioView.mostrarMensaje("Usuario no encontrado.");
             }
         });
+
+
     }
+
 
     public boolean autenticar() {
         String username = loginView.getTxtUsername().getText();
@@ -114,7 +120,7 @@ public class UsuarioController {
             return false;
         } else {
             loginView.dispose();
-            Main.iniciarApp(usuario);
+            Main.iniciarApp(usuario, "es", "EC"); // inicial idioma español
             return true;
         }
     }

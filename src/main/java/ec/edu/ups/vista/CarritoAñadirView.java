@@ -2,16 +2,18 @@ package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
+import ec.edu.ups.util.FormateadorUtils;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
-import java.text.SimpleDateFormat;
 import java.util.List;
+import java.util.Locale;
 
 public class CarritoAñadirView extends JInternalFrame {
     private JTextField txtCodigo;
     private JButton btnBuscar;
-       private JLabel lblNombre;
+    private JLabel lblNombre;
     private JLabel lblPrecio;
     private JButton btnAnadir;
     private JTextField txtNombre;
@@ -26,30 +28,38 @@ public class CarritoAñadirView extends JInternalFrame {
     private JLabel lblIva;
     private JLabel lblTotal;
     private JPanel panelPrincipal;
-    private JComboBox cmBoxCantidad;
+    private JComboBox<String> cmBoxCantidad;
     private JTextField txtCodigoCarrito;
     private JTextField txtFecha;
     private JButton btnBorrar;
     private JButton btnGuardar;
+    private JLabel lblCodigoCarrito;
+    private JLabel lblFecha;
+    private JLabel lblConsejo;
+    private JLabel lblCodigo;
     private JButton btnEliminarProductoC;
     private JButton btnActualizarProductoC;
     private DefaultTableModel modelo;
 
-    public CarritoAñadirView(){
+    private MensajeInternacionalizacionHandler mensajeHandler;
+
+    public CarritoAñadirView(MensajeInternacionalizacionHandler mensajeHandler){
         super("Datos del Carrito", true , true, false, true);
+        this.mensajeHandler = mensajeHandler;
+
+
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 600);
         setLocation(200 , 125);
         setVisible(true);
         cargarDatos();
-        if (txtNombre.getText() == "" && txtPrecio.getText() == ""){
+
+        if (txtNombre.getText().isEmpty() && txtPrecio.getText().isEmpty()){
             btnAnadir.setEnabled(false);
         }
         txtCodigoCarrito.setEditable(false);
         txtFecha.setEditable(false);
-
-        //pack();
 
         modelo = new DefaultTableModel() {
             @Override
@@ -57,71 +67,90 @@ public class CarritoAñadirView extends JInternalFrame {
                 return false;
             }
         };
-        Object[] columnas = {"Codigo", "Nombre", "Precio", "Cantidad", "SubTotal"};
+        Object[] columnas = {
+                mensajeHandler.get("carrito.anadir.tbl.codigo"),
+                mensajeHandler.get("carrito.anadir.tbl.nombre"),
+                mensajeHandler.get("carrito.anadir.tbl.precio"),
+                mensajeHandler.get("carrito.anadir.tbl.cantidad"),
+                mensajeHandler.get("carrito.anadir.tbl.subtotal")
+        };
         modelo.setColumnIdentifiers(columnas);
         tblCarrito.setModel(modelo);
 
-        /*
-        cargarProductos();
-        */
+        btnEliminarProductoC = new JButton(mensajeHandler.get("carrito.anadir.btn.eliminar"));
+        btnActualizarProductoC = new JButton(mensajeHandler.get("carrito.anadir.btn.actualizar"));
 
-        btnEliminarProductoC = new JButton("Eliminar");
-        btnActualizarProductoC = new JButton("Editar");
-
-
-
-
-
+        setTextos(mensajeHandler);
     }
+
     public void cargarDatos(){
         cmBoxCantidad.removeAllItems();
-        for(int i = 0; i<20;i++){
-            cmBoxCantidad.addItem(String.valueOf(i+1));
+        for(int i = 1; i <= 20; i++){
+            cmBoxCantidad.addItem(String.valueOf(i));
         }
     }
 
-
-
     public void cargarDatosTabla(List<ItemCarrito> items) {
         modelo.setRowCount(0); // Borra la tabla
+        Locale locale = mensajeHandler.getLocale();
+
         for (ItemCarrito item : items) {
             Object[] fila = {
                     item.getProducto().getCodigo(),
                     item.getProducto().getNombre(),
-                    item.getProducto().getPrecio(),
+                    FormateadorUtils.formatearMoneda(item.getProducto().getPrecio(), locale),
                     item.getCantidad(),
-                    String.format("%.2f", item.getProducto().getPrecio() * item.getCantidad()),
-
+                    FormateadorUtils.formatearMoneda(item.getProducto().getPrecio() * item.getCantidad(), locale)
             };
             modelo.addRow(fila);
         }
-
-
     }
 
     public void setDatosCarrito(Carrito carrito) {
         txtCodigoCarrito.setText(String.valueOf(carrito.getCodigo()));
-
-        // También podrías poner la fecha si lo deseas:
-        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
-        txtFecha.setText(sdf.format(carrito.getFechaCreacion().getTime()));
+        txtFecha.setText(FormateadorUtils.formatearFecha(carrito.getFechaCreacion().getTime(), mensajeHandler.getLocale()));
     }
+
     public void limpiarCampos(){
         txtNombre.setText("");
         txtCodigo.setText("");
         txtPrecio.setText("");
     }
+
     public void mostrarMensaje(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
 
+    // Getters y setters (omito para brevedad, copia los tuyos)
 
-    public JComboBox getCmBoxCantidad() {
-        return cmBoxCantidad;
-    }
+    public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
+        setTitle(mensajeHandler.get("carrito.anadir.titulo"));
 
-    public void setCmBoxCantidad(JComboBox cmBoxCantidad) {
-        this.cmBoxCantidad = cmBoxCantidad;
+        lblCodigo.setText(mensajeHandler.get("carrito.anadir.lbl.codigo"));
+        lblNombre.setText(mensajeHandler.get("carrito.anadir.lbl.nombre"));
+        lblPrecio.setText(mensajeHandler.get("carrito.anadir.lbl.precio"));
+        lblCantidad.setText(mensajeHandler.get("carrito.anadir.lbl.cantidad"));
+        lblSubt.setText(mensajeHandler.get("carrito.anadir.lbl.subtotal"));
+        lblIva.setText(mensajeHandler.get("carrito.anadir.lbl.iva"));
+        lblTotal.setText(mensajeHandler.get("carrito.anadir.lbl.total"));
+        lblCodigoCarrito.setText(mensajeHandler.get("carrito.anadir.lbl.codigocarrito"));
+        lblFecha.setText(mensajeHandler.get("carrito.anadir.lbl.fecha"));
+        lblConsejo.setText(mensajeHandler.get("carrito.anadir.lbl.consejo"));
+
+        btnBuscar.setText(mensajeHandler.get("carrito.anadir.btn.buscar"));
+        btnAnadir.setText(mensajeHandler.get("carrito.anadir.btn.anadir"));
+        btnBorrar.setText(mensajeHandler.get("carrito.anadir.btn.borrar"));
+        btnGuardar.setText(mensajeHandler.get("carrito.anadir.btn.guardar"));
+        btnEliminarProductoC.setText(mensajeHandler.get("carrito.anadir.btn.eliminar"));
+        btnActualizarProductoC.setText(mensajeHandler.get("carrito.anadir.btn.actualizar"));
+
+        modelo.setColumnIdentifiers(new Object[]{
+                mensajeHandler.get("carrito.anadir.tbl.codigo"),
+                mensajeHandler.get("carrito.anadir.tbl.nombre"),
+                mensajeHandler.get("carrito.anadir.tbl.precio"),
+                mensajeHandler.get("carrito.anadir.tbl.cantidad"),
+                mensajeHandler.get("carrito.anadir.tbl.subtotal")
+        });
     }
 
     public JTextField getTxtCodigo() {
@@ -160,8 +189,8 @@ public class CarritoAñadirView extends JInternalFrame {
         return btnAnadir;
     }
 
-    public void setBtnAnadir(JButton añadirButton) {
-        this.btnAnadir = añadirButton;
+    public void setBtnAnadir(JButton btnAnadir) {
+        this.btnAnadir = btnAnadir;
     }
 
     public JTextField getTxtNombre() {
@@ -260,24 +289,28 @@ public class CarritoAñadirView extends JInternalFrame {
         this.panelPrincipal = panelPrincipal;
     }
 
-    public JTextField getTxtFecha() {
-        return txtFecha;
+    public JComboBox<String> getCmBoxCantidad() {
+        return cmBoxCantidad;
     }
 
-    public void setTxtFecha(JTextField txtFecha) {
-        this.txtFecha = txtFecha;
+    public void setCmBoxCantidad(JComboBox<String> cmBoxCantidad) {
+        this.cmBoxCantidad = cmBoxCantidad;
     }
 
     public JTextField getTxtCodigoCarrito() {
         return txtCodigoCarrito;
     }
 
-    public JButton getBtnGuardar() {
-        return btnGuardar;
+    public void setTxtCodigoCarrito(JTextField txtCodigoCarrito) {
+        this.txtCodigoCarrito = txtCodigoCarrito;
     }
 
-    public void setBtnGuardar(JButton btnGuardar) {
-        this.btnGuardar = btnGuardar;
+    public JTextField getTxtFecha() {
+        return txtFecha;
+    }
+
+    public void setTxtFecha(JTextField txtFecha) {
+        this.txtFecha = txtFecha;
     }
 
     public JButton getBtnBorrar() {
@@ -288,8 +321,44 @@ public class CarritoAñadirView extends JInternalFrame {
         this.btnBorrar = btnBorrar;
     }
 
-    public void setTxtCodigoCarrito(JTextField txtCodigoCarrito) {
-        this.txtCodigoCarrito = txtCodigoCarrito;
+    public JButton getBtnGuardar() {
+        return btnGuardar;
+    }
+
+    public void setBtnGuardar(JButton btnGuardar) {
+        this.btnGuardar = btnGuardar;
+    }
+
+    public JLabel getLblCodigoCarrito() {
+        return lblCodigoCarrito;
+    }
+
+    public void setLblCodigoCarrito(JLabel lblCodigoCarrito) {
+        this.lblCodigoCarrito = lblCodigoCarrito;
+    }
+
+    public JLabel getLblFecha() {
+        return lblFecha;
+    }
+
+    public void setLblFecha(JLabel lblFecha) {
+        this.lblFecha = lblFecha;
+    }
+
+    public JLabel getLblConsejo() {
+        return lblConsejo;
+    }
+
+    public void setLblConsejo(JLabel lblConsejo) {
+        this.lblConsejo = lblConsejo;
+    }
+
+    public JLabel getLblCodigo() {
+        return lblCodigo;
+    }
+
+    public void setLblCodigo(JLabel lblCodigo) {
+        this.lblCodigo = lblCodigo;
     }
 
     public JButton getBtnEliminarProductoC() {
@@ -307,6 +376,20 @@ public class CarritoAñadirView extends JInternalFrame {
     public void setBtnActualizarProductoC(JButton btnActualizarProductoC) {
         this.btnActualizarProductoC = btnActualizarProductoC;
     }
+
+    public DefaultTableModel getModelo() {
+        return modelo;
+    }
+
+    public void setModelo(DefaultTableModel modelo) {
+        this.modelo = modelo;
+    }
+
+    public MensajeInternacionalizacionHandler getMensajeHandler() {
+        return mensajeHandler;
+    }
+
+    public void setMensajeHandler(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajeHandler = mensajeHandler;
+    }
 }
-
-

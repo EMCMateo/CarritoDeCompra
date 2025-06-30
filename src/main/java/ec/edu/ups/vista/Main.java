@@ -12,46 +12,51 @@ import ec.edu.ups.dao.impl.UsuarioDAOMemoria;
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 
 public class Main {
 
-    // DAO únicos para compartir información entre vistas
     private static final UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
     private static final ProductoDAO productoDAO = new ProductoDAOMemoria();
     private static final CarritoDAO carritoDAO = new CarritoDAOMemoria();
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> {
-            // Vistas iniciales
-            LoginView loginView = new LoginView();
-            UserRegistroView userRegistroView = new UserRegistroView();
-            ListarUsuarioView listarUsuarioView = new ListarUsuarioView(usuarioDAO);
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                MensajeInternacionalizacionHandler mensajeHandler = new MensajeInternacionalizacionHandler("es", "EC");
+                LoginView loginView = new LoginView(mensajeHandler);
+                UserRegistroView userRegistroView = new UserRegistroView(mensajeHandler);
+                ListarUsuarioView listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
 
-            UsuarioController usuarioController = new UsuarioController(
-                    usuarioDAO,
-                    loginView,
-                    userRegistroView,
-                    listarUsuarioView
-            );
+                new UsuarioController(
+                        usuarioDAO,
+                        loginView,
+                        userRegistroView,
+                        listarUsuarioView,
+                        mensajeHandler
+                );
 
-            loginView.setVisible(true);
+                loginView.setVisible(true);
+            }
         });
     }
 
-    public static void iniciarApp(Usuario usuario) {
+    public static void iniciarApp(Usuario usuario, String len, String pais) {
+        MensajeInternacionalizacionHandler mensajeHandler = new MensajeInternacionalizacionHandler(len, pais);
+
         // Ventana principal
-        PrincipalView principalView = new PrincipalView();
+        PrincipalView principalView = new PrincipalView(mensajeHandler);
 
         // Vistas
-        ProductoAnadirView productoAnadirView = new ProductoAnadirView();
-        ProductoListaView productoListaView = new ProductoListaView();
-        ProductoEliminarView productoEliminarView = new ProductoEliminarView();
-        ProductoActualizarView productoActualizarView = new ProductoActualizarView();
-        CarritoAñadirView carritoAnadirView = new CarritoAñadirView();
-        ListarCarritoView listarCarritoView = new ListarCarritoView();
-        ListarUsuarioView listarUsuarioView = new ListarUsuarioView(usuarioDAO);
+        ProductoAnadirView productoAnadirView = new ProductoAnadirView(mensajeHandler);
+        ProductoListaView productoListaView = new ProductoListaView(mensajeHandler);
+        ProductoEliminarView productoEliminarView = new ProductoEliminarView(mensajeHandler);
+        ProductoActualizarView productoActualizarView = new ProductoActualizarView(mensajeHandler);
+        CarritoAñadirView carritoAnadirView = new CarritoAñadirView(mensajeHandler);
+        ListarCarritoView listarCarritoView = new ListarCarritoView(mensajeHandler);
+        ListarUsuarioView listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
 
         // Controladores
         ProductoController productoController = new ProductoController(
@@ -75,6 +80,41 @@ public class Main {
 
         configurarAccesoPorRol(usuario, principalView);
 
+        principalView.getMenuItemES().addActionListener(e -> {
+            mensajeHandler.setLenguaje("es", "EC");
+            principalView.setTextos(mensajeHandler);
+            productoAnadirView.setTextos(mensajeHandler);
+            productoListaView.setTextos(mensajeHandler);
+            productoEliminarView.setTextos(mensajeHandler);
+            productoActualizarView.setTextos(mensajeHandler);
+            carritoAnadirView.setTextos(mensajeHandler);
+            listarCarritoView.setTextos(mensajeHandler);
+            listarUsuarioView.setTextos(mensajeHandler);
+        });
+
+        principalView.getMenuItemEN().addActionListener(e -> {
+            mensajeHandler.setLenguaje("en", "US");
+            principalView.setTextos(mensajeHandler);
+            productoAnadirView.setTextos(mensajeHandler);
+            productoListaView.setTextos(mensajeHandler);
+            productoEliminarView.setTextos(mensajeHandler);
+            productoActualizarView.setTextos(mensajeHandler);
+            carritoAnadirView.setTextos(mensajeHandler);
+            listarCarritoView.setTextos(mensajeHandler);
+            listarUsuarioView.setTextos(mensajeHandler);
+        });
+
+        principalView.getMenuItemIT().addActionListener(e -> {
+            mensajeHandler.setLenguaje("it", "IT");
+            principalView.setTextos(mensajeHandler);
+            productoAnadirView.setTextos(mensajeHandler);
+            productoListaView.setTextos(mensajeHandler);
+            productoEliminarView.setTextos(mensajeHandler);
+            productoActualizarView.setTextos(mensajeHandler);
+            carritoAnadirView.setTextos(mensajeHandler);
+            listarCarritoView.setTextos(mensajeHandler);
+            listarUsuarioView.setTextos(mensajeHandler);
+        });
 
         principalView.getMenuItemCrearProducto().addActionListener(e -> {
             productoController.setProductoAnadirView(productoAnadirView);
@@ -119,7 +159,8 @@ public class Main {
             listarUsuarioView.setVisible(true);
         });
 
-        // Cerrar sesión
+
+
         principalView.getMenuItemCerrarSesion().addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(
                     principalView,
@@ -127,30 +168,23 @@ public class Main {
                     "Cerrar Sesión",
                     JOptionPane.YES_NO_OPTION
             );
-
-
             if (confirm == JOptionPane.YES_OPTION) {
                 principalView.dispose();
 
-                // Volver al login con los mismos DAOs
-                LoginView loginView = new LoginView();
-                UserRegistroView userRegistroView = new UserRegistroView();
-                new UsuarioController(usuarioDAO, loginView, userRegistroView, listarUsuarioView);
+                LoginView loginView = new LoginView(mensajeHandler);
+                UserRegistroView userRegistroView = new UserRegistroView(mensajeHandler);
+                new UsuarioController(usuarioDAO, loginView, userRegistroView, listarUsuarioView, mensajeHandler);
 
                 loginView.setVisible(true);
             }
         });
 
-        // Salir del sistema
         principalView.getMenuItemSalir().addActionListener(e -> System.exit(0));
-
-        // Mostrar ventana principal
         principalView.setVisible(true);
     }
 
     public static void configurarAccesoPorRol(Usuario usuario, PrincipalView principalView) {
         if (usuario.getRol() == Rol.CLIENTE) {
-
             principalView.getMenuItemCrearProducto().setEnabled(false);
             principalView.getMenuItemBuscarProducto().setEnabled(false);
             principalView.getMenuItemEliminarProducto().setEnabled(false);
