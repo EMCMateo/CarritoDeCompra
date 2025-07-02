@@ -1,15 +1,8 @@
 package ec.edu.ups.vista;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
+import javax.swing.*;
 
 public class LoginView extends JFrame {
     private JPanel panelPrincipal;
@@ -22,82 +15,50 @@ public class LoginView extends JFrame {
     private JLabel lblUsernameLogin;
     private JLabel lblRecuperacion;
     private JButton btnRecuperar;
+
     private MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler;
 
-    public LoginView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler){
+    public LoginView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
 
-        setTextos(mensajeInternacionalizacionHandler);
-        setContentPane(panelPrincipal);
-        setSize(500,500);
+        // ⚠️ NECESARIO para inicializar panelPrincipal y los componentes del .form
+        $$$setupUI$$$();
 
+        setContentPane(panelPrincipal);
+        setSize(500, 500);
         setTitle(mensajeInternacionalizacionHandler.get("login.titulo"));
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
-        setVisible(true);
         setLocationRelativeTo(null);
 
+        setTextos(mensajeInternacionalizacionHandler);
 
-
-
+        setVisible(true);
     }
 
     public void mostrarMensaje(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
+
     public void limpiarCampos() {
         txtUsername.setText("");
         txtPassword.setText("");
-    }
-
-
-
-    public JPanel getPanelPrincipal() {
-        return panelPrincipal;
-    }
-
-    public void setPanelPrincipal(JPanel panelPrincipal) {
-        this.panelPrincipal = panelPrincipal;
-    }
-
-    public JPanel getPanelSecundario() {
-        return panelSecundario;
-    }
-
-    public void setPanelSecundario(JPanel panelSecundario) {
-        this.panelSecundario = panelSecundario;
-    }
-
-    public JPasswordField getTxtPassword() {
-        return txtPassword;
-    }
-
-    public void setTxtPassword(JPasswordField txtPassword) {
-        this.txtPassword = txtPassword;
     }
 
     public JTextField getTxtUsername() {
         return txtUsername;
     }
 
-    public void setTxtUsername(JTextField txtUsername) {
-        this.txtUsername = txtUsername;
+    public JPasswordField getTxtPassword() {
+        return txtPassword;
     }
 
     public JButton getBtnIniciarSesion() {
         return btnIniciarSesion;
     }
 
-    public void setBtnIniciarSesion(JButton btnIniciarSesion) {
-        this.btnIniciarSesion = btnIniciarSesion;
-    }
-
     public JButton getBtnRegistro() {
         return btnRegistro;
-    }
-
-    public void setBtnRegistro(JButton btnRegistro) {
-        this.btnRegistro = btnRegistro;
     }
 
     public JButton getBtnRecuperar() {
@@ -116,12 +77,23 @@ public class LoginView extends JFrame {
         return lblPasswordLogin;
     }
 
-    public void setTextos(ec.edu.ups.util.MensajeInternacionalizacionHandler mensajeHandler) {
+    public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         setTitle(mensajeHandler.get("login.titulo"));
         lblUsernameLogin.setText(mensajeHandler.get("login.lbl.usuario"));
         lblPasswordLogin.setText(mensajeHandler.get("login.lbl.contrasena"));
         btnIniciarSesion.setText(mensajeHandler.get("login.btn.iniciar"));
         btnRegistro.setText(mensajeHandler.get("login.btn.registrarse"));
+        lblRecuperacion.setText(mensajeHandler.get("login.lbl.recuperar"));
+        btnRecuperar.setText(mensajeHandler.get("login.btn.recuperar"));
     }
 
+    // ⚠️ Asegúrate que este método existe (lo genera IntelliJ automáticamente)
+    private void $$$setupUI$$$() {
+        // Este método será generado automáticamente si usas el GUI Designer
+        // NO lo escribas tú manualmente
+    }
+
+    public JComponent $$$getRootComponent$$$() {
+        return panelPrincipal;
+    }
 }

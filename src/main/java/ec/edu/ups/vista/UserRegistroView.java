@@ -38,13 +38,14 @@ public class UserRegistroView extends JFrame{
 
     public UserRegistroView( MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler){
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
-        setTextos(mensajeInternacionalizacionHandler);
+
         setContentPane(panelPrincipal);
         setSize(500,500);
         setTitle(mensajeInternacionalizacionHandler.get("registro.titulo"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
         setLocationRelativeTo(null);
+        setTextos(mensajeInternacionalizacionHandler);
 
     }
     public void mostrarMensaje(String message) {

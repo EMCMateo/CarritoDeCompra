@@ -57,7 +57,7 @@ public class Main {
         CarritoAñadirView carritoAnadirView = new CarritoAñadirView(mensajeHandler);
         ListarCarritoView listarCarritoView = new ListarCarritoView(mensajeHandler);
         ListarUsuarioView listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
-        ListarCarritoUsuario listarCarritoUsuario = new ListarCarritoUsuario(mensajeHandler);
+        ListarCarritoUsuarioView listarCarritoUsuarioView = new ListarCarritoUsuarioView(mensajeHandler);
         
 
         // Controladores
@@ -79,7 +79,7 @@ public class Main {
                 listarCarritoView,
                 usuario, 
                 mensajeHandler,
-                listarCarritoUsuario,
+                listarCarritoUsuarioView,
                 usuarioDAO
         );
         carritoController.carritoEventos();
@@ -96,6 +96,7 @@ public class Main {
             carritoAnadirView.setTextos(mensajeHandler);
             listarCarritoView.setTextos(mensajeHandler);
             listarUsuarioView.setTextos(mensajeHandler);
+            listarCarritoUsuarioView.setTextos(mensajeHandler);
         });
 
         principalView.getMenuItemEN().addActionListener(e -> {
@@ -108,6 +109,7 @@ public class Main {
             carritoAnadirView.setTextos(mensajeHandler);
             listarCarritoView.setTextos(mensajeHandler);
             listarUsuarioView.setTextos(mensajeHandler);
+            listarCarritoUsuarioView.setTextos(mensajeHandler);
         });
 
         principalView.getMenuItemIT().addActionListener(e -> {
@@ -120,6 +122,7 @@ public class Main {
             carritoAnadirView.setTextos(mensajeHandler);
             listarCarritoView.setTextos(mensajeHandler);
             listarUsuarioView.setTextos(mensajeHandler);
+            listarCarritoUsuarioView.setTextos(mensajeHandler);
         });
 
         principalView.getMenuItemCrearProducto().addActionListener(e -> {
@@ -164,14 +167,18 @@ public class Main {
             principalView.getjDesktopPane().add(listarUsuarioView);
             listarUsuarioView.setVisible(true);
         });
+        principalView.getMenutItemListarCarritoUsuario().addActionListener(e -> {
+            principalView.getjDesktopPane().add(listarCarritoUsuarioView);
+            listarCarritoUsuarioView.setVisible(true);
+        });
 
 
 
         principalView.getMenuItemCerrarSesion().addActionListener(e -> {
             int confirm = JOptionPane.showConfirmDialog(
                     principalView,
-                    "¿Está seguro que desea cerrar sesión?",
-                    "Cerrar Sesión",
+                    mensajeHandler.get("menu.cerrar.confirmacion"),
+                    mensajeHandler.get("menu.cerrar.titulo"),
                     JOptionPane.YES_NO_OPTION
             );
             if (confirm == JOptionPane.YES_OPTION) {

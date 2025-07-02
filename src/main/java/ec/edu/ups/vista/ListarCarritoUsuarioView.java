@@ -10,7 +10,7 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
-public class ListarCarritoUsuario extends JInternalFrame{
+public class ListarCarritoUsuarioView extends JInternalFrame{
     private JScrollPane ScrollPane;
     private JTable tblCarrito;
     private JTextField txtCodigo;
@@ -22,7 +22,7 @@ public class ListarCarritoUsuario extends JInternalFrame{
     private MensajeInternacionalizacionHandler mensajeHandler;
     private DefaultTableModel modelo;
 
-    public ListarCarritoUsuario(MensajeInternacionalizacionHandler mensajeHandler){
+    public ListarCarritoUsuarioView(MensajeInternacionalizacionHandler mensajeHandler){
         this.mensajeHandler = mensajeHandler;
         inicializarComponentes(); // primero inicializa el modelo y tabla
         this.setTitle(mensajeHandler.get("panel.carrito.listar"));

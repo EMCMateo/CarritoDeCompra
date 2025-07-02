@@ -85,6 +85,7 @@
         </constraints>
         <properties>
           <font name="Century Gothic" style="1"/>
+          <foreground color="-262913"/>
           <text value="Nombre:"/>
         </properties>
       </component>
@@ -94,6 +95,7 @@
         </constraints>
         <properties>
           <font name="Century Gothic" style="1"/>
+          <foreground color="-262913"/>
           <text value="Precio:"/>
         </properties>
       </component>

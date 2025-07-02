@@ -9,8 +9,8 @@ import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.CarritoAñadirView;
-import ec.edu.ups.vista.ListarCarritoUsuario;
 import ec.edu.ups.vista.ListarCarritoView;
+import ec.edu.ups.vista.ListarCarritoUsuarioView;
 
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
@@ -29,10 +29,10 @@ public class CarritoController {
     private Usuario usuarioActual;
     private boolean visualizarCarrito = false;
     private final MensajeInternacionalizacionHandler mensajeHandler;
-    private final ListarCarritoUsuario listarCarritoUsuario;
+    private final ListarCarritoUsuarioView listarCarritoUsuarioView;
     public CarritoController(CarritoDAO carritoDAO, CarritoAñadirView carritoAñadirView,
                              ProductoDAO productoDAO, Carrito carrito, ListarCarritoView listarCarritoView,
-                             Usuario usuarioActual, MensajeInternacionalizacionHandler mensajeHandler, ListarCarritoUsuario listarCarritoUsuario, UsuarioDAO usuarioDAO) {
+                             Usuario usuarioActual, MensajeInternacionalizacionHandler mensajeHandler, ListarCarritoUsuarioView listarCarritoUsuarioView, UsuarioDAO usuarioDAO) {
         this.productoDAO = productoDAO;
         this.carritoAñadirView = carritoAñadirView;
         this.carritoDAO = carritoDAO;
@@ -40,7 +40,7 @@ public class CarritoController {
         this.listarCarritoView = listarCarritoView;
         this.usuarioActual = usuarioActual;
         this.mensajeHandler = mensajeHandler;
-        this.listarCarritoUsuario = listarCarritoUsuario;
+        this.listarCarritoUsuarioView = listarCarritoUsuarioView;
     }
 
     public void carritoEventos() {
@@ -129,40 +129,40 @@ public class CarritoController {
                 }
             }
         });
-        listarCarritoUsuario.getBtnBuscar().addActionListener(e -> {
+        listarCarritoUsuarioView.getBtnBuscar().addActionListener(e -> {
             try {
-                String username = listarCarritoUsuario.getTxtCodigo().getText();
+                String username = listarCarritoUsuarioView.getTxtCodigo().getText();
                 Usuario usuario = usuarioDAO.buscarPorUsername(username);
                 if (usuario != null) {
                     List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
                     if (carritos.isEmpty()) {
-                        listarCarritoUsuario.mostrarMensaje(mensajeHandler.get("carrito.usuario.sin.carritos"));
+                        listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.sin.carritos"));
                     } else {
-                        listarCarritoUsuario.mostrarMensaje(
+                        listarCarritoUsuarioView.mostrarMensaje(
                                 mensajeHandler.get("carrito.usuario.tiene.carritos") + " " + carritos.size()
                         );
                     }
                 } else {
-                    listarCarritoUsuario.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
+                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
                 }
             } catch (NumberFormatException ex) {
-                listarCarritoUsuario.mostrarMensaje(mensajeHandler.get("producto.usuario.codigo.invalido"));
+                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("producto.usuario.codigo.invalido"));
             }
         });
 
 
-        listarCarritoUsuario.getBtnListar().addActionListener(e -> {
+        listarCarritoUsuarioView.getBtnListar().addActionListener(e -> {
             try {
-                String username = listarCarritoUsuario.getTxtCodigo().getText();
+                String username = listarCarritoUsuarioView.getTxtCodigo().getText();
                 Usuario usuario = usuarioDAO.buscarPorUsername(username);
                 if (usuario != null) {
                     List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
-                    listarCarritoUsuario.cargarDatos(carritos);
+                    listarCarritoUsuarioView.cargarDatos(carritos);
                 } else {
-                    listarCarritoUsuario.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
+                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
                 }
             } catch (NumberFormatException ex) {
-                listarCarritoUsuario.mostrarMensaje(mensajeHandler.get("producto.usuario.codigo.invalido"));
+                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("producto.usuario.codigo.invalido"));
             }
         });
 
