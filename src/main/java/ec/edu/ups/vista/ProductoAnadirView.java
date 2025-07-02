@@ -23,6 +23,7 @@ public class ProductoAnadirView extends JInternalFrame {
 
     public ProductoAnadirView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
+        this.setTitle(mensajeInternacionalizacionHandler.get("panel.producto.anadir"));
         setTextos(mensajeInternacionalizacionHandler);
         setContentPane(panelPrincipal);
         setTitle("Datos del Producto");

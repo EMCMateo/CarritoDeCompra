@@ -1,14 +1,22 @@
 package ec.edu.ups.vista;
 
+import java.util.List;
+import java.util.Locale;
+
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.util.List;
-import java.util.Locale;
 
 public class CarritoAñadirView extends JInternalFrame {
     private JTextField txtCodigo;
@@ -54,6 +62,7 @@ public class CarritoAñadirView extends JInternalFrame {
         setLocation(200 , 125);
         setVisible(true);
         cargarDatos();
+        this.setTitle(mensajeHandler.get("panel.carrito.anadir"));
 
         if (txtNombre.getText().isEmpty() && txtPrecio.getText().isEmpty()){
             btnAnadir.setEnabled(false);

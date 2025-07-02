@@ -1,8 +1,15 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
-import javax.swing.*;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 public class LoginView extends JFrame {
     private JPanel panelPrincipal;
@@ -13,18 +20,23 @@ public class LoginView extends JFrame {
     private JButton btnRegistro;
     private JLabel lblPasswordLogin;
     private JLabel lblUsernameLogin;
+    private JLabel lblRecuperacion;
+    private JButton btnRecuperar;
     private MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler;
 
     public LoginView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler){
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
+
         setTextos(mensajeInternacionalizacionHandler);
         setContentPane(panelPrincipal);
         setSize(500,500);
-        setTitle("Iniciar Sesion");
+
+        setTitle(mensajeInternacionalizacionHandler.get("login.titulo"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
         setVisible(true);
         setLocationRelativeTo(null);
+
 
 
 
@@ -86,6 +98,22 @@ public class LoginView extends JFrame {
 
     public void setBtnRegistro(JButton btnRegistro) {
         this.btnRegistro = btnRegistro;
+    }
+
+    public JButton getBtnRecuperar() {
+        return btnRecuperar;
+    }
+
+    public JLabel getLblRecuperacion() {
+        return lblRecuperacion;
+    }
+
+    public JLabel getLblUsernameLogin() {
+        return lblUsernameLogin;
+    }
+
+    public JLabel getLblPasswordLogin() {
+        return lblPasswordLogin;
     }
 
     public void setTextos(ec.edu.ups.util.MensajeInternacionalizacionHandler mensajeHandler) {

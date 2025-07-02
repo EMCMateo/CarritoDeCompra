@@ -1,8 +1,13 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+import javax.swing.JDesktopPane;
+import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
+import javax.swing.JPanel;
 
-import javax.swing.*;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 public class PrincipalView extends JFrame {
 
@@ -27,6 +32,7 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemES;
     private JMenuItem menuItemEN;
     private JMenuItem menuItemIT;
+    private JMenuItem menutItemListarCarritoUsuario;
     private JPanel panelPrincipal;
 
     private JDesktopPane jDesktopPane;
@@ -66,6 +72,7 @@ public class PrincipalView extends JFrame {
         menuItemES = new JMenuItem();
         menuItemEN = new JMenuItem();
         menuItemIT = new JMenuItem();
+        menutItemListarCarritoUsuario = new JMenuItem();
 
         menuProducto.add(menuItemCrearProducto);
         menuProducto.add(menuItemEliminarProducto);
@@ -74,6 +81,7 @@ public class PrincipalView extends JFrame {
 
         menuCarrito.add(menuItemCrearCarrito);
         menuCarrito.add(menuItemListarCarrito);
+        menuCarrito.add(menutItemListarCarritoUsuario);
 
         menuUsuarios.add(menuItemListarUsuarios);
 
@@ -114,6 +122,7 @@ public class PrincipalView extends JFrame {
         menuItemES.setText(mensajeInternacionalizacionHandler.get("menuitem.es"));
         menuItemEN.setText(mensajeInternacionalizacionHandler.get("menuitem.en"));
         menuItemIT.setText(mensajeInternacionalizacionHandler.get("menuitem.it"));
+        menutItemListarCarritoUsuario.setText(mensajeInternacionalizacionHandler.get("menuitem.listarcarritousuario"));
     }
 
     // ==== Getters para controladores ====
@@ -132,4 +141,5 @@ public class PrincipalView extends JFrame {
     public JMenuItem getMenuItemES() { return menuItemES; }
     public JMenuItem getMenuItemEN() { return menuItemEN; }
     public JMenuItem getMenuItemIT() { return menuItemIT; }
+    public JMenuItem getMenutItemListarCarritoUsuario() {return menutItemListarCarritoUsuario; }
 }

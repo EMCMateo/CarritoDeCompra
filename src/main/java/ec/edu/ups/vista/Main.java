@@ -57,6 +57,8 @@ public class Main {
         CarritoAñadirView carritoAnadirView = new CarritoAñadirView(mensajeHandler);
         ListarCarritoView listarCarritoView = new ListarCarritoView(mensajeHandler);
         ListarUsuarioView listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
+        ListarCarritoUsuario listarCarritoUsuario = new ListarCarritoUsuario(mensajeHandler);
+        
 
         // Controladores
         ProductoController productoController = new ProductoController(
@@ -65,7 +67,8 @@ public class Main {
                 productoListaView,
                 carritoAnadirView,
                 productoEliminarView,
-                productoActualizarView
+                productoActualizarView,
+                mensajeHandler
         );
 
         CarritoController carritoController = new CarritoController(
@@ -74,7 +77,10 @@ public class Main {
                 productoDAO,
                 new Carrito(),
                 listarCarritoView,
-                usuario
+                usuario, 
+                mensajeHandler,
+                listarCarritoUsuario,
+                usuarioDAO
         );
         carritoController.carritoEventos();
 

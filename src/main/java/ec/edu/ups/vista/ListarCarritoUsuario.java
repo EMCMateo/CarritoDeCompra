@@ -1,37 +1,28 @@
 package ec.edu.ups.vista;
 
-import java.text.SimpleDateFormat;
-import java.util.List;
-import java.util.Locale;
-
-import javax.swing.JButton;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
-import javax.swing.table.DefaultTableModel;
-
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
-public class ListarCarritoView extends JInternalFrame {
-    private JPanel panelPrincipal;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.text.SimpleDateFormat;
+import java.util.List;
+import java.util.Locale;
+
+public class ListarCarritoUsuario extends JInternalFrame{
+    private JScrollPane ScrollPane;
     private JTable tblCarrito;
     private JTextField txtCodigo;
     private JButton btnBuscar;
-    private JButton btnListar;
-    private JScrollPane ScrollPane;
     private JLabel lblCodigo;
+    private JButton btnListar;
     private JLabel lblConsejo;
+    private JPanel panelPrincipal;
+    private MensajeInternacionalizacionHandler mensajeHandler;
     private DefaultTableModel modelo;
 
-    private MensajeInternacionalizacionHandler mensajeHandler;
-
-    public ListarCarritoView(MensajeInternacionalizacionHandler mensajeHandler) {
+    public ListarCarritoUsuario(MensajeInternacionalizacionHandler mensajeHandler){
         this.mensajeHandler = mensajeHandler;
         inicializarComponentes(); // primero inicializa el modelo y tabla
         this.setTitle(mensajeHandler.get("panel.carrito.listar"));
@@ -129,3 +120,7 @@ public class ListarCarritoView extends JInternalFrame {
         return lblConsejo;
     }
 }
+
+
+
+

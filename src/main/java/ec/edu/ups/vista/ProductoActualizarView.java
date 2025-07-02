@@ -1,8 +1,13 @@
 package ec.edu.ups.vista;
 
-import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import javax.swing.*;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 public class ProductoActualizarView extends JInternalFrame {
     private JTextField txtCodigo;
@@ -30,7 +35,7 @@ public class ProductoActualizarView extends JInternalFrame {
         setIconifiable(true);
         setVisible(true);
         pack();
-
+        this.setTitle(mensajeHandler.get("panel.producto.actualizar"));
         setTextos(mensajeHandler);
     }
 

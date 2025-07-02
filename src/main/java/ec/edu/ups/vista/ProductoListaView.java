@@ -1,11 +1,17 @@
 package ec.edu.ups.vista;
 
+import java.util.List;
+
+import javax.swing.JButton;
+import javax.swing.JInternalFrame;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-import java.util.List;
 
 public class ProductoListaView extends JInternalFrame {
 
@@ -22,7 +28,7 @@ public class ProductoListaView extends JInternalFrame {
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
 
         inicializarComponentes(); // Inicializa componentes y modelo
-
+        this.setTitle(mensajeInternacionalizacionHandler.get("panel.producto.lista"));
         setTextos(mensajeInternacionalizacionHandler);
 
         setContentPane(panelPrincipal);

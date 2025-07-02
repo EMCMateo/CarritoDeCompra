@@ -30,7 +30,7 @@ public class ListarUsuarioView extends JInternalFrame {
     public ListarUsuarioView(UsuarioDAO usuarioDAO, MensajeInternacionalizacionHandler mensajeHandler) {
         this.usuarioDAO = usuarioDAO;
         this.mensajeHandler = mensajeHandler;
-
+        this.setTitle(mensajeHandler.get("panel.usuario.listar"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
         setClosable(true);

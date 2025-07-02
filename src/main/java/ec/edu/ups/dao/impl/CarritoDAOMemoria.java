@@ -3,6 +3,7 @@ package ec.edu.ups.dao.impl;
 import ec.edu.ups.dao.CarritoDAO;
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.modelo.Usuario;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -56,6 +57,14 @@ public class CarritoDAOMemoria implements CarritoDAO {
     @Override
     public List<Carrito> listarTodos() {
         return carritos;
+    }
+
+    
+    @Override
+    public List<Carrito> buscarPorUsuario(Usuario usuario) {
+        return carritos.stream()
+                .filter(c -> c.getUsuario() != null && c.getUsuario().equals(usuario))
+                .toList();
     }
 }
 
