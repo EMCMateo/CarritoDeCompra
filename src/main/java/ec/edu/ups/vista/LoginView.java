@@ -30,6 +30,7 @@ public class LoginView extends JFrame {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
         setLocationRelativeTo(null);
+        pack();
 
         setTextos(mensajeInternacionalizacionHandler);
 

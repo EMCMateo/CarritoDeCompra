@@ -46,6 +46,7 @@ public class UserRegistroView extends JFrame{
         setResizable(true);
         setLocationRelativeTo(null);
         setTextos(mensajeInternacionalizacionHandler);
+        pack();
 
     }
     public void mostrarMensaje(String message) {
