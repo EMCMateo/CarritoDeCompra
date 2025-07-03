@@ -6,7 +6,6 @@ import javax.swing.*;
 
 public class LoginView extends JFrame {
     private JPanel panelPrincipal;
-    private JPanel panelSecundario;
     private JPasswordField txtPassword;
     private JTextField txtUsername;
     private JButton btnIniciarSesion;
@@ -25,9 +24,8 @@ public class LoginView extends JFrame {
     }
 
     private void inicializarComponentes() {
-        // ⚠️ NECESARIO para inicializar panelPrincipal y los componentes del .form
-        $$$setupUI$$$();
 
+        System.out.println("Panel principal: " + panelPrincipal);
         setContentPane(panelPrincipal);
         setSize(500, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
@@ -42,11 +40,7 @@ public class LoginView extends JFrame {
         setVisible(true);
     }
 
-    // ⚠️ Asegúrate que este método existe (lo genera IntelliJ automáticamente)
-    private void $$$setupUI$$$() {
-        // Este método será generado automáticamente si usas el GUI Designer
-        // NO lo escribas tú manualmente
-    }
+
 
     public void mostrarMensaje(String message) {
         JOptionPane.showMessageDialog(this, message);
@@ -99,7 +93,5 @@ public class LoginView extends JFrame {
         btnRecuperar.setText(mensajeHandler.get("login.btn.recuperar"));
     }
 
-    public JComponent $$$getRootComponent$$$() {
-        return panelPrincipal;
-    }
+
 }

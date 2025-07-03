@@ -20,8 +20,9 @@ public class ProductoListaView extends JInternalFrame {
 
     public ProductoListaView(MensajeInternacionalizacionHandler mensajeHandler) {
         initComponents();
-        setTextos(mensajeHandler);
         configurarVentana();
+        setTextos(mensajeHandler);
+
     }
 
     private void initComponents() {

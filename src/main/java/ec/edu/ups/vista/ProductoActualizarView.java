@@ -16,11 +16,14 @@ public class ProductoActualizarView extends JInternalFrame {
     private JLabel lblCodigo;
     private JLabel lblNombre;
     private JLabel lblPrecio;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
     public ProductoActualizarView(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajeHandler = mensajeHandler;
         initComponents();
-        setTextos(mensajeHandler);
         configurarVentana();
+        setTextos(mensajeHandler);
+
     }
 
     private void initComponents() {
@@ -29,7 +32,7 @@ public class ProductoActualizarView extends JInternalFrame {
 
     private void configurarVentana() {
         setContentPane(panelPrincipal);
-        setTitle("Actualizar Producto");
+        setTitle(mensajeHandler.get("producto.actualizar.titulo"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setClosable(true);
         setIconifiable(true);

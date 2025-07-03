@@ -61,7 +61,7 @@ public class ListarUsuarioView extends JInternalFrame {
         tblUsuarios.setModel(modelo);
         tblUsuarios.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
 
-        // Añadir MouseListener que detecta clics en la columna del botón
+
         tblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {

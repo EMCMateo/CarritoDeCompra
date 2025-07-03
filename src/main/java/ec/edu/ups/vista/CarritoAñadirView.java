@@ -42,17 +42,15 @@ public class CarritoAñadirView extends JInternalFrame {
 
     public CarritoAñadirView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
-        inicializarComponentes();
-        setTextos(mensajeHandler);
-
-        setContentPane(panelPrincipal);
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
-        setSize(1000, 600);
+        inicializarComponentes(); // si usas GUI Builder
         setClosable(true);
-        setIconifiable(true);
         setResizable(true);
-        setLocation(200, 125);
-        setVisible(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setSize(600, 400); // si no usas pack()
+        setTextos(mensajeHandler); // si tienes texto internacionalizable
+        setContentPane(panelPrincipal);
+
     }
 
     private void inicializarComponentes() {

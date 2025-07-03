@@ -26,7 +26,7 @@ public class ListarCarritoView extends JInternalFrame {
     public ListarCarritoView(MensajeInternacionalizacionHandler mh) {
         this.mensajeHandler = mh;
         inicializarComponentes();
-        setTextos(mh);
+
 
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
@@ -35,6 +35,7 @@ public class ListarCarritoView extends JInternalFrame {
         setIconifiable(true);
         setResizable(true);
         setVisible(true);
+        setTextos(mh);
     }
 
     private void inicializarComponentes() {

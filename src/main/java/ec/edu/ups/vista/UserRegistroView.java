@@ -32,11 +32,11 @@ public class UserRegistroView extends JFrame{
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
 
         inicializarComponentes();
+        setTextos(mensajeInternacionalizacionHandler);
     }
 
     private void inicializarComponentes() {
-        // ⚠️ NECESARIO para inicializar panelPrincipal y los componentes del .form
-        $$$setupUI$$$();
+
 
         setContentPane(panelPrincipal);
         setSize(500, 500);
@@ -47,16 +47,11 @@ public class UserRegistroView extends JFrame{
         setTextos(mensajeInternacionalizacionHandler);
 
         pack();
-        setLocationRelativeTo(null); // Centrar después de pack()
+        setLocationRelativeTo(null);
 
         setVisible(true);
     }
 
-    // ⚠️ Asegúrate que este método existe (lo genera IntelliJ automáticamente)
-    private void $$$setupUI$$$() {
-        // Este método será generado automáticamente si usas el GUI Designer
-        // NO lo escribas tú manualmente
-    }
 
     public void mostrarMensaje(String message) {
         JOptionPane.showMessageDialog(this, message);
@@ -175,7 +170,4 @@ public class UserRegistroView extends JFrame{
         lblPasswordConfirm.setText(mensajeHandler.get("registro.label.repetir"));
     }
 
-    public JComponent $$$getRootComponent$$$() {
-        return panelPrincipal;
-    }
 }

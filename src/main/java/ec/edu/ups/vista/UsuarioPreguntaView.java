@@ -29,17 +29,14 @@ public class UsuarioPreguntaView extends JFrame {
         this.mensajeHandler = mensajeHandler;
         this.onGuardar = onGuardar;
 
-        // Esto es generado por el GUI Builder:
-        // asigna panelPrincipal (con todos tus btn, labels, textfields)
-        initComponents();
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
         setSize(400,300);
         setLocationRelativeTo(null);
         setTitle(mensajeHandler.get("registro.pregunta.titulo"));
-
-        cargarTextos();
         cargarEventos();
+        cargarTextos();
+
     }
 
     private void cargarTextos() {
@@ -68,7 +65,5 @@ public class UsuarioPreguntaView extends JFrame {
             dispose();         // Cierra esta ventana
         });
     }
-    private void initComponents() {
-        // Este método debe estar generado automáticamente por tu GUI Builder (no modifiques manualmente)
-    }
+
 }

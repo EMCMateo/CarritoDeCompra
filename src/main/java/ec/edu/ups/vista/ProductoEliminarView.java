@@ -16,11 +16,14 @@ public class ProductoEliminarView extends JInternalFrame {
     private JTextField txtPrecio;
     private JLabel lblNombre;
     private JLabel lblPrecio;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
     public ProductoEliminarView(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajeHandler = mensajeHandler;
         initComponents();
-        setTextos(mensajeHandler);
         configurarVentana();
+        setTextos(mensajeHandler);
+
     }
 
     private void initComponents() {
@@ -29,7 +32,7 @@ public class ProductoEliminarView extends JInternalFrame {
 
     private void configurarVentana() {
         setContentPane(panelPrincipal);
-        setTitle("Eliminar Producto");
+        setTitle(mensajeHandler.get("producto.eliminar.titulo"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setClosable(true);
         setIconifiable(true);
