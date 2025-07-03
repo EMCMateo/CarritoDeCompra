@@ -10,7 +10,7 @@
       <foreground color="-328449"/>
     </properties>
     <border type="bevel-lowered" title="Eliminar Productos" title-justification="2" title-position="2">
-      <font name="Century Gothic" size="14" style="2"/>
+      <font name="Century Gothic" size="14" style="1"/>
       <title-color color="-328449"/>
     </border>
     <children>

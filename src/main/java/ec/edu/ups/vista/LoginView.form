@@ -70,6 +70,7 @@
             </constraints>
             <properties>
               <font name="Century Gothic" style="1"/>
+              <foreground color="-262913"/>
               <text value="¿Olvidaste tu contraseña?"/>
             </properties>
           </component>

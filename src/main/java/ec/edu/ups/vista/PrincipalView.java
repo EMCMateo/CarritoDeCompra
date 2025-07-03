@@ -20,6 +20,8 @@ public class PrincipalView extends JFrame {
     private JMenu menuIdiomas;
     private JMenu menuSalir;
 
+    private MiJDesktopPane desktop;
+
     private JMenuItem menuItemCrearProducto;
     private JMenuItem menuItemEliminarProducto;
     private JMenuItem menuItemActualizarProducto;
@@ -35,15 +37,15 @@ public class PrincipalView extends JFrame {
     private JMenuItem menutItemListarCarritoUsuario;
     private JPanel panelPrincipal;
 
-    private JDesktopPane jDesktopPane;
 
     public PrincipalView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
 
+
         inicializarComponentes();
         setTextos(mensajeInternacionalizacionHandler);
 
-        setContentPane(jDesktopPane);
+        setContentPane(desktop);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setExtendedState(JFrame.MAXIMIZED_BOTH);
         setLocationRelativeTo(null);
@@ -51,7 +53,7 @@ public class PrincipalView extends JFrame {
     }
 
     private void inicializarComponentes() {
-        jDesktopPane = new JDesktopPane();
+        desktop = new MiJDesktopPane(mensajeInternacionalizacionHandler);
         menuBar = new JMenuBar();
 
         menuProducto = new JMenu();
@@ -103,7 +105,7 @@ public class PrincipalView extends JFrame {
 
     public void setTextos(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
         setTitle(mensajeInternacionalizacionHandler.get("app.titulo"));
-
+        desktop.actualizarTextos();
         menuProducto.setText(mensajeInternacionalizacionHandler.get("menu.producto"));
         menuCarrito.setText(mensajeInternacionalizacionHandler.get("menu.carrito"));
         menuUsuarios.setText(mensajeInternacionalizacionHandler.get("menu.usuarios"));
@@ -126,9 +128,7 @@ public class PrincipalView extends JFrame {
     }
 
     // ==== Getters para controladores ====
-    public JDesktopPane getjDesktopPane() {
-        return jDesktopPane;
-    }
+
     public JMenuItem getMenuItemCrearProducto() { return menuItemCrearProducto; }
     public JMenuItem getMenuItemEliminarProducto() { return menuItemEliminarProducto; }
     public JMenuItem getMenuItemActualizarProducto() { return menuItemActualizarProducto; }
@@ -142,4 +142,9 @@ public class PrincipalView extends JFrame {
     public JMenuItem getMenuItemEN() { return menuItemEN; }
     public JMenuItem getMenuItemIT() { return menuItemIT; }
     public JMenuItem getMenutItemListarCarritoUsuario() {return menutItemListarCarritoUsuario; }
+
+    public MiJDesktopPane getDesktop() {
+        return desktop;
+    }
+
 }

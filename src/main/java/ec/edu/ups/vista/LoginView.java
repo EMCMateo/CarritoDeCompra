@@ -21,20 +21,31 @@ public class LoginView extends JFrame {
     public LoginView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
 
+        inicializarComponentes();
+    }
+
+    private void inicializarComponentes() {
         // ⚠️ NECESARIO para inicializar panelPrincipal y los componentes del .form
         $$$setupUI$$$();
 
         setContentPane(panelPrincipal);
         setSize(500, 500);
-        setTitle(mensajeInternacionalizacionHandler.get("login.titulo"));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
         setLocationRelativeTo(null);
-        pack();
 
         setTextos(mensajeInternacionalizacionHandler);
 
+        pack();
+        setLocationRelativeTo(null); // Centrar después de pack()
+
         setVisible(true);
+    }
+
+    // ⚠️ Asegúrate que este método existe (lo genera IntelliJ automáticamente)
+    private void $$$setupUI$$$() {
+        // Este método será generado automáticamente si usas el GUI Designer
+        // NO lo escribas tú manualmente
     }
 
     public void mostrarMensaje(String message) {
@@ -86,12 +97,6 @@ public class LoginView extends JFrame {
         btnRegistro.setText(mensajeHandler.get("login.btn.registrarse"));
         lblRecuperacion.setText(mensajeHandler.get("login.lbl.recuperar"));
         btnRecuperar.setText(mensajeHandler.get("login.btn.recuperar"));
-    }
-
-    // ⚠️ Asegúrate que este método existe (lo genera IntelliJ automáticamente)
-    private void $$$setupUI$$$() {
-        // Este método será generado automáticamente si usas el GUI Designer
-        // NO lo escribas tú manualmente
     }
 
     public JComponent $$$getRootComponent$$$() {

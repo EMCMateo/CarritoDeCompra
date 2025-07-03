@@ -48,4 +48,5 @@ public class Pregunta {
     public int hashCode() {
         return Objects.hash(id);
     }
+
 }

@@ -8,7 +8,6 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-import javax.swing.table.TableCellEditor;
 import java.awt.*;
 import java.util.List;
 
@@ -30,17 +29,29 @@ public class ListarUsuarioView extends JInternalFrame {
     public ListarUsuarioView(UsuarioDAO usuarioDAO, MensajeInternacionalizacionHandler mensajeHandler) {
         this.usuarioDAO = usuarioDAO;
         this.mensajeHandler = mensajeHandler;
-        this.setTitle(mensajeHandler.get("panel.usuario.listar"));
+
+        // Configurar propiedades del JInternalFrame
+        setTitle(mensajeHandler.get("panel.usuario.listar"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        setVisible(true);
 
+        // Verificar que panelPrincipal no sea null
+        if (panelPrincipal == null) {
+            throw new IllegalStateException("panelPrincipal no está inicializado. Verifica el archivo .form.");
+        }
+
+        // Establecer el contentPane
         setContentPane(panelPrincipal);
 
-        modelo = new DefaultTableModel(new Object[]{mensajeHandler.get("usuario.listar.tabla.usuario"), mensajeHandler.get("usuario.listar.tabla.rol"), mensajeHandler.get("usuario.listar.tabla.eliminar")}, 0) {
+        // Inicializar el modelo de la tabla
+        modelo = new DefaultTableModel(new Object[]{
+                mensajeHandler.get("usuario.listar.tabla.usuario"),
+                mensajeHandler.get("usuario.listar.tabla.rol"),
+                mensajeHandler.get("usuario.listar.tabla.eliminar")
+        }, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -50,7 +61,7 @@ public class ListarUsuarioView extends JInternalFrame {
         tblUsuarios.setModel(modelo);
         tblUsuarios.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
 
-// Añadir MouseListener que detecta clics en la columna del botón
+        // Añadir MouseListener que detecta clics en la columna del botón
         tblUsuarios.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
@@ -81,9 +92,7 @@ public class ListarUsuarioView extends JInternalFrame {
             }
         });
 
-
-
-        // Eventos
+        // Configurar eventos de los botones
         btnListarTodos.addActionListener(e -> cargarDatos(usuarioDAO.listarTodos()));
         btnClientes.addActionListener(e -> cargarDatos(usuarioDAO.listarClientes()));
         btnAdmin.addActionListener(e -> cargarDatos(usuarioDAO.listarAdmin()));
@@ -97,8 +106,11 @@ public class ListarUsuarioView extends JInternalFrame {
             }
         });
 
-
+        // Configurar textos de la interfaz
         setTextos();
+
+        // Hacer visible la ventana al final
+        setVisible(true);
     }
 
     public void setTextos() {
@@ -172,28 +184,14 @@ public class ListarUsuarioView extends JInternalFrame {
             return this;
         }
     }
-
-
-
-
-
-
-
-
-public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
-        setTitle(mensajeHandler.get("usuario.listar.titulo"));
-        lblListar.setText(mensajeHandler.get("usuario.listar.lbl.titulo"));
-        lblUsernameUsuarioView.setText(mensajeHandler.get("usuario.listar.lbl.usuario"));
-
-        btnBuscar.setText(mensajeHandler.get("usuario.listar.btn.buscar"));
-        btnClientes.setText(mensajeHandler.get("usuario.listar.btn.clientes"));
-        btnAdmin.setText(mensajeHandler.get("usuario.listar.btn.admin"));
-        btnListarTodos.setText(mensajeHandler.get("usuario.listar.btn.todos"));
-
-        modelo.setColumnIdentifiers(new Object[]{
-                mensajeHandler.get("usuario.listar.tabla.usuario"),
-                mensajeHandler.get("usuario.listar.tabla.rol"),
-                mensajeHandler.get("usuario.listar.tabla.eliminar")
-        });
+    /**
+     * Actualiza el mensajeHandler y refresca los textos para nuevo idioma.
+     */
+    public void actualizarMensajeHandler(MensajeInternacionalizacionHandler nuevoHandler) {
+        this.mensajeHandler = nuevoHandler;
+        setTextos();
     }
+
+
+    // Eliminar el método duplicado setTextos(MensajeInternacionalizacionHandler)
 }

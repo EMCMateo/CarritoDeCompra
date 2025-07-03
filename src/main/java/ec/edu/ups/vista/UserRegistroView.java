@@ -3,14 +3,7 @@ package ec.edu.ups.vista;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JButton;
-import javax.swing.JFrame;
-import javax.swing.JInternalFrame;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
@@ -33,22 +26,38 @@ public class UserRegistroView extends JFrame{
     private JTextField txtRespuesta3;
     private MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler;
 
-
     private List<String> preguntasMostradas;
 
-    public UserRegistroView( MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler){
+    public UserRegistroView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler){
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
 
+        inicializarComponentes();
+    }
+
+    private void inicializarComponentes() {
+        // ⚠️ NECESARIO para inicializar panelPrincipal y los componentes del .form
+        $$$setupUI$$$();
+
         setContentPane(panelPrincipal);
-        setSize(500,500);
-        setTitle(mensajeInternacionalizacionHandler.get("registro.titulo"));
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setSize(500, 500);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
         setLocationRelativeTo(null);
-        setTextos(mensajeInternacionalizacionHandler);
-        pack();
 
+        setTextos(mensajeInternacionalizacionHandler);
+
+        pack();
+        setLocationRelativeTo(null); // Centrar después de pack()
+
+        setVisible(true);
     }
+
+    // ⚠️ Asegúrate que este método existe (lo genera IntelliJ automáticamente)
+    private void $$$setupUI$$$() {
+        // Este método será generado automáticamente si usas el GUI Designer
+        // NO lo escribas tú manualmente
+    }
+
     public void mostrarMensaje(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
@@ -80,7 +89,6 @@ public class UserRegistroView extends JFrame{
     public List<String> getPreguntasMostradas() {
         return preguntasMostradas;
     }
-
 
     public JButton getBtnCancelar() {
         return btnCancelar;
@@ -165,11 +173,9 @@ public class UserRegistroView extends JFrame{
         lblUsername.setText(mensajeHandler.get("registro.label.usuario"));
         lblPassword.setText(mensajeHandler.get("registro.label.contraseña"));
         lblPasswordConfirm.setText(mensajeHandler.get("registro.label.repetir"));
-
     }
 
-
-
-
-
+    public JComponent $$$getRootComponent$$$() {
+        return panelPrincipal;
+    }
 }

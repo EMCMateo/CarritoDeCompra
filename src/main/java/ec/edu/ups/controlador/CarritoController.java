@@ -30,9 +30,11 @@ public class CarritoController {
     private boolean visualizarCarrito = false;
     private final MensajeInternacionalizacionHandler mensajeHandler;
     private final ListarCarritoUsuarioView listarCarritoUsuarioView;
+
     public CarritoController(CarritoDAO carritoDAO, CarritoAñadirView carritoAñadirView,
                              ProductoDAO productoDAO, Carrito carrito, ListarCarritoView listarCarritoView,
-                             Usuario usuarioActual, MensajeInternacionalizacionHandler mensajeHandler, ListarCarritoUsuarioView listarCarritoUsuarioView, UsuarioDAO usuarioDAO) {
+                             Usuario usuarioActual, MensajeInternacionalizacionHandler mensajeHandler,
+                             ListarCarritoUsuarioView listarCarritoUsuarioView, UsuarioDAO usuarioDAO) {
         this.productoDAO = productoDAO;
         this.carritoAñadirView = carritoAñadirView;
         this.carritoDAO = carritoDAO;
@@ -76,9 +78,7 @@ public class CarritoController {
             if (visualizarCarrito) return;
             carrito.vaciarCarrito();
             carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
-            carritoAñadirView.getTxtSubtotal().setText("");
-            carritoAñadirView.getTxtIVA().setText("");
-            carritoAñadirView.getTxtTotal().setText("");
+            limpiarTotales();
             carritoAñadirView.limpiarCampos();
         });
 
@@ -90,7 +90,7 @@ public class CarritoController {
                 JTable tabla = carritoAñadirView.getTblCarrito();
                 int fila = tabla.rowAtPoint(e.getPoint());
                 if (fila >= 0) {
-                    int codigoProducto = (int) tabla.getValueAt(fila, 0);
+                    int codigoProducto = Integer.parseInt(tabla.getValueAt(fila, 0).toString());
                     Object[] opciones = {
                             mensajeHandler.get("opcion.editar"),
                             mensajeHandler.get("opcion.eliminar"),
@@ -129,44 +129,33 @@ public class CarritoController {
                 }
             }
         });
+
         listarCarritoUsuarioView.getBtnBuscar().addActionListener(e -> {
-            try {
-                String username = listarCarritoUsuarioView.getTxtCodigo().getText();
-                Usuario usuario = usuarioDAO.buscarPorUsername(username);
-                if (usuario != null) {
-                    List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
-                    if (carritos.isEmpty()) {
-                        listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.sin.carritos"));
-                    } else {
-                        listarCarritoUsuarioView.mostrarMensaje(
-                                mensajeHandler.get("carrito.usuario.tiene.carritos") + " " + carritos.size()
-                        );
-                    }
+            String username = listarCarritoUsuarioView.getTxtCodigo().getText();
+            Usuario usuario = usuarioDAO.buscarPorUsername(username);
+            if (usuario != null) {
+                List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
+                if (carritos.isEmpty()) {
+                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.sin.carritos"));
                 } else {
-                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
+                    listarCarritoUsuarioView.mostrarMensaje(
+                            mensajeHandler.get("carrito.usuario.tiene.carritos") + " " + carritos.size());
                 }
-            } catch (NumberFormatException ex) {
-                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("producto.usuario.codigo.invalido"));
+            } else {
+                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
             }
         });
-
 
         listarCarritoUsuarioView.getBtnListar().addActionListener(e -> {
-            try {
-                String username = listarCarritoUsuarioView.getTxtCodigo().getText();
-                Usuario usuario = usuarioDAO.buscarPorUsername(username);
-                if (usuario != null) {
-                    List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
-                    listarCarritoUsuarioView.cargarDatos(carritos);
-                } else {
-                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
-                }
-            } catch (NumberFormatException ex) {
-                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("producto.usuario.codigo.invalido"));
+            String username = listarCarritoUsuarioView.getTxtCodigo().getText();
+            Usuario usuario = usuarioDAO.buscarPorUsername(username);
+            if (usuario != null) {
+                List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
+                listarCarritoUsuarioView.cargarDatos(carritos);
+            } else {
+                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
             }
         });
-
-
 
         listarCarritoView.getBtnListar().addActionListener(e -> listarCarrito());
 
@@ -180,7 +169,7 @@ public class CarritoController {
                 JTable tabla = listarCarritoView.getTblCarrito();
                 int fila = tabla.rowAtPoint(e.getPoint());
                 if (fila >= 0) {
-                    int codigoCarrito = (int) tabla.getValueAt(fila, 1);
+                    int codigoCarrito = Integer.parseInt(tabla.getValueAt(fila, 1).toString());
                     Object[] opciones = {
                             mensajeHandler.get("opcion.editar"),
                             mensajeHandler.get("opcion.eliminar"),
@@ -255,6 +244,12 @@ public class CarritoController {
         carritoAñadirView.getTxtTotal().setText(String.format("%.2f", carrito.calcularTotal()));
     }
 
+    private void limpiarTotales() {
+        carritoAñadirView.getTxtSubtotal().setText("");
+        carritoAñadirView.getTxtIVA().setText("");
+        carritoAñadirView.getTxtTotal().setText("");
+    }
+
     private void listarCarrito() {
         List<Carrito> carritos = carritoDAO.listarTodos();
         listarCarritoView.cargarDatos(carritos);
@@ -292,9 +287,7 @@ public class CarritoController {
         carrito = null;
         carritoAñadirView.cargarDatosTabla(List.of());
         carritoAñadirView.limpiarCampos();
-        carritoAñadirView.getTxtSubtotal().setText("");
-        carritoAñadirView.getTxtIVA().setText("");
-        carritoAñadirView.getTxtTotal().setText("");
+        limpiarTotales();
     }
 
     private void eliminarCarrito(int codigoCarrito) {
@@ -302,7 +295,8 @@ public class CarritoController {
         listarCarrito();
         listarCarritoView.mostrarMensaje(mensajeHandler.get("carrito.eliminado.ok"));
     }
-
-
-
 }
+
+
+
+

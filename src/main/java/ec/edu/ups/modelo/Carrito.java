@@ -10,7 +10,7 @@ public class Carrito {
     private final double IVA = 0.12;
     private GregorianCalendar fechaCreacion;
     private int codigo;
-    private Usuario usuario; // ✅ Nuevo atributo
+    private Usuario usuario;
     private List<ItemCarrito> items;
     private static int ultimoCodigo = 1;
 
