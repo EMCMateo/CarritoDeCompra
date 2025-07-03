@@ -20,6 +20,7 @@ public class ProductoEliminarView extends JInternalFrame {
 
     public ProductoEliminarView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
+        setContentPane(panelPrincipal);
         initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
@@ -31,7 +32,6 @@ public class ProductoEliminarView extends JInternalFrame {
     }
 
     private void configurarVentana() {
-        setContentPane(panelPrincipal);
         setTitle(mensajeHandler.get("producto.eliminar.titulo"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setClosable(true);

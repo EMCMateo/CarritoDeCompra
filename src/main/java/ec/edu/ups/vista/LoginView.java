@@ -20,13 +20,14 @@ public class LoginView extends JFrame {
     public LoginView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
 
+        setContentPane(panelPrincipal);
         inicializarComponentes();
     }
 
     private void inicializarComponentes() {
 
         System.out.println("Panel principal: " + panelPrincipal);
-        setContentPane(panelPrincipal);
+
         setSize(500, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);

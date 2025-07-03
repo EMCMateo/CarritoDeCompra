@@ -29,6 +29,7 @@ public class ListarUsuarioView extends JInternalFrame {
     public ListarUsuarioView(UsuarioDAO usuarioDAO, MensajeInternacionalizacionHandler mensajeHandler) {
         this.usuarioDAO = usuarioDAO;
         this.mensajeHandler = mensajeHandler;
+        setContentPane(panelPrincipal);
 
         // Configurar propiedades del JInternalFrame
         setTitle(mensajeHandler.get("panel.usuario.listar"));
@@ -44,7 +45,7 @@ public class ListarUsuarioView extends JInternalFrame {
         }
 
         // Establecer el contentPane
-        setContentPane(panelPrincipal);
+
 
         // Inicializar el modelo de la tabla
         modelo = new DefaultTableModel(new Object[]{

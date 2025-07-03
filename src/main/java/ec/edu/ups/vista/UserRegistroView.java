@@ -30,7 +30,7 @@ public class UserRegistroView extends JFrame{
 
     public UserRegistroView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler){
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
-
+        setContentPane(panelPrincipal);
         inicializarComponentes();
         setTextos(mensajeInternacionalizacionHandler);
     }
@@ -38,7 +38,7 @@ public class UserRegistroView extends JFrame{
     private void inicializarComponentes() {
 
 
-        setContentPane(panelPrincipal);
+
         setSize(500, 500);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);

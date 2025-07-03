@@ -25,9 +25,10 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
 
     public ListarCarritoUsuarioView(MensajeInternacionalizacionHandler mh) {
         this.mensajeHandler = mh;
+        setContentPane(panelPrincipal);
         inicializarComponentes();
 
-        setContentPane(panelPrincipal);
+
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setSize(1000, 400);
         setClosable(true);

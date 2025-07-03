@@ -56,8 +56,7 @@ public class Main {
         MiJDesktopPane escritorio = principalView.getDesktop(); // importante
 
         // Vistas
-        // ProductoAnadirView se creará cada vez que se abra la ventana
-        ProductoAnadirView[] productoAnadirViewRef = new ProductoAnadirView[1];
+        ProductoAnadirView productoAnadirView = new ProductoAnadirView(mensajeHandler);
         ProductoListaView productoListaView = new ProductoListaView(mensajeHandler);
         ProductoEliminarView productoEliminarView = new ProductoEliminarView(mensajeHandler);
         ProductoActualizarView productoActualizarView = new ProductoActualizarView(mensajeHandler);
@@ -69,7 +68,8 @@ public class Main {
         UserRegistroView registroView = new UserRegistroView(mensajeHandler);
 
         // Controladores
-        // El controlador se creará cada vez que se cree la vista
+        new ProductoController(productoDAO, productoAnadirView, productoListaView,
+                carritoAnadirView, productoEliminarView, productoActualizarView, mensajeHandler).inicializarEventos();
 
         new CarritoController(carritoDAO, carritoAnadirView, productoDAO, new Carrito(), listarCarritoView,
                 usuario, mensajeHandler, listarCarritoUsuarioView, usuarioDAO).carritoEventos();
@@ -96,12 +96,7 @@ public class Main {
         });
 
         // Menús funcionales
-        principalView.getMenuItemCrearProducto().addActionListener(e -> {
-            productoAnadirViewRef[0] = new ProductoAnadirView(mensajeHandler);
-            new ProductoController(productoDAO, productoAnadirViewRef[0], productoListaView,
-                    carritoAnadirView, productoEliminarView, productoActualizarView, mensajeHandler).inicializarEventos();
-            abrirVentana(escritorio, productoAnadirViewRef[0]);
-        });
+        principalView.getMenuItemCrearProducto().addActionListener(e -> abrirVentana(escritorio, productoAnadirView));
         principalView.getMenuItemBuscarProducto().addActionListener(e -> abrirVentana(escritorio, productoListaView));
         principalView.getMenuItemEliminarProducto().addActionListener(e -> abrirVentana(escritorio, productoEliminarView));
         principalView.getMenuItemActualizarProducto().addActionListener(e -> abrirVentana(escritorio, productoActualizarView));
@@ -133,7 +128,7 @@ public class Main {
     private static void abrirVentana(JDesktopPane escritorio, JInternalFrame vista) {
         try {
             System.out.println("Abriendo vista: " + vista.getClass().getSimpleName());
-            if (!vista.isVisible()) {
+            if (vista.isVisible()) {
                 escritorio.add(vista);
                 vista.setVisible(true);
                 vista.setClosable(true);

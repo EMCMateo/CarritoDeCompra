@@ -22,18 +22,20 @@ public class ProductoAnadirView extends JInternalFrame {
     private JLabel lblPrecio;
 
     public ProductoAnadirView(MensajeInternacionalizacionHandler mensajeHandler) {
+        setContentPane(panelPrincipal);
         initComponents(); // Inicializar componentes primero
+        btnLimpiar.addActionListener(e -> limpiarCampos());
         setTextos(mensajeHandler); // Después ya puedes cambiar sus textos
         configurarVentana();
     }
 
     private void initComponents() {
 
-        btnLimpiar.addActionListener(e -> limpiarCampos());
+
     }
 
     private void configurarVentana() {
-        setContentPane(panelPrincipal);
+
         setTitle("Datos del Producto");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setClosable(true);

@@ -19,6 +19,7 @@ public class ProductoListaView extends JInternalFrame {
     private DefaultTableModel modelo;
 
     public ProductoListaView(MensajeInternacionalizacionHandler mensajeHandler) {
+        setContentPane(panelPrincipal);
         initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
@@ -38,7 +39,6 @@ public class ProductoListaView extends JInternalFrame {
     }
 
     private void configurarVentana() {
-        setContentPane(panelPrincipal);
         setTitle("Lista de Productos");
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setClosable(true);

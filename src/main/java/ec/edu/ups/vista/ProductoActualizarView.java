@@ -20,6 +20,7 @@ public class ProductoActualizarView extends JInternalFrame {
 
     public ProductoActualizarView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
+        setContentPane(panelPrincipal);
         initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
@@ -31,7 +32,7 @@ public class ProductoActualizarView extends JInternalFrame {
     }
 
     private void configurarVentana() {
-        setContentPane(panelPrincipal);
+
         setTitle(mensajeHandler.get("producto.actualizar.titulo"));
         setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
         setClosable(true);
