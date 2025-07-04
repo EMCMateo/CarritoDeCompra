@@ -1,173 +1,94 @@
 package ec.edu.ups.vista;
 
-import java.util.ArrayList;
-import java.util.List;
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 
-import ec.edu.ups.util.MensajeInternacionalizacionHandler;
-
-public class UserRegistroView extends JFrame{
+public class UserRegistroView extends JFrame {
     private JPanel panelPrincipal;
+    private JLabel lblNombreCompleto;
+    private JTextField txtNombreCompleto;
+    private JLabel lblCorreo;
+    private JTextField txtCorreo;
+    private JLabel lblTelefono;
+    private JTextField txtTelefono;
+    private JLabel lblFechaNacimiento;
+    private JTextField txtFechaNacimiento;
+    private JLabel lblUsername;
     private JTextField txtUsername;
+    private JLabel lblPassword;
     private JPasswordField pswContra;
+    private JLabel lblPasswordConfirm;
     private JPasswordField pswContra2;
     private JButton btnConfirmar;
     private JButton btnCancelar;
-    private JLabel lblUsername;
-    private JLabel lblPassword;
-    private JLabel lblPasswordConfirm;
-    private JTextField txtRespuesta1;
-    private JPanel panelFormulario;
-    private JLabel lblPregunta1;
-    private JLabel lblPregunta2;
-    private JTextField txtRespuesta2;
-    private JLabel lblPregunta3;
-    private JTextField txtRespuesta3;
-    private MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler;
 
-    private List<String> preguntasMostradas;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
-    public UserRegistroView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler){
-        this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
+    public UserRegistroView(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
-        inicializarComponentes();
-        setTextos(mensajeInternacionalizacionHandler);
-    }
-
-    private void inicializarComponentes() {
-
-
-
-        setSize(500, 500);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setResizable(true);
+        setSize(500, 400);
         setLocationRelativeTo(null);
-
-        setTextos(mensajeInternacionalizacionHandler);
-
-        pack();
-        setLocationRelativeTo(null);
-
-        setVisible(true);
+        setTitle(mensajeHandler.get("usuario.registro.panel.titulo"));
+        setTextos();
     }
 
 
-    public void mostrarMensaje(String message) {
-        JOptionPane.showMessageDialog(this, message);
+    public void setTextos() {
+        setTitle(mensajeHandler.get("usuario.registro.panel.titulo"));
+
+        lblNombreCompleto.setText(mensajeHandler.get("usuario.view.nombre"));
+        lblCorreo.setText(mensajeHandler.get("usuario.view.correo"));
+        lblTelefono.setText(mensajeHandler.get("usuario.view.telefono"));
+        lblFechaNacimiento.setText(mensajeHandler.get("usuario.view.fechaNac"));
+
+        lblUsername.setText(mensajeHandler.get("login.view.username"));
+        lblPassword.setText(mensajeHandler.get("login.view.password"));
+        lblPasswordConfirm.setText(mensajeHandler.get("login.view.repetir.password"));
+
+        btnConfirmar.setText(mensajeHandler.get("usuario.view.guardar"));
+        btnCancelar.setText(mensajeHandler.get("boton.cancelar"));
     }
 
-    public void limpiarCampos() {
-        txtUsername.setText("");
-        pswContra.setText("");
-        pswContra2.setText("");
+    public void mostrarMensaje(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje);
     }
 
-    public void mostrarPreguntas(List<String> preguntas) {
-        this.preguntasMostradas = preguntas;
-
-        if (preguntas.size() >= 3) {
-            lblPregunta1.setText(preguntas.get(0));
-            lblPregunta2.setText(preguntas.get(1));
-            lblPregunta3.setText(preguntas.get(2));
-        }
+    public JTextField getTxtNombreCompleto() {
+        return txtNombreCompleto;
     }
 
-    public List<String> getRespuestas() {
-        List<String> respuestas = new ArrayList<>();
-        respuestas.add(txtRespuesta1.getText().trim());
-        respuestas.add(txtRespuesta2.getText().trim());
-        respuestas.add(txtRespuesta3.getText().trim());
-        return respuestas;
+    public JTextField getTxtCorreo() {
+        return txtCorreo;
     }
 
-    public List<String> getPreguntasMostradas() {
-        return preguntasMostradas;
+    public JTextField getTxtTelefono() {
+        return txtTelefono;
     }
 
-    public JButton getBtnCancelar() {
-        return btnCancelar;
-    }
-
-    public JButton getBtnConfirmar() {
-        return btnConfirmar;
-    }
-
-    public JPasswordField getPswContra2() {
-        return pswContra2;
-    }
-
-    public JPasswordField getPswContra() {
-        return pswContra;
+    public JTextField getTxtFechaNacimiento() {
+        return txtFechaNacimiento;
     }
 
     public JTextField getTxtUsername() {
         return txtUsername;
     }
 
-    public JTextField getTxtRespuesta1() {
-        return txtRespuesta1;
+    public JPasswordField getPswContra() {
+        return pswContra;
     }
 
-    public void setTxtRespuesta1(JTextField txtRespuesta1) {
-        this.txtRespuesta1 = txtRespuesta1;
+    public JPasswordField getPswContra2() {
+        return pswContra2;
     }
 
-    public JPanel getPanelFormulario() {
-        return panelFormulario;
+    public JButton getBtnConfirmar() {
+        return btnConfirmar;
     }
 
-    public void setPanelFormulario(JPanel panelFormulario) {
-        this.panelFormulario = panelFormulario;
+    public JButton getBtnCancelar() {
+        return btnCancelar;
     }
-
-    public JLabel getLblPregunta1() {
-        return lblPregunta1;
-    }
-
-    public void setLblPregunta1(JLabel lblPregunta1) {
-        this.lblPregunta1 = lblPregunta1;
-    }
-
-    public JLabel getLblPregunta2() {
-        return lblPregunta2;
-    }
-
-    public void setLblPregunta2(JLabel lblPregunta2) {
-        this.lblPregunta2 = lblPregunta2;
-    }
-
-    public JTextField getTxtRespuesta2() {
-        return txtRespuesta2;
-    }
-
-    public void setTxtRespuesta2(JTextField txtRespuesta2) {
-        this.txtRespuesta2 = txtRespuesta2;
-    }
-
-    public JLabel getLblPregunta3() {
-        return lblPregunta3;
-    }
-
-    public void setLblPregunta3(JLabel lblPregunta3) {
-        this.lblPregunta3 = lblPregunta3;
-    }
-
-    public JTextField getTxtRespuesta3() {
-        return txtRespuesta3;
-    }
-
-    public void setTxtRespuesta3(JTextField txtRespuesta3) {
-        this.txtRespuesta3 = txtRespuesta3;
-    }
-
-    public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
-        setTitle(mensajeHandler.get("registro.titulo"));
-        btnConfirmar.setText(mensajeHandler.get("registro.btn.confirmar"));
-        btnCancelar.setText(mensajeHandler.get("registro.btn.cancelar"));
-        lblUsername.setText(mensajeHandler.get("registro.label.usuario"));
-        lblPassword.setText(mensajeHandler.get("registro.label.contraseña"));
-        lblPasswordConfirm.setText(mensajeHandler.get("registro.label.repetir"));
-    }
-
 }

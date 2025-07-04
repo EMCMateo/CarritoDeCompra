@@ -19,6 +19,7 @@ public class PrincipalView extends JFrame {
     private JMenu menuUsuarios;
     private JMenu menuIdiomas;
     private JMenu menuSalir;
+    private JMenu menuYo;
 
     private MiJDesktopPane desktop;
 
@@ -35,6 +36,7 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemEN;
     private JMenuItem menuItemIT;
     private JMenuItem menutItemListarCarritoUsuario;
+    private JMenuItem menuItemYo;
     private JPanel panelPrincipal;
 
 
@@ -61,8 +63,10 @@ public class PrincipalView extends JFrame {
         menuUsuarios = new JMenu();
         menuIdiomas = new JMenu();
         menuSalir = new JMenu();
+        menuYo = new JMenu();
 
         menuItemCrearProducto = new JMenuItem();
+        menuItemYo = new JMenuItem();
         menuItemEliminarProducto = new JMenuItem();
         menuItemActualizarProducto = new JMenuItem();
         menuItemBuscarProducto = new JMenuItem();
@@ -94,11 +98,14 @@ public class PrincipalView extends JFrame {
         menuSalir.add(menuItemCerrarSesion);
         menuSalir.add(menuItemSalir);
 
+        menuYo.add(menuItemYo);
+
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);
         menuBar.add(menuUsuarios);
         menuBar.add(menuIdiomas);
         menuBar.add(menuSalir);
+        menuBar.add(menuYo);
 
         setJMenuBar(menuBar);
     }
@@ -111,6 +118,7 @@ public class PrincipalView extends JFrame {
         menuUsuarios.setText(mensajeInternacionalizacionHandler.get("menu.usuarios"));
         menuIdiomas.setText(mensajeInternacionalizacionHandler.get("menu.idiomas"));
         menuSalir.setText(mensajeInternacionalizacionHandler.get("menu.salir"));
+        menuYo.setText(mensajeInternacionalizacionHandler.get("menu.yo"));
 
         menuItemCrearProducto.setText(mensajeInternacionalizacionHandler.get("menuitem.crearproducto"));
         menuItemEliminarProducto.setText(mensajeInternacionalizacionHandler.get("menuitem.eliminarproducto"));
@@ -124,6 +132,7 @@ public class PrincipalView extends JFrame {
         menuItemES.setText(mensajeInternacionalizacionHandler.get("menuitem.es"));
         menuItemEN.setText(mensajeInternacionalizacionHandler.get("menuitem.en"));
         menuItemIT.setText(mensajeInternacionalizacionHandler.get("menuitem.it"));
+        menuItemYo.setText(mensajeInternacionalizacionHandler.get("menu.yo"));
         menutItemListarCarritoUsuario.setText(mensajeInternacionalizacionHandler.get("menuitem.listarcarritousuario"));
     }
 
@@ -142,7 +151,7 @@ public class PrincipalView extends JFrame {
     public JMenuItem getMenuItemEN() { return menuItemEN; }
     public JMenuItem getMenuItemIT() { return menuItemIT; }
     public JMenuItem getMenutItemListarCarritoUsuario() {return menutItemListarCarritoUsuario; }
-
+    public JMenuItem getMenuItemYo(){return menuItemYo;}
     public MiJDesktopPane getDesktop() {
         return desktop;
     }

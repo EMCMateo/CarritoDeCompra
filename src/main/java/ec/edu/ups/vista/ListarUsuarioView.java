@@ -6,6 +6,7 @@ import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
@@ -33,7 +34,7 @@ public class ListarUsuarioView extends JInternalFrame {
 
         // Configurar propiedades del JInternalFrame
         setTitle(mensajeHandler.get("panel.usuario.listar"));
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setSize(1000, 400);
         setClosable(true);
         setIconifiable(true);
@@ -122,6 +123,11 @@ public class ListarUsuarioView extends JInternalFrame {
         if (btnClientes != null) btnClientes.setText(mensajeHandler.get("usuario.listar.btn.clientes"));
         if (btnAdmin != null) btnAdmin.setText(mensajeHandler.get("usuario.listar.btn.admin"));
         if (btnListarTodos != null) btnListarTodos.setText(mensajeHandler.get("usuario.listar.btn.todos"));
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajeHandler.get("usuario.listar.panel.titulo"));
+            panelPrincipal.repaint();
+        }
 
         modelo.setColumnIdentifiers(new Object[]{
                 mensajeHandler.get("usuario.listar.tabla.usuario"),

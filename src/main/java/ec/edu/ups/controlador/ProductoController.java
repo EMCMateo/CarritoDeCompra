@@ -32,6 +32,8 @@ public class ProductoController {
         this.productoEliminarView = productoEliminarView;
         this.productoActualizarView = productoActualizarView;
         this.mensajeHandler = mensajeHandler;
+
+        inicializarEventos();
     }
 
     public void inicializarEventos() {
@@ -45,6 +47,12 @@ public class ProductoController {
         productoAnadirView.getBtnAceptar().addActionListener(e -> {
             try {
                 int codigo = Integer.parseInt(productoAnadirView.getTxtCodigo().getText());
+
+                if (productoDAO.buscarPorCodigo(codigo) != null) {
+                    productoAnadirView.mostrarMensaje(mensajeHandler.get("producto.codigo.repetido"));
+                    return;
+                }
+
                 String nombre = productoAnadirView.getTxtNombre().getText();
                 double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
 
@@ -59,21 +67,31 @@ public class ProductoController {
     }
 
     private void configurarEventosLista() {
-        productoListaView.getBtnListar().addActionListener(e -> {
-            List<Producto> productos = productoDAO.listarTodos();
-            productoListaView.cargarDatos(productos);
-        });
+        // Listar todos los productos
+        productoListaView.getBtnListar().addActionListener(e -> listarTodosProductos());
 
-        productoListaView.getBtnBuscar().addActionListener(e -> {
-            try {
-                int codigo = Integer.parseInt(productoListaView.getTxtBuscar().getText());
-                Producto p = productoDAO.buscarPorCodigo(codigo);
-                productoListaView.cargarDatos(p != null ? List.of(p) : List.of());
-                if (p == null) productoListaView.mostrarMensaje(mensajeHandler.get("producto.no.encontrado"));
-            } catch (NumberFormatException ex) {
-                productoListaView.mostrarMensaje(mensajeHandler.get("producto.codigo.invalido"));
+        // Buscar producto por código
+        productoListaView.getBtnBuscar().addActionListener(e -> buscarProductoPorCodigo());
+    }
+
+    private void listarTodosProductos() {
+        List<Producto> productos = productoDAO.listarTodos();
+        productoListaView.cargarDatos(productos);
+    }
+
+    private void buscarProductoPorCodigo() {
+        try {
+            int codigo = Integer.parseInt(productoListaView.getTxtBuscar().getText());
+            Producto p = productoDAO.buscarPorCodigo(codigo);
+            if (p != null) {
+                productoListaView.cargarDatos(List.of(p));
+            } else {
+                productoListaView.mostrarMensaje(mensajeHandler.get("producto.no.encontrado"));
+                productoListaView.cargarDatos(List.of());
             }
-        });
+        } catch (NumberFormatException ex) {
+            productoListaView.mostrarMensaje(mensajeHandler.get("producto.codigo.invalido"));
+        }
     }
 
     private void configurarEventosActualizar() {

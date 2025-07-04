@@ -151,7 +151,7 @@ public class CarritoController {
             Usuario usuario = usuarioDAO.buscarPorUsername(username);
             if (usuario != null) {
                 List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
-                listarCarritoUsuarioView.cargarDatos(carritos);
+                listarCarritoUsuarioView.cargarDatosConFormato(carritos, mensajeHandler);
             } else {
                 listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
             }
@@ -169,7 +169,8 @@ public class CarritoController {
                 JTable tabla = listarCarritoView.getTblCarrito();
                 int fila = tabla.rowAtPoint(e.getPoint());
                 if (fila >= 0) {
-                    int codigoCarrito = Integer.parseInt(tabla.getValueAt(fila, 1).toString());
+                    int codigoCarrito = Integer.parseInt(tabla.getValueAt(fila, 0).toString());
+
                     Object[] opciones = {
                             mensajeHandler.get("opcion.editar"),
                             mensajeHandler.get("opcion.eliminar"),
@@ -294,6 +295,20 @@ public class CarritoController {
         carritoDAO.eliminar(codigoCarrito);
         listarCarrito();
         listarCarritoView.mostrarMensaje(mensajeHandler.get("carrito.eliminado.ok"));
+    }
+
+    public void actualizarTextos() {
+        // Recarga todos los textos e interfaces
+        carritoAñadirView.setTextos(mensajeHandler);
+        listarCarritoView.setTextos(mensajeHandler);
+        listarCarritoUsuarioView.setTextos(mensajeHandler);
+
+        // Si ya hay datos, vuelve a mostrarlos con formato actualizado
+        listarCarritoView.cargarDatosConFormato(carritoDAO.listarTodos(), mensajeHandler);
+        if (carrito != null) {
+            carritoAñadirView.cargarDatosTabla(carrito.obtenerItems());
+            mostrarTotales();
+        }
     }
 }
 

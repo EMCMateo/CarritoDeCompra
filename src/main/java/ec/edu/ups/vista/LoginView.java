@@ -3,6 +3,7 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 
 public class LoginView extends JFrame {
     private JPanel panelPrincipal;
@@ -29,7 +30,7 @@ public class LoginView extends JFrame {
         System.out.println("Panel principal: " + panelPrincipal);
 
         setSize(500, 500);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setResizable(true);
         setLocationRelativeTo(null);
 
@@ -92,6 +93,11 @@ public class LoginView extends JFrame {
         btnRegistro.setText(mensajeHandler.get("login.btn.registrarse"));
         lblRecuperacion.setText(mensajeHandler.get("login.lbl.recuperar"));
         btnRecuperar.setText(mensajeHandler.get("login.btn.recuperar"));
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajeHandler.get("log.in.panel.titulo"));
+            panelPrincipal.repaint();
+        }
     }
 
 

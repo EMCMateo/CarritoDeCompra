@@ -5,6 +5,7 @@ import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -29,7 +30,7 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
         inicializarComponentes();
 
 
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setSize(1000, 400);
         setClosable(true);
         setIconifiable(true);
@@ -53,6 +54,11 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
         lblConsejo.setText(mh.get("carrito.listar.lbl.consejo"));
         btnBuscar.setText(mh.get("carrito.listar.btn.buscar"));
         btnListar.setText(mh.get("carrito.listar.btn.listar"));
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajeHandler.get("carritousuario.listar.panel.titulo"));
+            panelPrincipal.repaint();
+        }
 
         modelo.setColumnIdentifiers(new Object[]{
                 mh.get("carrito.listar.col.usuario"),

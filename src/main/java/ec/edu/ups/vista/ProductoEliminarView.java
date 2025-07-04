@@ -3,6 +3,7 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 public class ProductoEliminarView extends JInternalFrame {
@@ -33,7 +34,7 @@ public class ProductoEliminarView extends JInternalFrame {
 
     private void configurarVentana() {
         setTitle(mensajeHandler.get("producto.eliminar.titulo"));
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setClosable(true);
         setIconifiable(true);
         setSize(400, 200);
@@ -47,6 +48,11 @@ public class ProductoEliminarView extends JInternalFrame {
         lblPrecio.setText(mensajeHandler.get("producto.eliminar.lbl.precio"));
         btnBuscar.setText(mensajeHandler.get("producto.eliminar.btn.buscar"));
         btnEliminar.setText(mensajeHandler.get("producto.eliminar.btn.eliminar"));
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajeHandler.get("producto.eliminar.panel.titulo"));
+            panelPrincipal.repaint();
+        }
     }
 
     public int mostrarConfirmacion(String mensaje) {

@@ -23,6 +23,12 @@ public class Main {
 
     private static boolean preguntasCargadas = false;
 
+    // Declarar estas variables estáticas para controlar instancias
+    private static LoginView loginView;
+    private static UserRegistroView userRegistroView;
+    private static ListarUsuarioView listarUsuarioView;
+    private static UsuarioController usuarioController;
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             mensajeHandler = new MensajeInternacionalizacionHandler(lang, country);
@@ -36,14 +42,14 @@ public class Main {
                 preguntasCargadas = true;
             }
 
-            LoginView loginView = new LoginView(mensajeHandler);
-            UserRegistroView userRegistroView = new UserRegistroView(mensajeHandler);
-            ListarUsuarioView listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
+            loginView = new LoginView(mensajeHandler);
+            userRegistroView = new UserRegistroView(mensajeHandler);
+            listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
 
-            new UsuarioController(usuarioDAO, loginView, userRegistroView, listarUsuarioView, mensajeHandler, preguntaDAO);
+            usuarioController = new UsuarioController(usuarioDAO, loginView, userRegistroView, listarUsuarioView, mensajeHandler, preguntaDAO);
+
             loginView.setVisible(true);
             userRegistroView.setVisible(false);
-
         });
     }
 
@@ -51,6 +57,14 @@ public class Main {
         lang = idioma;
         country = pais;
         mensajeHandler.setLenguaje(lang, country);
+        if (loginView != null) {
+            loginView.dispose();
+            loginView = null;
+        }
+        if (userRegistroView != null) {
+            userRegistroView.dispose();
+            userRegistroView = null;
+        }
 
         PrincipalView principalView = new PrincipalView(mensajeHandler);
         MiJDesktopPane escritorio = principalView.getDesktop(); // importante
@@ -63,9 +77,8 @@ public class Main {
         CarritoAñadirView carritoAnadirView = new CarritoAñadirView(mensajeHandler);
         ListarCarritoView listarCarritoView = new ListarCarritoView(mensajeHandler);
         ListarCarritoUsuarioView listarCarritoUsuarioView = new ListarCarritoUsuarioView(mensajeHandler);
-        ListarUsuarioView listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
-        LoginView loginView = new LoginView(mensajeHandler);
-        UserRegistroView registroView = new UserRegistroView(mensajeHandler);
+        listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
+        UsuarioView usuarioView = new UsuarioView(mensajeHandler);
 
         // Controladores
         new ProductoController(productoDAO, productoAnadirView, productoListaView,
@@ -80,19 +93,19 @@ public class Main {
         principalView.getMenuItemES().addActionListener(e -> {
             cambiarIdioma("es", "EC");
             actualizarTextos(principalView, productoAnadirView, productoListaView, productoEliminarView, productoActualizarView,
-                    carritoAnadirView, listarCarritoView, listarCarritoUsuarioView, listarUsuarioView, loginView, registroView);
+                    carritoAnadirView, listarCarritoView, listarCarritoUsuarioView, listarUsuarioView, null, null, usuarioView);
         });
 
         principalView.getMenuItemEN().addActionListener(e -> {
             cambiarIdioma("en", "US");
             actualizarTextos(principalView, productoAnadirView, productoListaView, productoEliminarView, productoActualizarView,
-                    carritoAnadirView, listarCarritoView, listarCarritoUsuarioView, listarUsuarioView, loginView, registroView);
+                    carritoAnadirView, listarCarritoView, listarCarritoUsuarioView, listarUsuarioView, null, null, usuarioView);
         });
 
         principalView.getMenuItemIT().addActionListener(e -> {
             cambiarIdioma("it", "IT");
             actualizarTextos(principalView, productoAnadirView, productoListaView, productoEliminarView, productoActualizarView,
-                    carritoAnadirView, listarCarritoView, listarCarritoUsuarioView, listarUsuarioView, loginView, registroView);
+                    carritoAnadirView, listarCarritoView, listarCarritoUsuarioView, listarUsuarioView, null, null, usuarioView);
         });
 
         // Menús funcionales
@@ -104,6 +117,12 @@ public class Main {
         principalView.getMenuItemListarCarrito().addActionListener(e -> abrirVentana(escritorio, listarCarritoView));
         principalView.getMenutItemListarCarritoUsuario().addActionListener(e -> abrirVentana(escritorio, listarCarritoUsuarioView));
         principalView.getMenuItemListarUsuarios().addActionListener(e -> abrirVentana(escritorio, listarUsuarioView));
+        principalView.getMenuItemYo().addActionListener(e -> {
+            usuarioController.setUsuarioView(usuarioView);
+            usuarioController.cargarDatosUsuarioEnVista();
+            abrirVentana(escritorio, usuarioView);
+        });
+
 
         // Cerrar sesión
         principalView.getMenuItemCerrarSesion().addActionListener(e -> {
@@ -113,7 +132,13 @@ public class Main {
                     JOptionPane.YES_NO_OPTION);
             if (confirm == JOptionPane.YES_OPTION) {
                 principalView.dispose();
-                main(new String[0]);
+                // Al cerrar sesión, volver a crear las vistas y controlador del login
+                loginView = new LoginView(mensajeHandler);
+                userRegistroView = new UserRegistroView(mensajeHandler);
+                userRegistroView.setVisible(false);
+                listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
+                usuarioController = new UsuarioController(usuarioDAO, loginView, userRegistroView, listarUsuarioView, mensajeHandler, preguntaDAO);
+                loginView.setVisible(true);
             }
         });
 
@@ -122,31 +147,28 @@ public class Main {
 
         principalView.setVisible(true);
         escritorio.repaint();
-
     }
 
     private static void abrirVentana(JDesktopPane escritorio, JInternalFrame vista) {
         try {
-            System.out.println("Abriendo vista: " + vista.getClass().getSimpleName());
-            if (vista.isVisible()) {
+            if (vista.getParent() == null) {
                 escritorio.add(vista);
-                vista.setVisible(true);
-                vista.setClosable(true);
-                vista.setIconifiable(true);
-                vista.setMaximizable(true);
-                vista.setResizable(true);
             }
+
+            if (!vista.isVisible()) {
+                vista.setVisible(true);
+            }
+
             vista.toFront();
-            vista.requestFocusInWindow();
             vista.setSelected(true);
+            vista.requestFocusInWindow();
+
             escritorio.repaint();
+
         } catch (Exception ex) {
             ex.printStackTrace();
         }
     }
-
-
-
 
     private static void cambiarIdioma(String idioma, String pais) {
         lang = idioma;
@@ -165,7 +187,8 @@ public class Main {
             ListarCarritoUsuarioView listarCarritoUsuarioView,
             ListarUsuarioView listarUsuarioView,
             LoginView loginView,
-            UserRegistroView registroView
+            UserRegistroView UserRegistroView,
+            UsuarioView usuarioView
     ) {
         principalView.setTextos(mensajeHandler);
         productoAnadirView.setTextos(mensajeHandler);
@@ -176,8 +199,9 @@ public class Main {
         listarCarritoView.setTextos(mensajeHandler);
         listarCarritoUsuarioView.setTextos(mensajeHandler);
         listarUsuarioView.setTextos();
-        loginView.setTextos(mensajeHandler);
-        registroView.setTextos(mensajeHandler);
+        if (usuarioView != null) usuarioView.setTextos(mensajeHandler);
+        if (loginView != null) loginView.setTextos(mensajeHandler);
+        if (userRegistroView != null) userRegistroView.setTextos();
     }
 
     private static void configurarAccesoPorRol(Usuario usuario, PrincipalView principalView) {
@@ -188,6 +212,8 @@ public class Main {
             principalView.getMenuItemActualizarProducto().setEnabled(false);
             principalView.getMenuItemListarCarrito().setEnabled(false);
             principalView.getMenuItemListarUsuarios().setEnabled(false);
+            principalView.getMenuItemBuscarProducto().setEnabled(true);
+
         }
     }
 }

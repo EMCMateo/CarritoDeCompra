@@ -23,6 +23,7 @@ public class UsuarioController {
     private final ListarUsuarioView listarUsuarioView;
     private final MensajeInternacionalizacionHandler mensajeHandler;
     private final PreguntaDAO preguntaDAO;
+    private UsuarioView usuarioView;
 
     private Usuario usuario;
 
@@ -42,12 +43,12 @@ public class UsuarioController {
         cargarEventosLogin();
         cargarEventosRegistro();
         cargarEventosListarUsuarios();
+        cargarEventoGuardarDatos();
     }
 
     private void cargarEventosLogin() {
         loginView.getBtnIniciarSesion().addActionListener(e -> {
             if (autenticar()) {
-                userRegistroView.dispose();
                 loginView.dispose();
             } else {
                 loginView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.login.error"));
@@ -55,7 +56,7 @@ public class UsuarioController {
         });
 
         loginView.getBtnRegistro().addActionListener(e -> {
-            loginView.dispose();
+            loginView.setVisible(false);
             userRegistroView.setVisible(true);
         });
 
@@ -68,7 +69,13 @@ public class UsuarioController {
             String contrasena1 = new String(userRegistroView.getPswContra().getPassword());
             String contrasena2 = new String(userRegistroView.getPswContra2().getPassword());
 
-            if (username.isEmpty() || contrasena1.isEmpty() || contrasena2.isEmpty()) {
+            String nombreCompleto = userRegistroView.getTxtNombreCompleto().getText().trim();
+            String correo = userRegistroView.getTxtCorreo().getText().trim();
+            String telefono = userRegistroView.getTxtTelefono().getText().trim();
+            String fechaNacimiento = userRegistroView.getTxtFechaNacimiento().getText().trim();
+
+            if (username.isEmpty() || contrasena1.isEmpty() || contrasena2.isEmpty()
+                    || nombreCompleto.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNacimiento.isEmpty()) {
                 userRegistroView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.camposVacios"));
                 return;
             }
@@ -83,7 +90,26 @@ public class UsuarioController {
                 return;
             }
 
+            if (!validarCorreo(correo)) {
+                userRegistroView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.email"));
+                return;
+            }
+
+            if (!validarTelefono(telefono)) {
+                userRegistroView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.telefono"));
+                return;
+            }
+
+            if (!validarFecha(fechaNacimiento)) {
+                userRegistroView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.fecha"));
+                return;
+            }
+
             Usuario nuevoUsuario = new Usuario(username, contrasena1, Rol.CLIENTE);
+            nuevoUsuario.setNombreCompleto(nombreCompleto);
+            nuevoUsuario.setCorreo(correo);
+            nuevoUsuario.setTelefono(telefono);
+            nuevoUsuario.setFechaNacimiento(fechaNacimiento);
 
             List<Pregunta> todas = preguntaDAO.listarTodas();
             if (todas.size() < 3) {
@@ -95,50 +121,15 @@ public class UsuarioController {
             Set<Pregunta> preguntasUnicas = new LinkedHashSet<>();
             for (Pregunta p : todas) {
                 preguntasUnicas.add(p);
-                if (preguntasUnicas.size() == 3) break;
+                if (preguntasUnicas.size() == 10) break;
             }
 
             userRegistroView.dispose();
 
-            UsuarioPreguntaView pv = new UsuarioPreguntaView(
-                    new ArrayList<>(preguntasUnicas), nuevoUsuario, mensajeHandler,
+            UsuarioPreguntaView pv = new UsuarioPreguntaView(mensajeHandler);
+            cargarPreguntasEnVista(pv, new ArrayList<>(preguntasUnicas));
+            cargarEventosUsuarioPregunta(pv, new ArrayList<>(preguntasUnicas), nuevoUsuario,
                     () -> {
-                        String nombreCompleto = JOptionPane.showInputDialog(null, mensajeHandler.get("mensaje.ingrese.nombre"));
-                        String fechaNacimiento = JOptionPane.showInputDialog(null, mensajeHandler.get("mensaje.ingrese.fecha"));
-                        String correo = JOptionPane.showInputDialog(null, mensajeHandler.get("mensaje.ingrese.correo"));
-                        String telefono = JOptionPane.showInputDialog(null, mensajeHandler.get("mensaje.ingrese.telefono"));
-
-                        if (nombreCompleto == null || fechaNacimiento == null || correo == null || telefono == null ||
-                                nombreCompleto.trim().isEmpty() || fechaNacimiento.trim().isEmpty() ||
-                                correo.trim().isEmpty() || telefono.trim().isEmpty()) {
-                            JOptionPane.showMessageDialog(null, mensajeHandler.get("mensaje.usuario.error.camposVacios"));
-                            loginView.setVisible(true);
-                            return;
-                        }
-
-                        if (!validarCorreo(correo)) {
-                            JOptionPane.showMessageDialog(null, mensajeHandler.get("mensaje.usuario.error.email"));
-                            loginView.setVisible(true);
-                            return;
-                        }
-
-                        if (!validarTelefono(telefono)) {
-                            JOptionPane.showMessageDialog(null, mensajeHandler.get("mensaje.usuario.error.telefono"));
-                            loginView.setVisible(true);
-                            return;
-                        }
-
-                        if (!validarFecha(fechaNacimiento)) {
-                            JOptionPane.showMessageDialog(null, mensajeHandler.get("mensaje.usuario.error.fecha"));
-                            loginView.setVisible(true);
-                            return;
-                        }
-
-                        nuevoUsuario.setNombreCompleto(nombreCompleto);
-                        nuevoUsuario.setFechaNacimiento(fechaNacimiento);
-                        nuevoUsuario.setCorreo(correo);
-                        nuevoUsuario.setTelefono(telefono);
-
                         usuarioDAO.crear(nuevoUsuario);
                         JOptionPane.showMessageDialog(null, mensajeHandler.get("mensaje.usuario.registrado"));
                         loginView.setVisible(true);
@@ -210,6 +201,128 @@ public class UsuarioController {
         }
     }
 
+    public void cargarDatosUsuarioEnVista() {
+        if (usuarioView == null || usuario == null) return;
+
+        usuarioView.getTxtNombre().setText(usuario.getNombreCompleto());
+        usuarioView.getTxtTelefono().setText(usuario.getTelefono());
+        usuarioView.getTxtCorreoUser().setText(usuario.getCorreo());
+        usuarioView.getTxtFechaNac().setText(usuario.getFechaNacimiento());
+    }
+
+    private void cargarEventoGuardarDatos() {
+        if (usuarioView == null) return;
+
+        usuarioView.getBtnGuardar().addActionListener(e -> {
+            String nombre = usuarioView.getTxtNombre().getText().trim();
+            String correo = usuarioView.getTxtCorreoUser().getText().trim();
+            String telefono = usuarioView.getTxtTelefono().getText().trim();
+            String fechaNac = usuarioView.getTxtFechaNac().getText().trim();
+
+            if (nombre.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNac.isEmpty()) {
+                JOptionPane.showMessageDialog(usuarioView,
+                        mensajeHandler.get("mensaje.usuario.error.camposVacios"));
+                return;
+            }
+
+            if (!validarCorreo(correo)) {
+                JOptionPane.showMessageDialog(usuarioView,
+                        mensajeHandler.get("mensaje.usuario.error.email"));
+                return;
+            }
+
+            if (!validarTelefono(telefono)) {
+                JOptionPane.showMessageDialog(usuarioView,
+                        mensajeHandler.get("mensaje.usuario.error.telefono"));
+                return;
+            }
+
+            if (!validarFecha(fechaNac)) {
+                JOptionPane.showMessageDialog(usuarioView,
+                        mensajeHandler.get("mensaje.usuario.error.fecha"));
+                return;
+            }
+
+            usuario.setNombreCompleto(nombre);
+            usuario.setCorreo(correo);
+            usuario.setTelefono(telefono);
+            usuario.setFechaNacimiento(fechaNac);
+
+            usuarioDAO.actualizar(usuario);
+
+            JOptionPane.showMessageDialog(usuarioView,
+                    mensajeHandler.get("mensaje.usuario.datosActualizados"));
+        });
+    }
+
+    public void cargarPreguntasEnVista(UsuarioPreguntaView view, List<Pregunta> preguntas) {
+        view.getCmbPreguntas().removeAllItems();
+        for (Pregunta p : preguntas) {
+            view.getCmbPreguntas().addItem(p.getTexto());
+        }
+        view.getTxtAreaRespuestas().setEditable(false);
+        view.getTxtAreaRespuestas().setText("");
+    }
+
+    public void cargarEventosUsuarioPregunta(UsuarioPreguntaView view, List<Pregunta> preguntas, Usuario usuario, Runnable callback) {
+        Map<String, Pregunta> preguntaMap = new HashMap<>();
+        for (Pregunta p : preguntas) {
+            preguntaMap.put(p.getTexto(), p);
+        }
+
+        view.getBtnGuardar().addActionListener(e -> {
+            String textoPregunta = (String) view.getCmbPreguntas().getSelectedItem();
+            String respuesta = view.getTxtRespuesta().getText().trim();
+
+            if (textoPregunta == null || respuesta.isEmpty()) {
+                JOptionPane.showMessageDialog(view,
+                        mensajeHandler.get("preguntas.error.camposVacios"));
+                return;
+            }
+
+            Pregunta pregunta = preguntaMap.get(textoPregunta);
+
+            for (RespuestaSeguridad r : usuario.getRespuestasSeguridad()) {
+                if (r.getPregunta().getId() == pregunta.getId()) {
+                    JOptionPane.showMessageDialog(view,
+                            mensajeHandler.get("preguntas.error.yaRespondida"));
+                    return;
+                }
+            }
+
+            usuario.getRespuestasSeguridad().add(new RespuestaSeguridad(pregunta, respuesta));
+            actualizarAreaRespuestas(view, usuario);
+            view.getTxtRespuesta().setText("");
+        });
+
+        view.getBtnFinalizar().addActionListener(e -> {
+            if (usuario.getRespuestasSeguridad().size() < 3) {
+                JOptionPane.showMessageDialog(view,
+                        mensajeHandler.get("preguntas.error.minimoTres"));
+                return;
+            }
+
+            int confirmar = JOptionPane.showConfirmDialog(view,
+                    mensajeHandler.get("preguntas.confirmar"),
+                    mensajeHandler.get("preguntas.titulo"),
+                    JOptionPane.YES_NO_OPTION);
+
+            if (confirmar == JOptionPane.YES_OPTION) {
+                view.dispose();
+                callback.run();
+            }
+        });
+    }
+
+    private void actualizarAreaRespuestas(UsuarioPreguntaView view, Usuario usuario) {
+        StringBuilder sb = new StringBuilder();
+        for (RespuestaSeguridad r : usuario.getRespuestasSeguridad()) {
+            sb.append("- ").append(r.getPregunta().getTexto()).append("\n");
+            sb.append("   ").append(r.getRespuesta()).append("\n\n");
+        }
+        view.getTxtAreaRespuestas().setText(sb.toString());
+    }
+
     private void recuperarContrasenia() {
         String username = JOptionPane.showInputDialog(loginView, mensajeHandler.get("mensaje.recuperar.ingreseUsuario"));
         if (username == null || username.trim().isEmpty()) return;
@@ -221,46 +334,48 @@ public class UsuarioController {
         }
 
         List<RespuestaSeguridad> respuestas = u.getRespuestasSeguridad();
-        if (respuestas == null || respuestas.size() < 3) {
+        if (respuestas == null || respuestas.isEmpty()) {
             JOptionPane.showMessageDialog(loginView, mensajeHandler.get("mensaje.recuperar.usuarioSinPreguntas"));
             return;
         }
 
-        PreguntasModificarView vista = new PreguntasModificarView(mensajeHandler);
-        vista.mostrarPreguntasDelUsuario(respuestas);
-        vista.setVisible(true);
+        Collections.shuffle(respuestas);
+        RespuestaSeguridad preguntaElegida = respuestas.get(0);
 
-        vista.getBtnVerificar().addActionListener(ev -> {
-            Map<Pregunta, String> ingresadas = vista.getRespuestasIngresadas();
-            boolean todasCorrectas = true;
+        String textoPregunta = preguntaElegida.getPregunta().getTexto();
+        String respuestaCorrecta = preguntaElegida.getRespuesta();
 
-            for (RespuestaSeguridad r : respuestas) {
-                boolean encontrada = ingresadas.entrySet().stream()
-                        .anyMatch(entry -> entry.getKey().getId() == r.getPregunta().getId()
-                                && entry.getValue().equalsIgnoreCase(r.getRespuesta()));
-                if (!encontrada) {
-                    todasCorrectas = false;
-                    break;
-                }
-            }
+        String respuestaUsuario = JOptionPane.showInputDialog(
+                loginView,
+                mensajeHandler.get("mensaje.recuperar.ingreseRespuesta") + "\n\n" + textoPregunta
+        );
 
-            if (todasCorrectas) {
-                String nueva = JOptionPane.showInputDialog(vista, mensajeHandler.get("mensaje.recuperar.nuevaContra"));
-                if (nueva != null && !nueva.isEmpty()) {
-                    u.setPassword(nueva);
-                    JOptionPane.showMessageDialog(vista, mensajeHandler.get("mensaje.recuperar.exito"));
-                    vista.dispose();
-                } else {
-                    JOptionPane.showMessageDialog(vista, mensajeHandler.get("mensaje.recuperar.vacia"));
-                }
+        if (respuestaUsuario == null || respuestaUsuario.trim().isEmpty()) {
+            JOptionPane.showMessageDialog(loginView, mensajeHandler.get("mensaje.recuperar.vacia"));
+            return;
+        }
+
+        if (respuestaCorrecta.equalsIgnoreCase(respuestaUsuario.trim())) {
+            String nueva = JOptionPane.showInputDialog(loginView, mensajeHandler.get("mensaje.recuperar.nuevaContra"));
+            if (nueva != null && !nueva.isEmpty()) {
+                u.setPassword(nueva);
+                usuarioDAO.actualizar(u);
+                JOptionPane.showMessageDialog(loginView, mensajeHandler.get("mensaje.recuperar.exito"));
             } else {
-                JOptionPane.showMessageDialog(vista, mensajeHandler.get("mensaje.recuperar.fallido"));
-                vista.limpiarCampos();
+                JOptionPane.showMessageDialog(loginView, mensajeHandler.get("mensaje.recuperar.vacia"));
             }
-        });
+        } else {
+            JOptionPane.showMessageDialog(loginView, mensajeHandler.get("mensaje.recuperar.fallido"));
+        }
     }
+
 
     public Usuario getUsuarioAutenticado() {
         return usuario;
+    }
+
+    public void setUsuarioView(UsuarioView usuarioView) {
+        this.usuarioView = usuarioView;
+        cargarEventoGuardarDatos();
     }
 }

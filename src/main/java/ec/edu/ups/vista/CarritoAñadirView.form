@@ -10,7 +10,7 @@
       <font name="Georgia" style="2"/>
       <foreground color="-328449"/>
     </properties>
-    <border type="bevel-lowered" title="Datos Del Carrito" title-justification="2" title-position="2">
+    <border type="bevel-lowered" title-justification="2" title-position="2">
       <font name="Century Gothic" style="3"/>
       <title-color color="-262913"/>
     </border>

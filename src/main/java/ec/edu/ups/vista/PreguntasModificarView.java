@@ -5,6 +5,7 @@ import ec.edu.ups.modelo.RespuestaSeguridad;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.HashMap;
 import java.util.List;
@@ -27,6 +28,11 @@ public class PreguntasModificarView extends JFrame {
         this.camposDeRespuesta = new HashMap<>();
 
         setTitle(mensajes.get("pregunta.recuperar.titulo"));
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajes.get("modificar.preguntas.panel.titulo"));
+            panelPrincipal.repaint();
+        }
         setContentPane(panelPrincipal);
         setSize(600, 400);
         setLocationRelativeTo(null); // centrar ventana
@@ -65,6 +71,7 @@ public class PreguntasModificarView extends JFrame {
     public void actualizarTextos() {
         lblTitulo.setText(mensajes.get("pregunta.recuperar.titulo"));
         btnVerificar.setText(mensajes.get("global.boton.verificar"));
+
     }
 
     public Map<Pregunta, String> getRespuestasIngresadas() {

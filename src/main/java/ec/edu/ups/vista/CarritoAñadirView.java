@@ -6,6 +6,7 @@ import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +44,7 @@ public class CarritoAñadirView extends JInternalFrame {
     public CarritoAñadirView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         inicializarComponentes(); // si usas GUI Builder
         setClosable(true);
         setResizable(true);
@@ -121,6 +123,12 @@ public class CarritoAñadirView extends JInternalFrame {
         btnAnadir.setText(mh.get("carrito.anadir.btn.anadir"));
         btnBorrar.setText(mh.get("carrito.anadir.btn.borrar"));
         btnGuardar.setText(mh.get("carrito.anadir.btn.guardar"));
+
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajeHandler.get("carrito.add.panel.titulo"));
+            panelPrincipal.repaint();
+        }
 
         modelo.setColumnIdentifiers(new Object[]{
                 mh.get("carrito.anadir.tbl.codigo"),

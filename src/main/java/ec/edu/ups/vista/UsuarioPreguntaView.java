@@ -6,64 +6,77 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 public class UsuarioPreguntaView extends JFrame {
 
     private JPanel panelPrincipal;
+    private JComboBox<String> cmbPreguntas;
+    private JTextField txtRespuesta;
     private JButton btnGuardar;
-    private JLabel lblPregunta1, lblPregunta2, lblPregunta3;
-    private JTextField txtRespuesta1, txtRespuesta2, txtRespuesta3;
+    private JButton btnFinalizar;
+    private JTextArea txtAreaRespuestas;
+    private JLabel lblPreguntasLBL;
+    private JLabel lblPregunta1;
+    private JLabel lblConsejo;
+    private JLabel lblRespuesta;
 
-    private final List<Pregunta> preguntas;
-    private final Usuario usuario;
     private final MensajeInternacionalizacionHandler mensajeHandler;
-    private final Runnable onGuardar;
 
-    // Constructor que usa tu .form (GUI Builder)
-    public UsuarioPreguntaView(List<Pregunta> preguntas,
-                               Usuario usuario,
-                               MensajeInternacionalizacionHandler mensajeHandler,
-                               Runnable onGuardar) {
-        this.preguntas = preguntas;
-        this.usuario   = usuario;
+    public UsuarioPreguntaView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
-        this.onGuardar = onGuardar;
 
         setContentPane(panelPrincipal);
-        setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        setSize(400,300);
+        setTitle(mensajeHandler.get("preguntas.titulo"));
+        setSize(600, 500);
         setLocationRelativeTo(null);
-        setTitle(mensajeHandler.get("registro.pregunta.titulo"));
-        cargarEventos();
-        cargarTextos();
-
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTextos();
     }
 
-    private void cargarTextos() {
-        lblPregunta1.setText(preguntas.get(0).getTexto());
-        lblPregunta2.setText(preguntas.get(1).getTexto());
-        lblPregunta3.setText(preguntas.get(2).getTexto());
-        btnGuardar.setText(mensajeHandler.get("global.boton.guardar"));
+    private void setTextos() {
+        lblPregunta1.setText(mensajeHandler.get("preguntas.titulo"));
+        lblConsejo.setText(mensajeHandler.get("preguntas.consejo"));
+        lblPreguntasLBL.setText(mensajeHandler.get("preguntas.pregunta"));
+        lblRespuesta.setText(mensajeHandler.get("preguntas.respuesta"));
+        btnGuardar.setText(mensajeHandler.get("boton.guardar"));
+        btnFinalizar.setText(mensajeHandler.get("pregunta.finalizar"));
     }
 
-    private void cargarEventos() {
-        btnGuardar.addActionListener(e -> {
-            String r1 = txtRespuesta1.getText().trim();
-            String r2 = txtRespuesta2.getText().trim();
-            String r3 = txtRespuesta3.getText().trim();
-
-            if (r1.isEmpty() || r2.isEmpty() || r3.isEmpty()) {
-                JOptionPane.showMessageDialog(this, mensajeHandler.get("mensaje.usuario.error.camposVacios"));
-                return;
-            }
-
-            usuario.addRespuesta(preguntas.get(0), r1);
-            usuario.addRespuesta(preguntas.get(1), r2);
-            usuario.addRespuesta(preguntas.get(2), r3);
-
-            onGuardar.run();   // Graba el usuario
-            dispose();         // Cierra esta ventana
-        });
+    public JComboBox<String> getCmbPreguntas() {
+        return cmbPreguntas;
     }
 
+    public JTextField getTxtRespuesta() {
+        return txtRespuesta;
+    }
+
+    public JButton getBtnGuardar() {
+        return btnGuardar;
+    }
+
+    public JButton getBtnFinalizar() {
+        return btnFinalizar;
+    }
+
+    public JTextArea getTxtAreaRespuestas() {
+        return txtAreaRespuestas;
+    }
+
+    public JLabel getLblPreguntasLBL() {
+        return lblPreguntasLBL;
+    }
+
+    public JLabel getLblPregunta1() {
+        return lblPregunta1;
+    }
+
+    public JLabel getLblConsejo() {
+        return lblConsejo;
+    }
+
+    public JLabel getLblRespuesta() {
+        return lblRespuesta;
+    }
 }

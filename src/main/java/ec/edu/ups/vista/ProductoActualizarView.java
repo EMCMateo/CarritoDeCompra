@@ -3,6 +3,7 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 
 public class ProductoActualizarView extends JInternalFrame {
@@ -21,6 +22,8 @@ public class ProductoActualizarView extends JInternalFrame {
     public ProductoActualizarView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
+
+
         initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
@@ -34,7 +37,7 @@ public class ProductoActualizarView extends JInternalFrame {
     private void configurarVentana() {
 
         setTitle(mensajeHandler.get("producto.actualizar.titulo"));
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setClosable(true);
         setIconifiable(true);
         setSize(400, 200);
@@ -48,6 +51,11 @@ public class ProductoActualizarView extends JInternalFrame {
         lblPrecio.setText(mensajeHandler.get("producto.actualizar.lbl.precio"));
         btnBuscar.setText(mensajeHandler.get("producto.actualizar.btn.buscar"));
         btnActualizar.setText(mensajeHandler.get("producto.actualizar.btn.actualizar"));
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajeHandler.get("producto.actualizar.panel.titulo"));
+            panelPrincipal.repaint();
+        }
     }
 
     public void mostrarMensaje(String mensaje) {

@@ -4,6 +4,7 @@ import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
@@ -40,7 +41,7 @@ public class ProductoListaView extends JInternalFrame {
 
     private void configurarVentana() {
         setTitle("Lista de Productos");
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setClosable(true);
         setIconifiable(true);
         setSize(600, 400);
@@ -52,6 +53,11 @@ public class ProductoListaView extends JInternalFrame {
         lblNombre.setText(mensajeHandler.get("producto.lista.lbl.nombre"));
         btnBuscar.setText(mensajeHandler.get("producto.lista.btn.buscar"));
         btnListar.setText(mensajeHandler.get("producto.lista.btn.listar"));
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajeHandler.get("producto.listar.panel.titulo"));
+            panelPrincipal.repaint();
+        }
 
         modelo.setColumnIdentifiers(new String[]{
                 mensajeHandler.get("producto.tabla.codigo"),

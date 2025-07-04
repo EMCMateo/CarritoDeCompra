@@ -4,6 +4,7 @@ import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -37,7 +38,7 @@ public class ProductoAnadirView extends JInternalFrame {
     private void configurarVentana() {
 
         setTitle("Datos del Producto");
-        setDefaultCloseOperation(JInternalFrame.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setClosable(true);
         setIconifiable(true);
         setSize(500, 500);
@@ -51,6 +52,11 @@ public class ProductoAnadirView extends JInternalFrame {
         lblPrecio.setText(mensajeHandler.get("producto.anadir.lbl.precio"));
         btnAceptar.setText(mensajeHandler.get("producto.anadir.btn.aceptar"));
         btnLimpiar.setText(mensajeHandler.get("producto.anadir.btn.limpiar"));
+        if (panelPrincipal.getBorder() instanceof TitledBorder) {
+            TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
+            border.setTitle(mensajeHandler.get("producto.anadir.panel.titulo"));
+            panelPrincipal.repaint();
+        }
     }
 
     public void limpiarCampos() {
