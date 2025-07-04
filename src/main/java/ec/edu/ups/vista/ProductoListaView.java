@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
@@ -8,6 +9,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
+import java.util.Locale;
 
 public class ProductoListaView extends JInternalFrame {
 
@@ -18,24 +20,19 @@ public class ProductoListaView extends JInternalFrame {
     private JButton btnListar;
     private JLabel lblNombre;
     private DefaultTableModel modelo;
+    private MensajeInternacionalizacionHandler mensajes;
 
     public ProductoListaView(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajes = mensajeHandler;
         setContentPane(panelPrincipal);
         initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
-
     }
 
     private void initComponents() {
-
-        tblProductos = new JTable();
         modelo = new DefaultTableModel();
         tblProductos.setModel(modelo);
-
-        JScrollPane scrollPane = new JScrollPane(tblProductos);
-
-
         modelo.setColumnIdentifiers(new String[]{"Código", "Nombre", "Precio"});
     }
 
@@ -68,11 +65,18 @@ public class ProductoListaView extends JInternalFrame {
 
     public void cargarDatos(List<Producto> listaProductos) {
         modelo.setRowCount(0);
-        for (Producto p : listaProductos) {
-            modelo.addRow(new Object[]{p.getCodigo(), p.getNombre(), p.getPrecio()});
-        }
+        Locale locale = mensajes.getLocale();
 
+        for (Producto p : listaProductos) {
+            String precioFormateado = FormateadorUtils.formatearMoneda(p.getPrecio(), locale);
+            modelo.addRow(new Object[]{
+                    p.getCodigo(),
+                    p.getNombre(),
+                    precioFormateado
+            });
+        }
     }
+
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
@@ -82,5 +86,4 @@ public class ProductoListaView extends JInternalFrame {
     public JButton getBtnListar() { return btnListar; }
     public JTable getTblProductos() { return tblProductos; }
     public DefaultTableModel getModelo() { return modelo; }
-
 }

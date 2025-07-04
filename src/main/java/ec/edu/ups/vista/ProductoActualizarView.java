@@ -1,5 +1,6 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
@@ -22,20 +23,16 @@ public class ProductoActualizarView extends JInternalFrame {
     public ProductoActualizarView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
-
-
         initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
-
     }
 
     private void initComponents() {
-
+        // Aquí deberías inicializar tus componentes si no lo estás haciendo en el GUI builder
     }
 
     private void configurarVentana() {
-
         setTitle(mensajeHandler.get("producto.actualizar.titulo"));
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setClosable(true);
@@ -56,6 +53,12 @@ public class ProductoActualizarView extends JInternalFrame {
             border.setTitle(mensajeHandler.get("producto.actualizar.panel.titulo"));
             panelPrincipal.repaint();
         }
+    }
+
+    public void mostrarProducto(String nombre, double precio) {
+        txtNombre.setText(nombre);
+        String precioFormateado = FormateadorUtils.formatearMoneda(precio, mensajeHandler.getLocale());
+        txtPrecio.setText(precioFormateado);
     }
 
     public void mostrarMensaje(String mensaje) {

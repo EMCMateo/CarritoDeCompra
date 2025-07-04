@@ -2,10 +2,12 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.*;
 
 import javax.swing.*;
+import java.text.ParseException;
 import java.util.List;
 
 public class ProductoController {
@@ -54,23 +56,25 @@ public class ProductoController {
                 }
 
                 String nombre = productoAnadirView.getTxtNombre().getText();
-                double precio = Double.parseDouble(productoAnadirView.getTxtPrecio().getText());
+
+                double precio = FormateadorUtils.parsearMoneda(
+                        productoAnadirView.getTxtPrecio().getText(),
+                        mensajeHandler.getLocale()
+                );
 
                 Producto p = new Producto(codigo, nombre, precio);
                 productoDAO.crear(p);
                 productoAnadirView.mostrarMensaje(mensajeHandler.get("producto.guardado"));
                 productoAnadirView.limpiarCampos();
-            } catch (NumberFormatException ex) {
+            } catch (NumberFormatException | java.text.ParseException ex) {
                 productoAnadirView.mostrarMensaje(mensajeHandler.get("producto.datos.invalidos"));
             }
         });
     }
 
     private void configurarEventosLista() {
-        // Listar todos los productos
         productoListaView.getBtnListar().addActionListener(e -> listarTodosProductos());
 
-        // Buscar producto por código
         productoListaView.getBtnBuscar().addActionListener(e -> buscarProductoPorCodigo());
     }
 
@@ -99,9 +103,13 @@ public class ProductoController {
             try {
                 int codigo = Integer.parseInt(productoActualizarView.getTxtCodigo().getText());
                 Producto p = productoDAO.buscarPorCodigo(codigo);
+
                 if (p != null) {
-                    productoActualizarView.getTxtNombre().setText(p.getNombre());
-                    productoActualizarView.getTxtPrecio().setText(String.valueOf(p.getPrecio()));
+                    // El precio viene del objeto Producto, no del JTextField
+                    productoActualizarView.mostrarProducto(
+                            p.getNombre(),
+                            p.getPrecio()
+                    );
                 } else {
                     productoActualizarView.mostrarMensaje(mensajeHandler.get("producto.no.encontrado"));
                     productoActualizarView.limpiarCampos();
@@ -110,6 +118,9 @@ public class ProductoController {
                 productoActualizarView.mostrarMensaje(mensajeHandler.get("producto.codigo.invalido"));
             }
         });
+
+
+
 
         productoActualizarView.getBtnActualizar().addActionListener(e -> {
             try {
@@ -138,8 +149,7 @@ public class ProductoController {
                 int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
                 Producto p = productoDAO.buscarPorCodigo(codigo);
                 if (p != null) {
-                    productoEliminarView.getTxtNombre().setText(p.getNombre());
-                    productoEliminarView.getTxtPrecio().setText(String.valueOf(p.getPrecio()));
+                    productoEliminarView.mostrarProducto(p.getNombre(), p.getPrecio());
                 } else {
                     productoEliminarView.mostrarMensaje(mensajeHandler.get("producto.no.encontrado"));
                     productoEliminarView.limpiarCampos();
@@ -170,11 +180,4 @@ public class ProductoController {
         });
     }
 
-    public void actualizarTextos() {
-        productoAnadirView.setTextos(mensajeHandler);
-        productoListaView.setTextos(mensajeHandler);
-        productoActualizarView.setTextos(mensajeHandler);
-        productoEliminarView.setTextos(mensajeHandler);
-        carritoAñadirView.setTextos(mensajeHandler);
-    }
 }

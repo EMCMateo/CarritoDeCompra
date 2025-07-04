@@ -1,13 +1,12 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Producto;
+import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.List;
 
 public class ProductoAnadirView extends JInternalFrame {
@@ -22,21 +21,22 @@ public class ProductoAnadirView extends JInternalFrame {
     private JLabel lblNombre;
     private JLabel lblPrecio;
 
+    private MensajeInternacionalizacionHandler mensajeHandler;
+
     public ProductoAnadirView(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
-        initComponents(); // Inicializar componentes primero
+        initComponents();
         btnLimpiar.addActionListener(e -> limpiarCampos());
-        setTextos(mensajeHandler); // Después ya puedes cambiar sus textos
+        setTextos(mensajeHandler);
         configurarVentana();
     }
 
     private void initComponents() {
-
-
+        // Aquí deberías inicializar tus componentes si no usas GUI builder
     }
 
     private void configurarVentana() {
-
         setTitle("Datos del Producto");
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setClosable(true);
@@ -59,6 +59,13 @@ public class ProductoAnadirView extends JInternalFrame {
         }
     }
 
+    public void mostrarProducto(String codigo, String nombre, double precio) {
+        txtCodigo.setText(codigo);
+        txtNombre.setText(nombre);
+        String precioFormateado = FormateadorUtils.formatearMoneda(precio, mensajeHandler.getLocale());
+        txtPrecio.setText(precioFormateado);
+    }
+
     public void limpiarCampos() {
         txtCodigo.setText("");
         txtNombre.setText("");
@@ -68,13 +75,13 @@ public class ProductoAnadirView extends JInternalFrame {
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
+
     public void mostrarProductos(List<Producto> productos) {
         for (Producto producto : productos) {
             System.out.println(producto);
         }
     }
 
-    // Getters para el controlador
     public JTextField getTxtPrecio() { return txtPrecio; }
     public JTextField getTxtNombre() { return txtNombre; }
     public JTextField getTxtCodigo() { return txtCodigo; }
