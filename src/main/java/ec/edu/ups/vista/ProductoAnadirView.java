@@ -82,6 +82,23 @@ public class ProductoAnadirView extends JInternalFrame {
         }
     }
 
+    public void actualizarInternacionalizacion(MensajeInternacionalizacionHandler nuevoHandler) {
+        this.mensajeHandler = nuevoHandler;
+        setTextos(nuevoHandler);
+
+        // Si ya hay datos en pantalla, re-formatear el precio
+        String textoPrecio = txtPrecio.getText();
+        if (!textoPrecio.isEmpty()) {
+            try {
+                double valor = FormateadorUtils.parsearMoneda(textoPrecio, nuevoHandler.getLocale());
+                txtPrecio.setText(FormateadorUtils.formatearMoneda(valor, nuevoHandler.getLocale()));
+            } catch (Exception e) {
+                txtPrecio.setText("");
+            }
+        }
+    }
+
+
     public JTextField getTxtPrecio() { return txtPrecio; }
     public JTextField getTxtNombre() { return txtNombre; }
     public JTextField getTxtCodigo() { return txtCodigo; }

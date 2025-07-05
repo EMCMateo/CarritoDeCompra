@@ -1,5 +1,6 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
@@ -14,6 +15,7 @@ import java.util.Locale;
 public class ProductoListaView extends JInternalFrame {
 
     private JPanel panelPrincipal;
+    private ProductoDAO productoDAO;
     private JTextField txtBuscar;
     private JButton btnBuscar;
     private JTable tblProductos;
@@ -22,7 +24,8 @@ public class ProductoListaView extends JInternalFrame {
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mensajes;
 
-    public ProductoListaView(MensajeInternacionalizacionHandler mensajeHandler) {
+    public ProductoListaView(MensajeInternacionalizacionHandler mensajeHandler, ProductoDAO productoDAO) {
+        this.productoDAO = productoDAO;
         this.mensajes = mensajeHandler;
         setContentPane(panelPrincipal);
         initComponents();
@@ -63,22 +66,24 @@ public class ProductoListaView extends JInternalFrame {
         });
     }
 
-    public void cargarDatos(List<Producto> listaProductos) {
+    public void cargarDatos(List<Producto> listaProductos, Locale locale) {
         modelo.setRowCount(0);
-        Locale locale = mensajes.getLocale();
-
         for (Producto p : listaProductos) {
-            String precioFormateado = FormateadorUtils.formatearMoneda(p.getPrecio(), locale);
             modelo.addRow(new Object[]{
                     p.getCodigo(),
                     p.getNombre(),
-                    precioFormateado
+                    FormateadorUtils.formatearMoneda(p.getPrecio(), locale)
             });
         }
     }
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
+    }
+
+    public void actualizarDatos(MensajeInternacionalizacionHandler mensajeHandler) {
+        List<Producto> productos = productoDAO.listarTodos();
+        cargarDatos(productos, mensajeHandler.getLocale());
     }
 
     public JTextField getTxtBuscar() { return txtBuscar; }

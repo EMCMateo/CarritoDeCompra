@@ -37,6 +37,7 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemIT;
     private JMenuItem menutItemListarCarritoUsuario;
     private JMenuItem menuItemYo;
+    private JMenuItem menuItemEditarCarrito;
     private JPanel panelPrincipal;
 
 
@@ -72,6 +73,7 @@ public class PrincipalView extends JFrame {
         menuItemBuscarProducto = new JMenuItem();
         menuItemCrearCarrito = new JMenuItem();
         menuItemListarCarrito = new JMenuItem();
+        menuItemEditarCarrito = new JMenuItem();
         menuItemListarUsuarios = new JMenuItem();
         menuItemCerrarSesion = new JMenuItem();
         menuItemSalir = new JMenuItem();
@@ -87,6 +89,7 @@ public class PrincipalView extends JFrame {
 
         menuCarrito.add(menuItemCrearCarrito);
         menuCarrito.add(menuItemListarCarrito);
+        menuCarrito.add(menuItemEditarCarrito);
         menuCarrito.add(menutItemListarCarritoUsuario);
 
         menuUsuarios.add(menuItemListarUsuarios);
@@ -134,6 +137,7 @@ public class PrincipalView extends JFrame {
         menuItemIT.setText(mensajeInternacionalizacionHandler.get("menuitem.it"));
         menuItemYo.setText(mensajeInternacionalizacionHandler.get("menu.yo"));
         menutItemListarCarritoUsuario.setText(mensajeInternacionalizacionHandler.get("menuitem.listarcarritousuario"));
+        menuItemEditarCarrito.setText(mensajeInternacionalizacionHandler.get("menuitem.editarCarrito"));
     }
 
     // ==== Getters para controladores ====
@@ -156,4 +160,7 @@ public class PrincipalView extends JFrame {
         return desktop;
     }
 
+    public JMenuItem getMenuItemEditarCarrito() {
+        return menuItemEditarCarrito;
+    }
 }

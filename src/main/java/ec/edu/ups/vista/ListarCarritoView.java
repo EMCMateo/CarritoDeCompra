@@ -7,6 +7,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
@@ -17,10 +18,9 @@ public class ListarCarritoView extends JInternalFrame {
     private JTextField txtCodigo;
     private JButton btnBuscar;
     private JButton btnListar;
-    private JScrollPane scrollPane;
+    private JScrollPane ScrollPane;
     private JLabel lblCodigo;
     private JLabel lblConsejo;
-    private JScrollPane ScrollPane;
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mensajeHandler;
 
@@ -28,8 +28,6 @@ public class ListarCarritoView extends JInternalFrame {
         this.mensajeHandler = mh;
         setContentPane(panelPrincipal);
         inicializarComponentes();
-
-
 
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setSize(1000, 400);
@@ -48,9 +46,13 @@ public class ListarCarritoView extends JInternalFrame {
             }
         };
         tblCarrito.setModel(modelo);
-        modelo.setColumnIdentifiers(new Object[]{"Código", "Fecha", "Total"});
+        modelo.setColumnIdentifiers(new Object[]{
+                "Usuario",
+                "Código",
+                "Fecha",
+                "Total"
+        });
     }
-
 
     public void setTextos(MensajeInternacionalizacionHandler mh) {
         setTitle(mh.get("carrito.listar.titulo"));
@@ -58,13 +60,15 @@ public class ListarCarritoView extends JInternalFrame {
         lblConsejo.setText(mh.get("carrito.listar.lbl.consejo"));
         btnBuscar.setText(mh.get("carrito.listar.btn.buscar"));
         btnListar.setText(mh.get("carrito.listar.btn.listar"));
+
         if (panelPrincipal.getBorder() instanceof TitledBorder) {
             TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
-            border.setTitle(mensajeHandler.get("carrito.listar.panel.titulo"));
+            border.setTitle(mh.get("carrito.listar.panel.titulo"));
             panelPrincipal.repaint();
         }
 
         modelo.setColumnIdentifiers(new Object[]{
+                mh.get("carrito.listar.col.usuario"),
                 mh.get("carrito.listar.col.codigo"),
                 mh.get("carrito.listar.col.fecha"),
                 mh.get("carrito.listar.col.total")
@@ -75,12 +79,31 @@ public class ListarCarritoView extends JInternalFrame {
         modelo.setRowCount(0);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Locale locale = mensajeHandler.getLocale();
+
         for (Carrito c : lista) {
             modelo.addRow(new Object[]{
+                    c.getUsuario() != null ? c.getUsuario().getUsername() : mensajeHandler.get("carrito.listar.desconocido"),
                     c.getCodigo(),
                     sdf.format(c.getFechaCreacion().getTime()),
                     FormateadorUtils.formatearMoneda(c.calcularTotal(), locale)
             });
+        }
+    }
+
+    public void cargarDatosConFormato(List<Carrito> carritos, MensajeInternacionalizacionHandler handler) {
+        modelo.setRowCount(0);
+        Locale locale = handler.getLocale();
+        NumberFormat currencyFormat = NumberFormat.getCurrencyInstance(locale);
+        SimpleDateFormat dateFormat = new SimpleDateFormat(handler.get("formato.fecha"));
+
+        for (Carrito c : carritos) {
+            Object[] fila = new Object[]{
+                    c.getUsuario() != null ? c.getUsuario().getUsername() : handler.get("carrito.listar.desconocido"),
+                    c.getCodigo(),
+                    dateFormat.format(c.getFechaCreacion().getTime()),
+                    currencyFormat.format(c.calcularTotal())
+            };
+            modelo.addRow(fila);
         }
     }
 
@@ -104,10 +127,6 @@ public class ListarCarritoView extends JInternalFrame {
         return btnListar;
     }
 
-    public JScrollPane getScrollPane() {
-        return scrollPane;
-    }
-
     public JLabel getLblCodigo() {
         return lblCodigo;
     }
@@ -119,24 +138,8 @@ public class ListarCarritoView extends JInternalFrame {
     public DefaultTableModel getModelo() {
         return modelo;
     }
-    /**
-     * Recarga la tabla con una lista y actualiza formatos con el Locale del mensajeHandler.
-     */
-    public void cargarDatosConFormato(List<Carrito> lista, MensajeInternacionalizacionHandler mh) {
-        modelo.setRowCount(0);
-        Locale locale = mh.getLocale();
-        for (Carrito c : lista) {
-            String fechaFormateada = FormateadorUtils.formatearFecha(c.getFechaCreacion().getTime(), locale);
-            String totalFormateado = FormateadorUtils.formatearMoneda(c.calcularTotal(), locale);
-            modelo.addRow(new Object[]{c.getCodigo(), fechaFormateada, totalFormateado});
-        }
-    }
 
-    /**
-     * Actualiza el mensajeHandler en esta vista.
-     */
     public void actualizarMensajeHandler(MensajeInternacionalizacionHandler nuevoHandler) {
         this.mensajeHandler = nuevoHandler;
     }
-
 }

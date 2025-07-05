@@ -61,9 +61,23 @@ public class ProductoEliminarView extends JInternalFrame {
         txtPrecio.setText(precioFormateado);
     }
 
-    public int mostrarConfirmacion(String mensaje) {
-        return JOptionPane.showConfirmDialog(this, mensaje, "Confirmación", JOptionPane.YES_NO_OPTION);
+
+    public void actualizarInternacionalizacion(MensajeInternacionalizacionHandler nuevoHandler) {
+        this.mensajeHandler = nuevoHandler;
+        setTextos(nuevoHandler);
+
+        // Si ya hay datos en pantalla, re-formatear el precio
+        String textoPrecio = txtPrecio.getText();
+        if (!textoPrecio.isEmpty()) {
+            try {
+                double valor = FormateadorUtils.parsearMoneda(textoPrecio, nuevoHandler.getLocale());
+                txtPrecio.setText(FormateadorUtils.formatearMoneda(valor, nuevoHandler.getLocale()));
+            } catch (Exception e) {
+                txtPrecio.setText("");
+            }
+        }
     }
+
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);

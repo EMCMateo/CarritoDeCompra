@@ -1,0 +1,321 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="ec.edu.ups.vista.CarritoEditarView">
+  <grid id="27dc6" binding="panelPrincipal" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="515" height="426"/>
+    </constraints>
+    <properties>
+      <background color="-16766928"/>
+      <enabled value="false"/>
+      <foreground color="-262913"/>
+    </properties>
+    <border type="bevel-raised" title="Editar Carrito" title-justification="2" title-position="2">
+      <font name="Century Gothic" style="1"/>
+      <title-color color="-262913"/>
+    </border>
+    <children>
+      <grid id="4aaa4" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16766928"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="53fda" class="javax.swing.JLabel" binding="lblCodigoCarrito">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-16766928"/>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="Codigo De Carrito:"/>
+            </properties>
+          </component>
+          <component id="c3b6d" class="javax.swing.JTextField" binding="txtCodigoCarrito">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <font name="Book Antiqua" style="1"/>
+            </properties>
+          </component>
+          <component id="28af9" class="javax.swing.JLabel" binding="lblFecha">
+            <constraints>
+              <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-16766928"/>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="Fecha:"/>
+            </properties>
+          </component>
+          <component id="5cc87" class="javax.swing.JTextField" binding="txtFecha">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties/>
+          </component>
+        </children>
+      </grid>
+      <grid id="7f17f" layout-manager="GridLayoutManager" row-count="4" column-count="5" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16766928"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="a126" class="javax.swing.JLabel" binding="lblCodigo">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-16764881"/>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="Codigo"/>
+            </properties>
+          </component>
+          <component id="fbc1c" class="javax.swing.JButton" binding="btnBuscar">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="2"/>
+              <horizontalTextPosition value="0"/>
+              <text value="Buscar"/>
+            </properties>
+            <clientProperties>
+              <hideActionText class="java.lang.Boolean" value="false"/>
+            </clientProperties>
+          </component>
+          <component id="b82e3" class="javax.swing.JLabel" binding="lblNombre">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="1" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-16764881"/>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="Nombre"/>
+            </properties>
+          </component>
+          <component id="14fcc" class="javax.swing.JTextField" binding="txtNombre">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+            </properties>
+          </component>
+          <component id="8461e" class="javax.swing.JTextField" binding="txtCodigo">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
+          <component id="47163" class="javax.swing.JLabel" binding="lblCantidad">
+            <constraints>
+              <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-16764881"/>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="Cantidad"/>
+            </properties>
+          </component>
+          <component id="a857c" class="javax.swing.JLabel" binding="lblPrecio">
+            <constraints>
+              <grid row="1" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <background color="-16764881"/>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="Precio"/>
+            </properties>
+          </component>
+          <component id="9282" class="javax.swing.JTextField" binding="txtPrecio">
+            <constraints>
+              <grid row="1" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+            </properties>
+          </component>
+          <component id="8d87b" class="javax.swing.JButton" binding="btnAnadir">
+            <constraints>
+              <grid row="3" column="3" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="2"/>
+              <horizontalTextPosition value="0"/>
+              <text value="Añadir"/>
+            </properties>
+            <clientProperties>
+              <hideActionText class="java.lang.Boolean" value="false"/>
+            </clientProperties>
+          </component>
+          <component id="7aa80" class="javax.swing.JComboBox" binding="cmBoxCantidad">
+            <constraints>
+              <grid row="0" column="4" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+          </component>
+        </children>
+      </grid>
+      <component id="30068" class="javax.swing.JLabel" binding="lblConsejo">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Century Gothic" style="3"/>
+          <foreground color="-262913"/>
+          <text value="Para editar/eliminar un producto hacer click en el producto deseado."/>
+        </properties>
+      </component>
+      <scrollpane id="42343">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16766928"/>
+          <font name="Century Gothic" style="1"/>
+          <foreground color="-328449"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="a575a" class="javax.swing.JTable" binding="tblCarrito">
+            <constraints/>
+            <properties>
+              <font name="Century Gothic" style="1"/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <grid id="aac5b" layout-manager="GridLayoutManager" row-count="3" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16766928"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="4a042" class="javax.swing.JLabel" binding="lblSubt">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="Subtotal"/>
+            </properties>
+          </component>
+          <component id="6f7ed" class="javax.swing.JTextField" binding="txtSubtotal">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+            </properties>
+          </component>
+          <component id="dd02e" class="javax.swing.JLabel" binding="lblIva">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="IVA"/>
+            </properties>
+          </component>
+          <component id="593b7" class="javax.swing.JTextField" binding="txtIVA">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+            </properties>
+          </component>
+          <component id="e419d" class="javax.swing.JLabel" binding="lblTotal">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
+              <text value="Total"/>
+            </properties>
+          </component>
+          <component id="a71ac" class="javax.swing.JTextField" binding="txtTotal">
+            <constraints>
+              <grid row="2" column="1" row-span="1" col-span="2" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="-1"/>
+              </grid>
+            </constraints>
+            <properties>
+              <editable value="false"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="41d9" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <background color="-16764881"/>
+        </properties>
+        <border type="none"/>
+        <children>
+          <component id="a1e00" class="javax.swing.JButton" binding="btnBorrar">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="2"/>
+              <text value="Borrar"/>
+            </properties>
+          </component>
+          <component id="8e219" class="javax.swing.JButton" binding="btnGuardar">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <font name="Century Gothic" style="2"/>
+              <text value="Guardar"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

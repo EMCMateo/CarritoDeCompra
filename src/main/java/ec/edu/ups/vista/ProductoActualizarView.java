@@ -6,6 +6,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.util.Locale;
 
 public class ProductoActualizarView extends JInternalFrame {
 
@@ -55,11 +56,11 @@ public class ProductoActualizarView extends JInternalFrame {
         }
     }
 
-    public void mostrarProducto(String nombre, double precio) {
+    public void mostrarProducto(String nombre, double precio, Locale locale) {
         txtNombre.setText(nombre);
-        String precioFormateado = FormateadorUtils.formatearMoneda(precio, mensajeHandler.getLocale());
-        txtPrecio.setText(precioFormateado);
+        txtPrecio.setText(FormateadorUtils.formatearMoneda(precio, locale));
     }
+
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
@@ -75,4 +76,20 @@ public class ProductoActualizarView extends JInternalFrame {
     public JTextField getTxtPrecio() { return txtPrecio; }
     public JButton getBtnBuscar() { return btnBuscar; }
     public JButton getBtnActualizar() { return btnActualizar; }
+
+    public void actualizarInternacionalizacion(MensajeInternacionalizacionHandler nuevoHandler) {
+        this.mensajeHandler = nuevoHandler;
+        setTextos(nuevoHandler);
+
+        // Re-formatear el campo de precio si tiene contenido
+        String textoPrecio = txtPrecio.getText();
+        if (!textoPrecio.isEmpty()) {
+            try {
+                double valor = FormateadorUtils.parsearMoneda(textoPrecio, nuevoHandler.getLocale());
+                txtPrecio.setText(FormateadorUtils.formatearMoneda(valor, nuevoHandler.getLocale()));
+            } catch (Exception e) {
+                txtPrecio.setText("");
+            }
+        }
+    }
 }

@@ -114,7 +114,7 @@ public class UsuarioController {
             List<Pregunta> todas = preguntaDAO.listarTodas();
             if (todas.size() < 3) {
                 userRegistroView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.sinPreguntas"));
-                return;
+                   return;
             }
 
             Collections.shuffle(todas);

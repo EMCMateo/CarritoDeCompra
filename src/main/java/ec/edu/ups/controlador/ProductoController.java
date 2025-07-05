@@ -80,7 +80,8 @@ public class ProductoController {
 
     private void listarTodosProductos() {
         List<Producto> productos = productoDAO.listarTodos();
-        productoListaView.cargarDatos(productos);
+        productoListaView.cargarDatos(productos, mensajeHandler.getLocale());
+
     }
 
     private void buscarProductoPorCodigo() {
@@ -88,10 +89,10 @@ public class ProductoController {
             int codigo = Integer.parseInt(productoListaView.getTxtBuscar().getText());
             Producto p = productoDAO.buscarPorCodigo(codigo);
             if (p != null) {
-                productoListaView.cargarDatos(List.of(p));
+                productoListaView.cargarDatos(List.of(p), mensajeHandler.getLocale());
             } else {
                 productoListaView.mostrarMensaje(mensajeHandler.get("producto.no.encontrado"));
-                productoListaView.cargarDatos(List.of());
+                productoListaView.cargarDatos(List.of(), mensajeHandler.getLocale());
             }
         } catch (NumberFormatException ex) {
             productoListaView.mostrarMensaje(mensajeHandler.get("producto.codigo.invalido"));
@@ -108,7 +109,8 @@ public class ProductoController {
                     // El precio viene del objeto Producto, no del JTextField
                     productoActualizarView.mostrarProducto(
                             p.getNombre(),
-                            p.getPrecio()
+                            p.getPrecio(),
+                            mensajeHandler.getLocale()
                     );
                 } else {
                     productoActualizarView.mostrarMensaje(mensajeHandler.get("producto.no.encontrado"));

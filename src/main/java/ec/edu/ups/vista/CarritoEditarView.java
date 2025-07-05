@@ -11,7 +11,7 @@ import javax.swing.table.DefaultTableModel;
 import java.util.List;
 import java.util.Locale;
 
-public class CarritoAñadirView extends JInternalFrame {
+public class CarritoEditarView extends JInternalFrame {
     private JTextField txtCodigo;
     private JButton btnBuscar;
     private JLabel lblNombre;
@@ -41,7 +41,7 @@ public class CarritoAñadirView extends JInternalFrame {
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mensajeHandler;
 
-    public CarritoAñadirView(MensajeInternacionalizacionHandler mensajeHandler) {
+    public CarritoEditarView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
@@ -110,7 +110,7 @@ public class CarritoAñadirView extends JInternalFrame {
     }
 
     public void setTextos(MensajeInternacionalizacionHandler mh) {
-        setTitle(mh.get("carrito.anadir.titulo"));
+        setTitle(mh.get("carrito.editar.titulo"));
         lblCodigo.setText(mh.get("carrito.anadir.lbl.codigo"));
         lblNombre.setText(mh.get("carrito.anadir.lbl.nombre"));
         lblPrecio.setText(mh.get("carrito.anadir.lbl.precio"));
@@ -129,7 +129,7 @@ public class CarritoAñadirView extends JInternalFrame {
 
         if (panelPrincipal.getBorder() instanceof TitledBorder) {
             TitledBorder border = (TitledBorder) panelPrincipal.getBorder();
-            border.setTitle(mensajeHandler.get("carrito.add.panel.titulo"));
+            border.setTitle(mensajeHandler.get("carrito.editar.titulo"));
             panelPrincipal.repaint();
         }
 
@@ -141,6 +141,7 @@ public class CarritoAñadirView extends JInternalFrame {
                 mh.get("carrito.anadir.tbl.subtotal")
         });
     }
+
 
     public JTextField getTxtCodigo() {
         return txtCodigo;

@@ -12,7 +12,7 @@ public class Carrito {
     private int codigo;
     private Usuario usuario;
     private List<ItemCarrito> items;
-    private static int ultimoCodigo = 1;
+    private static int ultimoCodigo = 0;
 
     public Carrito() {
         this.codigo = ultimoCodigo++;
