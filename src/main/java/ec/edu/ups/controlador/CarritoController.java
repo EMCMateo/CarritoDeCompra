@@ -7,6 +7,7 @@ import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Usuario;
+import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import ec.edu.ups.vista.CarritoAñadirView;
@@ -63,6 +64,8 @@ public class CarritoController {
         inicializarEventosListarCarritoUsuarioView();
         inicializarEventosEditarCarritoView();
     }
+
+
 
     public void mostrarVentanaEditarDesdeMenu() {
         // Cierra la vista si ya está abierta (por seguridad)
@@ -405,33 +408,84 @@ public class CarritoController {
     }
 
     private void inicializarEventosListarCarritoUsuarioView() {
-        listarCarritoUsuarioView.getBtnBuscar().addActionListener(e -> {
-            String username = listarCarritoUsuarioView.getTxtCodigo().getText();
-            Usuario usuario = usuarioDAO.buscarPorUsername(username);
-            if (usuario != null) {
-                List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
-                if (carritos.isEmpty()) {
-                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.sin.carritos"));
-                } else {
-                    listarCarritoUsuarioView.mostrarMensaje(
-                            mensajeHandler.get("carrito.usuario.tiene.carritos") + " " + carritos.size());
-                }
-            } else {
-                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
-            }
-        });
+        listarCarritoUsuarioView.getBtnBuscar().setEnabled(usuarioActual.getRol() == Rol.ADMINISTRADOR);
 
         listarCarritoUsuarioView.getBtnListar().addActionListener(e -> {
-            String username = listarCarritoUsuarioView.getTxtCodigo().getText();
-            Usuario usuario = usuarioDAO.buscarPorUsername(username);
-            if (usuario != null) {
-                List<Carrito> carritos = carritoDAO.buscarPorUsuario(usuario);
-                listarCarritoUsuarioView.cargarDatosConFormato(carritos, mensajeHandler);
+            List<Carrito> carritos;
+            if (usuarioActual.getRol() == Rol.ADMINISTRADOR) {
+                carritos = carritoDAO.listarTodos();
             } else {
-                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.usuario.no.encontrado"));
+                carritos = carritoDAO.buscarPorUsuario(usuarioActual);
+            }
+            listarCarritoUsuarioView.cargarDatosConFormato(carritos, mensajeHandler);
+        });
+
+        listarCarritoUsuarioView.getTblCarrito().addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                if (e.getClickCount() != 1) return;
+
+                JTable tabla = listarCarritoUsuarioView.getTblCarrito();
+                int fila = tabla.rowAtPoint(e.getPoint());
+                if (fila >= 0) {
+                    Object valorCodigo = tabla.getValueAt(fila, 1);
+                    if (valorCodigo == null) return;
+
+                    int codigoCarrito;
+                    try {
+                        codigoCarrito = Integer.parseInt(valorCodigo.toString());
+                    } catch (NumberFormatException ex) {
+                        return;
+                    }
+
+                    Carrito c = carritoDAO.buscarPorCodigo(codigoCarrito);
+                    if (c == null || c.getUsuario() == null) {
+                        listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.no.encontrado"));
+                        return;
+                    }
+
+                    if (usuarioActual.getRol() != Rol.ADMINISTRADOR &&
+                            !usuarioActual.getUsername().equals(c.getUsuario().getUsername())) {
+                        listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.visualizacion.denegada"));
+                        return;
+                    }
+
+                    Object[] opciones = {
+                            mensajeHandler.get("opcion.editar"),
+                            mensajeHandler.get("opcion.eliminar"),
+                            mensajeHandler.get("opcion.visualizar"),
+                            mensajeHandler.get("opcion.cancelar")
+                    };
+
+                    int respuesta = JOptionPane.showOptionDialog(listarCarritoUsuarioView,
+                            mensajeHandler.get("carrito.accion"),
+                            mensajeHandler.get("ventana.opciones"),
+                            JOptionPane.YES_NO_CANCEL_OPTION,
+                            JOptionPane.QUESTION_MESSAGE,
+                            null, opciones, opciones[3]);
+
+                    if (respuesta == 0) {
+                        carrito = c;
+                        abrirCarritoEditarView(false);
+                    } else if (respuesta == 1) {
+                        int confirmar = JOptionPane.showConfirmDialog(listarCarritoUsuarioView,
+                                mensajeHandler.get("carrito.eliminar.confirmacion"),
+                                mensajeHandler.get("ventana.confirmacion"),
+                                JOptionPane.YES_NO_OPTION);
+                        if (confirmar == JOptionPane.YES_OPTION) {
+                            carritoDAO.eliminar(c.getCodigo());
+                            listarCarritoUsuarioView.getBtnListar().doClick();
+                        }
+                    } else if (respuesta == 2) {
+                        carrito = c;
+                        abrirCarritoEditarView(true);
+                    }
+                }
             }
         });
     }
+
+
 
     private void añadirProductoAlCarrito() {
         if (carrito == null) {
@@ -482,19 +536,49 @@ public class CarritoController {
     }
 
     private void buscarCarrito() {
-        String codigoStr = listarCarritoView.getTxtCodigo().getText();
-        if (!codigoStr.isEmpty()) {
-            int codigo = Integer.parseInt(codigoStr);
-            Carrito carritoBuscado = carritoDAO.buscarPorCodigo(codigo);
-            if (carritoBuscado != null) {
-                listarCarritoView.cargarDatosConFormato(List.of(carritoBuscado), mensajeHandler);
-            } else {
-                listarCarritoView.mostrarMensaje(mensajeHandler.get("carrito.no.encontrado"));
+        String texto = listarCarritoUsuarioView.getTxtCodigo().getText().trim();
+
+        if (texto.isEmpty()) {
+            listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.busqueda.vacia"));
+            return;
+        }
+
+        // Si es administrador, puede buscar por código o por nombre de usuario
+        if (usuarioActual.getRol() == Rol.ADMINISTRADOR) {
+            try {
+                int codigo = Integer.parseInt(texto);  // intento como código
+                Carrito c = carritoDAO.buscarPorCodigo(codigo);
+                if (c != null) {
+                    listarCarritoUsuarioView.cargarDatosConFormato(List.of(c), mensajeHandler);
+                } else {
+                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.no.encontrado"));
+                }
+            } catch (NumberFormatException e) {
+                // No es número, buscar por nombre de usuario
+                Usuario u = usuarioDAO.buscarPorUsername(texto);
+                if (u != null) {
+                    List<Carrito> carritos = carritoDAO.buscarPorUsuario(u);
+                    listarCarritoUsuarioView.cargarDatosConFormato(carritos, mensajeHandler);
+                } else {
+                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("usuario.no.encontrado"));
+                }
             }
         } else {
-            listarCarrito();
+            // Si no es administrador, solo puede buscar su propio carrito por código
+            try {
+                int codigo = Integer.parseInt(texto);
+                Carrito c = carritoDAO.buscarPorCodigo(codigo);
+                if (c != null && c.getUsuario().equals(usuarioActual)) {
+                    listarCarritoUsuarioView.cargarDatosConFormato(List.of(c), mensajeHandler);
+                } else {
+                    listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.no.encontrado"));
+                }
+            } catch (NumberFormatException e) {
+                listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.codigo.invalido"));
+            }
         }
     }
+
 
     private void eliminarCarrito(int codigo) {
         carritoDAO.eliminar(codigo);
@@ -529,6 +613,7 @@ public class CarritoController {
         carritoEditarView.setVisible(true);
         carritoEditarView.toFront();
     }
+
 
 
 

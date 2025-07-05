@@ -240,6 +240,7 @@ public class Main {
             principalView.getMenuItemListarCarrito().setEnabled(false);
             principalView.getMenuItemListarUsuarios().setEnabled(false);
             principalView.getMenuItemBuscarProducto().setEnabled(true);
+            principalView.getMenuItemEditarCarrito().setEnabled(false);
         }
     }
 }

@@ -20,6 +20,7 @@ public class UsuarioView extends JInternalFrame {
     private JLabel lblFechaNac;
     private JTextField txtFechaNac;
     private JButton btnGuardar;
+    private JButton btnRecuperar;
 
     private MensajeInternacionalizacionHandler mensajeHandler;
 
@@ -44,6 +45,7 @@ public class UsuarioView extends JInternalFrame {
         lblCorreo.setText(mensajeHandler.get("usuario.view.correo"));
         lblFechaNac.setText(mensajeHandler.get("usuario.view.fechaNac"));
         btnGuardar.setText(mensajeHandler.get("usuario.view.guardar"));
+        btnRecuperar.setText(mensajeHandler.get("usuario.view.recuperar"));
     }
 
     public void cargarDatosUsuario(Usuario usuario) {
@@ -101,4 +103,7 @@ public class UsuarioView extends JInternalFrame {
         return btnGuardar;
     }
 
+    public JButton getBtnRecuperar() {
+        return btnRecuperar;
+    }
 }

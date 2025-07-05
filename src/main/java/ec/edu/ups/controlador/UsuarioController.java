@@ -58,6 +58,7 @@ public class UsuarioController {
         loginView.getBtnRegistro().addActionListener(e -> {
             loginView.setVisible(false);
             userRegistroView.setVisible(true);
+            userRegistroView.limpiarTodo();
         });
 
         loginView.getBtnRecuperar().addActionListener(e -> recuperarContrasenia());
@@ -377,5 +378,30 @@ public class UsuarioController {
     public void setUsuarioView(UsuarioView usuarioView) {
         this.usuarioView = usuarioView;
         cargarEventoGuardarDatos();
+        cargarEventoRecuperar();
+    }
+    private void cargarEventoRecuperar() {
+        if (usuarioView == null || usuario == null) return;
+
+        usuarioView.getBtnRecuperar().addActionListener(e -> {
+            JPasswordField passwordField = new JPasswordField();
+            int option = JOptionPane.showConfirmDialog(
+                    usuarioView,
+                    passwordField,
+                    mensajeHandler.get("mensaje.recuperar.nuevaContra"),
+                    JOptionPane.OK_CANCEL_OPTION
+            );
+
+            if (option == JOptionPane.OK_OPTION) {
+                String nuevaContra = new String(passwordField.getPassword());
+                if (nuevaContra.isEmpty()) {
+                    JOptionPane.showMessageDialog(usuarioView, mensajeHandler.get("mensaje.recuperar.vacia"));
+                    return;
+                }
+                usuario.setPassword(nuevaContra);
+                usuarioDAO.actualizar(usuario);
+                JOptionPane.showMessageDialog(usuarioView, mensajeHandler.get("mensaje.recuperar.exito"));
+            }
+        });
     }
 }

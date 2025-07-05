@@ -59,12 +59,14 @@ public class PrincipalView extends JFrame {
         desktop = new MiJDesktopPane(mensajeInternacionalizacionHandler);
         menuBar = new JMenuBar();
 
+        menuYo = new JMenu();
+
         menuProducto = new JMenu();
         menuCarrito = new JMenu();
         menuUsuarios = new JMenu();
         menuIdiomas = new JMenu();
         menuSalir = new JMenu();
-        menuYo = new JMenu();
+
 
         menuItemCrearProducto = new JMenuItem();
         menuItemYo = new JMenuItem();
@@ -81,6 +83,8 @@ public class PrincipalView extends JFrame {
         menuItemEN = new JMenuItem();
         menuItemIT = new JMenuItem();
         menutItemListarCarritoUsuario = new JMenuItem();
+
+        menuYo.add(menuItemYo);
 
         menuProducto.add(menuItemCrearProducto);
         menuProducto.add(menuItemEliminarProducto);
@@ -101,14 +105,14 @@ public class PrincipalView extends JFrame {
         menuSalir.add(menuItemCerrarSesion);
         menuSalir.add(menuItemSalir);
 
-        menuYo.add(menuItemYo);
 
+        menuBar.add(menuYo);
         menuBar.add(menuProducto);
         menuBar.add(menuCarrito);
         menuBar.add(menuUsuarios);
         menuBar.add(menuIdiomas);
         menuBar.add(menuSalir);
-        menuBar.add(menuYo);
+
 
         setJMenuBar(menuBar);
     }

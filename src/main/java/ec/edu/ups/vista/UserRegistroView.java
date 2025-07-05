@@ -91,4 +91,16 @@ public class UserRegistroView extends JFrame {
     public JButton getBtnCancelar() {
         return btnCancelar;
     }
+
+
+
+    public void limpiarTodo(){
+        txtUsername.setText("");
+        txtCorreo.setText("");
+        txtTelefono.setText("");
+        txtFechaNacimiento.setText("");
+        txtNombreCompleto.setText("");
+        pswContra.setText("");
+        pswContra2.setText("");
+    }
 }
