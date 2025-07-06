@@ -19,18 +19,19 @@ public class ProductoController {
     private final ProductoEliminarView productoEliminarView;
     private final CarritoAñadirView carritoAñadirView;
 
-    // Flags para evitar doble clic
     private boolean procesandoAnadir = false;
     private boolean procesandoActualizar = false;
     private boolean procesandoEliminar = false;
 
-    public ProductoController(ProductoDAO productoDAO,
-                              ProductoAnadirView productoAnadirView,
-                              ProductoListaView productoListaView,
-                              CarritoAñadirView carritoAñadirView,
-                              ProductoEliminarView productoEliminarView,
-                              ProductoActualizarView productoActualizarView,
-                              MensajeInternacionalizacionHandler mensajeHandler) {
+    public ProductoController(
+            ProductoDAO productoDAO,
+            ProductoAnadirView productoAnadirView,
+            ProductoListaView productoListaView,
+            CarritoAñadirView carritoAñadirView,
+            ProductoEliminarView productoEliminarView,
+            ProductoActualizarView productoActualizarView,
+            MensajeInternacionalizacionHandler mensajeHandler) {
+
         this.productoDAO = productoDAO;
         this.productoAnadirView = productoAnadirView;
         this.productoListaView = productoListaView;
@@ -42,7 +43,7 @@ public class ProductoController {
         inicializarEventos();
     }
 
-    public void inicializarEventos() {
+    private void inicializarEventos() {
         configurarEventosAnadir();
         configurarEventosLista();
         configurarEventosActualizar();
@@ -55,33 +56,42 @@ public class ProductoController {
             procesandoAnadir = true;
 
             try {
-                int codigo = Integer.parseInt(productoAnadirView.getTxtCodigo().getText());
+                String codTxt = productoAnadirView.getTxtCodigo().getText().trim();
+                String nomTxt = productoAnadirView.getTxtNombre().getText().trim();
+                String precTxt = productoAnadirView.getTxtPrecio().getText().trim();
+
+                if (codTxt.isEmpty() || nomTxt.isEmpty() || precTxt.isEmpty()) {
+                    productoAnadirView.mostrarMensaje(mensajeHandler.get("producto.datos.invalidos"));
+                    return;
+                }
+
+                int codigo = Integer.parseInt(codTxt);
+                String nombre = nomTxt;
+
+
+                double precio = FormateadorUtils.parsearMonedaFlexible(precTxt);
+
 
                 if (productoDAO.buscarPorCodigo(codigo) != null) {
                     productoAnadirView.mostrarMensaje(mensajeHandler.get("producto.codigo.repetido"));
-                    return; // ⬅️ Detiene ejecución si ya existe
+                    return;
                 }
-
-                String nombre = productoAnadirView.getTxtNombre().getText();
-
-                double precio = FormateadorUtils.parsearMoneda(
-                        productoAnadirView.getTxtPrecio().getText(),
-                        mensajeHandler.getLocale());
 
                 Producto p = new Producto(codigo, nombre, precio);
                 productoDAO.crear(p);
                 productoAnadirView.mostrarMensaje(mensajeHandler.get("producto.guardado"));
                 productoAnadirView.limpiarCampos();
 
-            } catch (NumberFormatException | java.text.ParseException ex) {
+            } catch (NumberFormatException ex) {
                 productoAnadirView.mostrarMensaje(mensajeHandler.get("producto.datos.invalidos"));
-                return;
             } finally {
                 procesandoAnadir = false;
             }
         });
     }
 
+
+    // Eventos Listar / Buscar
 
     private void configurarEventosLista() {
         productoListaView.getBtnListar().addActionListener(e -> listarTodosProductos());
@@ -108,6 +118,9 @@ public class ProductoController {
         }
     }
 
+
+    // Eventos Actualizar Producto
+
     private void configurarEventosActualizar() {
         productoActualizarView.getBtnBuscar().addActionListener(e -> {
             try {
@@ -132,7 +145,7 @@ public class ProductoController {
             try {
                 int codigo = Integer.parseInt(productoActualizarView.getTxtCodigo().getText());
                 String nombre = productoActualizarView.getTxtNombre().getText();
-                double precio = Double.parseDouble(productoActualizarView.getTxtPrecio().getText());
+                double precio = Double.parseDouble(productoActualizarView.getTxtPrecio().getText().replace(",", "."));
 
                 Producto p = productoDAO.buscarPorCodigo(codigo);
                 if (p != null) {
@@ -152,11 +165,15 @@ public class ProductoController {
         });
     }
 
+
+    // Eventos Eliminar Producto
+
     private void configurarEventosEliminar() {
         productoEliminarView.getBtnBuscar().addActionListener(e -> {
             try {
                 int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
                 Producto p = productoDAO.buscarPorCodigo(codigo);
+
                 if (p != null) {
                     productoEliminarView.mostrarProducto(p.getNombre(), p.getPrecio());
                 } else {
@@ -174,7 +191,9 @@ public class ProductoController {
 
             try {
                 int codigo = Integer.parseInt(productoEliminarView.getTxtCodigo().getText());
-                if (productoDAO.buscarPorCodigo(codigo) != null) {
+                Producto p = productoDAO.buscarPorCodigo(codigo);
+
+                if (p != null) {
                     int confirm = JOptionPane.showConfirmDialog(null,
                             mensajeHandler.get("producto.eliminar.confirmar"),
                             mensajeHandler.get("ventana.confirmacion"),
@@ -186,10 +205,12 @@ public class ProductoController {
                         productoEliminarView.limpiarCampos();
                     }
                 } else {
-                    productoEliminarView.mostrarMensaje(mensajeHandler.get("producto.eliminacion.cancelada"));
+                    productoEliminarView.mostrarMensaje(mensajeHandler.get("producto.no.encontrado"));
                 }
             } catch (NumberFormatException ex) {
                 productoEliminarView.mostrarMensaje(mensajeHandler.get("producto.codigo.invalido"));
+            } finally {
+                procesandoEliminar = false;
             }
         });
     }

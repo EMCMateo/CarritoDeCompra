@@ -73,13 +73,11 @@ public class CarritoController {
             carritoEditarView.setVisible(false);
         }
 
-        // Selecciona carrito desde comboBox SIEMPRE
+        // Selecciona carrito desde comboBox
         seleccionarCarritoDesdeComboBox();
     }
 
-
     private void seleccionarCarritoDesdeComboBox() {
-        // Limpiamos para que no herede el anterior
         carrito = null;
         visualizarCarritoEditar = false;
 
@@ -231,10 +229,10 @@ public class CarritoController {
         carritoEditarView.cargarDatosTabla(carrito.obtenerItems());
         mostrarTotalesEditar();
 
-        // ✅ Esta línea define si se puede editar
+
         boolean habilitar = !soloVisualizar;
 
-        // ✅ Habilita o deshabilita los botones y campos
+
         carritoEditarView.getBtnGuardar().setEnabled(habilitar);
         carritoEditarView.getBtnBorrar().setEnabled(habilitar);
         carritoEditarView.getBtnAnadir().setEnabled(habilitar);
@@ -242,14 +240,13 @@ public class CarritoController {
         carritoEditarView.getTxtCodigo().setEditable(habilitar);
         carritoEditarView.getCmBoxCantidad().setEnabled(habilitar);
 
-        // ✅ Si está en modo visualizar, desactiva clics sobre la tabla
         if (soloVisualizar) {
             for (MouseListener ml : carritoEditarView.getTblCarrito().getMouseListeners()) {
                 carritoEditarView.getTblCarrito().removeMouseListener(ml);
             }
         } else {
-            // ✅ Si es editable, asegúrate de volver a agregar el listener
-            inicializarEventosEditarCarritoView(); // Solo si no se agregaron antes
+
+            inicializarEventosEditarCarritoView();
         }
 
         carritoEditarView.setVisible(true);
@@ -266,10 +263,6 @@ public class CarritoController {
         carritoEditarView.getTxtTotal().setText(
                 FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale));
     }
-
-    // ---------------------------
-    // RESTO DEL CONTROLADOR
-    // ---------------------------
 
     private void inicializarEventosAñadirView() {
         carritoAñadirView.getBtnBuscar().addActionListener(e -> {

@@ -88,9 +88,9 @@ public class CarritoAñadirView extends JInternalFrame {
             modelo.addRow(new Object[]{
                     item.getProducto().getCodigo(),
                     item.getProducto().getNombre(),
-                    FormateadorUtils.formatearMoneda(item.getProducto().getPrecio(), locale),
+                    FormateadorUtils.formatearMonedaConSimbolo(item.getProducto().getPrecio(), locale),
                     item.getCantidad(),
-                    FormateadorUtils.formatearMoneda(item.getProducto().getPrecio() * item.getCantidad(), locale)
+                    FormateadorUtils.formatearMonedaConSimbolo(item.getProducto().getPrecio() * item.getCantidad(), locale)
             });
         }
     }
@@ -124,8 +124,6 @@ public class CarritoAñadirView extends JInternalFrame {
         lblFecha.setText(mh.get("carrito.anadir.lbl.fecha"));
         lblConsejo.setText(mh.get("carrito.anadir.lbl.consejo"));
 
-        btnBuscar.setText(mh.get("carrito.anadir.btn.buscar"));
-        btnAnadir.setText(mh.get("carrito.anadir.btn.anadir"));
         btnBorrar.setText(mh.get("carrito.anadir.btn.borrar"));
         btnGuardar.setText(mh.get("carrito.anadir.btn.guardar"));
 

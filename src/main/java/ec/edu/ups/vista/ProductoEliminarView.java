@@ -89,7 +89,7 @@ public class ProductoEliminarView extends JInternalFrame {
         if (!textoPrecio.isEmpty()) {
             try {
                 double valor = FormateadorUtils.parsearMoneda(textoPrecio, nuevoHandler.getLocale());
-                txtPrecio.setText(FormateadorUtils.formatearMoneda(valor, nuevoHandler.getLocale()));
+                txtPrecio.setText(FormateadorUtils.formatearMonedaConSimbolo(valor, nuevoHandler.getLocale()));
             } catch (Exception e) {
                 txtPrecio.setText("");
             }

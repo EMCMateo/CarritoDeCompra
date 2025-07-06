@@ -84,8 +84,7 @@ public class Main {
 
         // Controladores
         new ProductoController(productoDAO, productoAnadirView, productoListaView,
-                carritoAnadirView, productoEliminarView, productoActualizarView, mensajeHandler)
-                .inicializarEventos();
+                carritoAnadirView, productoEliminarView, productoActualizarView, mensajeHandler);
 
         CarritoController carritoController = new CarritoController(
                 carritoDAO,

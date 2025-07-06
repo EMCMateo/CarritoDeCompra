@@ -74,7 +74,7 @@ public class ProductoListaView extends JInternalFrame {
             modelo.addRow(new Object[]{
                     p.getCodigo(),
                     p.getNombre(),
-                    FormateadorUtils.formatearMoneda(p.getPrecio(), locale)
+                    FormateadorUtils.formatearMonedaConSimbolo(p.getPrecio(), locale)
             });
         }
     }

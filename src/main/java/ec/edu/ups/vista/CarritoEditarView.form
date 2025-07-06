@@ -95,7 +95,7 @@
             <properties>
               <font name="Century Gothic" style="2"/>
               <horizontalTextPosition value="0"/>
-              <text value="Buscar"/>
+              <text value=""/>
             </properties>
             <clientProperties>
               <hideActionText class="java.lang.Boolean" value="false"/>
@@ -171,7 +171,7 @@
             <properties>
               <font name="Century Gothic" style="2"/>
               <horizontalTextPosition value="0"/>
-              <text value="Añadir"/>
+              <text value=""/>
             </properties>
             <clientProperties>
               <hideActionText class="java.lang.Boolean" value="false"/>

@@ -144,7 +144,7 @@ public class UsuarioController {
             loginView.setVisible(true);
         });
     }
-
+        //METODOS DE VALIDACION
     private boolean validarCorreo(String correo) {
         String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         return Pattern.matches(regex, correo);

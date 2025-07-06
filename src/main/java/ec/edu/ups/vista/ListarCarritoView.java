@@ -88,7 +88,7 @@ public class ListarCarritoView extends JInternalFrame {
                     c.getUsuario() != null ? c.getUsuario().getUsername() : mensajeHandler.get("carrito.listar.desconocido"),
                     c.getCodigo(),
                     sdf.format(c.getFechaCreacion().getTime()),
-                    FormateadorUtils.formatearMoneda(c.calcularTotal(), locale)
+                    FormateadorUtils.formatearMonedaConSimbolo(c.calcularTotal(), locale)
             });
         }
     }

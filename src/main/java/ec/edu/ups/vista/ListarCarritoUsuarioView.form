@@ -39,7 +39,7 @@
               <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <background color="-16766928"/>
+              <background color="-262913"/>
               <enabled value="true"/>
               <font name="Century Gothic" style="3"/>
               <foreground color="-262913"/>
@@ -62,7 +62,7 @@
               <grid row="0" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
-              <background color="-16766928"/>
+              <background color="-262913"/>
               <enabled value="true"/>
               <font name="Century Gothic" style="3"/>
               <foreground color="-262913"/>

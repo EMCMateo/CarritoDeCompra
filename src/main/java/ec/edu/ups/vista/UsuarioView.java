@@ -5,6 +5,7 @@ import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.awt.*;
 import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -109,10 +110,19 @@ public class UsuarioView extends JInternalFrame {
         return btnRecuperar;
     }
 
-    public void setIconos(){
-        URL urlRecuperar = getClass().getResource("/ios-undo.png");
-        btnRecuperar.setIcon(new ImageIcon(urlRecuperar));
-        URL urlConfirmar = getClass().getResource("/md-done-all.png");
-        btnGuardar.setIcon(new ImageIcon(urlConfirmar));
+
+
+    public void setIconos() {
+        setIconoEscalado(btnRecuperar, "/ios-undo.png", 20, 20);
+        setIconoEscalado(btnGuardar, "/md-done-all.png", 20, 20);
+
+    }
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
     }
 }
