@@ -9,6 +9,7 @@ import ec.edu.ups.modelo.*;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.net.URL;
 
 public class Main {
 
@@ -124,7 +125,13 @@ public class Main {
         });
 
         // Menús funcionales
-        principalView.getMenuItemCrearProducto().addActionListener(e -> abrirVentana(escritorio, productoAnadirView));
+        principalView.getMenuItemCrearProducto().addActionListener(e ->
+                abrirVentana(escritorio, productoAnadirView)
+
+
+        );
+
+
         principalView.getMenuItemBuscarProducto().addActionListener(e -> abrirVentana(escritorio, productoListaView));
         principalView.getMenuItemEliminarProducto().addActionListener(e -> abrirVentana(escritorio, productoEliminarView));
         principalView.getMenuItemActualizarProducto().addActionListener(e -> abrirVentana(escritorio, productoActualizarView));

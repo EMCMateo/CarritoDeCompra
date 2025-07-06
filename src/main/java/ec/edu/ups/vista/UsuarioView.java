@@ -5,6 +5,7 @@ import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.net.URL;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -33,6 +34,7 @@ public class UsuarioView extends JInternalFrame {
         setSize(400, 300);
         setLocation(180,0);
         setTextos(mensajeHandler);
+        setIconos();
 
 
     }
@@ -105,5 +107,12 @@ public class UsuarioView extends JInternalFrame {
 
     public JButton getBtnRecuperar() {
         return btnRecuperar;
+    }
+
+    public void setIconos(){
+        URL urlRecuperar = getClass().getResource("/ios-undo.png");
+        btnRecuperar.setIcon(new ImageIcon(urlRecuperar));
+        URL urlConfirmar = getClass().getResource("/md-done-all.png");
+        btnGuardar.setIcon(new ImageIcon(urlConfirmar));
     }
 }

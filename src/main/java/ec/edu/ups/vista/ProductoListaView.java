@@ -9,6 +9,7 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -31,6 +32,7 @@ public class ProductoListaView extends JInternalFrame {
         initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
+        setIconos();
     }
 
     private void initComponents() {
@@ -91,4 +93,21 @@ public class ProductoListaView extends JInternalFrame {
     public JButton getBtnListar() { return btnListar; }
     public JTable getTblProductos() { return tblProductos; }
     public DefaultTableModel getModelo() { return modelo; }
+
+
+
+    public void setIconos(){
+
+        setIconoEscalado(btnBuscar, "/ios-search.png", 20, 20);
+        setIconoEscalado(btnListar, "/md-paper.png", 20, 20);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
+    }
 }

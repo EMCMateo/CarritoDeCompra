@@ -5,6 +5,8 @@ import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
@@ -33,6 +35,7 @@ public class UsuarioPreguntaView extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setTextos();
+        setIconos();
     }
 
     private void setTextos() {
@@ -79,4 +82,24 @@ public class UsuarioPreguntaView extends JFrame {
     public JLabel getLblRespuesta() {
         return lblRespuesta;
     }
+    public void setIconos() {
+        URL urlFinalizar = getClass().getResource("/md-done-all.png");
+        btnFinalizar.setIcon(new ImageIcon(urlFinalizar));
+
+        setIconoEscalado(btnFinalizar, "/md-done-all.png", 20, 20);
+        setIconoEscalado(btnGuardar, "/md-add-circle.png", 20, 20);
+
+
+    }
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
+    }
+
 }
+
+

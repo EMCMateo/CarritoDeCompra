@@ -6,6 +6,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.net.URL;
 import java.util.Locale;
 
 public class ProductoActualizarView extends JInternalFrame {
@@ -40,6 +41,7 @@ public class ProductoActualizarView extends JInternalFrame {
         setIconifiable(true);
         setSize(400, 200);
         setVisible(true);
+        setIconos();
     }
 
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
@@ -92,4 +94,21 @@ public class ProductoActualizarView extends JInternalFrame {
             }
         }
     }
+
+
+    public void setIconos(){
+
+        setIconoEscalado(btnBuscar, "/ios-search.png", 20, 20);
+        setIconoEscalado(btnActualizar, "/ios-create.png", 20, 20);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
+    }
 }
+

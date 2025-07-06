@@ -7,6 +7,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -38,6 +39,8 @@ public class PreguntasModificarView extends JFrame {
         setLocationRelativeTo(null); // centrar ventana
 
         actualizarTextos();
+        URL urlVerificar = getClass().getResource("/md-done-all.png");
+        btnVerificar.setIcon(new ImageIcon(urlVerificar));
     }
 
     public void mostrarPreguntasDelUsuario(List<RespuestaSeguridad> respuestasDelUsuario) {
@@ -89,6 +92,19 @@ public class PreguntasModificarView extends JFrame {
     public void limpiarCampos() {
         for (JTextField campo : camposDeRespuesta.values()) {
             campo.setText("");
+        }
+    }
+
+    public void setIconos() {
+
+        setIconoEscalado(btnVerificar, "/md-done-all.png", 20, 20);
+    }
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
         }
     }
 }

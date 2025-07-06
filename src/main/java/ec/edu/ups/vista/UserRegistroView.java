@@ -3,6 +3,8 @@ package ec.edu.ups.vista;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
+import java.awt.*;
+import java.net.URL;
 
 public class UserRegistroView extends JFrame {
     private JPanel panelPrincipal;
@@ -33,6 +35,7 @@ public class UserRegistroView extends JFrame {
         setLocationRelativeTo(null);
         setTitle(mensajeHandler.get("usuario.registro.panel.titulo"));
         setTextos();
+        setIconos();
     }
 
 
@@ -102,5 +105,20 @@ public class UserRegistroView extends JFrame {
         txtNombreCompleto.setText("");
         pswContra.setText("");
         pswContra2.setText("");
+    }
+
+    public void setIconos(){
+
+        setIconoEscalado(btnCancelar, "/ios-undo.png", 20, 20);
+        setIconoEscalado(btnConfirmar, "/md-done-all.png", 20, 20);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
     }
 }

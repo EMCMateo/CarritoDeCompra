@@ -4,6 +4,8 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
+import java.awt.*;
+import java.net.URL;
 
 public class LoginView extends JFrame {
     private JPanel panelPrincipal;
@@ -23,20 +25,19 @@ public class LoginView extends JFrame {
 
         setContentPane(panelPrincipal);
         inicializarComponentes();
+        setIconos();
     }
 
     private void inicializarComponentes() {
 
-        System.out.println("Panel principal: " + panelPrincipal);
 
-        setSize(500, 500);
+        setSize(500, 300);
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
         setResizable(true);
         setLocationRelativeTo(null);
 
         setTextos(mensajeInternacionalizacionHandler);
 
-        pack();
         setLocationRelativeTo(null); // Centrar después de pack()
 
         setVisible(true);
@@ -99,6 +100,21 @@ public class LoginView extends JFrame {
             panelPrincipal.repaint();
         }
     }
+
+    public void setIconos() {
+        setIconoEscalado(btnIniciarSesion, "/ios-arrow-dropright-circle.png", 20, 20);
+        setIconoEscalado(btnRegistro, "/md-person-add.png", 20, 20);
+        setIconoEscalado(btnRecuperar, "/ios-repeat.png", 20, 20);
+    }
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
+    }
+
 
 
 }

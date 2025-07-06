@@ -7,6 +7,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.net.URL;
 import java.util.List;
 
 public class ProductoAnadirView extends JInternalFrame {
@@ -30,6 +31,7 @@ public class ProductoAnadirView extends JInternalFrame {
         btnLimpiar.addActionListener(e -> limpiarCampos());
         setTextos(mensajeHandler);
         configurarVentana();
+        setIconos();
     }
 
     private void initComponents() {
@@ -97,6 +99,8 @@ public class ProductoAnadirView extends JInternalFrame {
             }
         }
     }
+    // En ProductoAnadirView.java
+
 
 
     public JTextField getTxtPrecio() { return txtPrecio; }
@@ -104,4 +108,21 @@ public class ProductoAnadirView extends JInternalFrame {
     public JTextField getTxtCodigo() { return txtCodigo; }
     public JButton getBtnAceptar() { return btnAceptar; }
     public JButton getBtnLimpiar() { return btnLimpiar; }
+
+
+
+    public void setIconos(){
+
+        setIconoEscalado(btnAceptar, "/md-done-all.png", 20, 20);
+        setIconoEscalado(btnLimpiar, "/ios-trash.png", 20, 20);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
+    }
 }

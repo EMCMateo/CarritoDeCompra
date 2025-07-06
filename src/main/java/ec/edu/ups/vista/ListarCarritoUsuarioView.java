@@ -7,6 +7,8 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.net.URL;
 import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -37,6 +39,7 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
         setResizable(true);
         setVisible(true);
         setTextos(mh);
+        setIconos();
     }
 
     private void inicializarComponentes() {
@@ -139,5 +142,21 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
 
     public void actualizarMensajeHandler(MensajeInternacionalizacionHandler nuevoHandler) {
         this.mensajeHandler = nuevoHandler;
+    }
+
+
+
+    public void setIconos() {
+        setIconoEscalado(btnBuscar, "/ios-search.png", 20, 20);
+        setIconoEscalado(btnListar, "/md-paper.png", 20, 20);
+
+    }
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
     }
 }

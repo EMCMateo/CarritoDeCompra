@@ -8,6 +8,8 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
@@ -52,7 +54,7 @@ public class CarritoAñadirView extends JInternalFrame {
         setMaximizable(true);
         setSize(600, 400); // si no usas pack()
         setTextos(mensajeHandler); // si tienes texto internacionalizable
-
+        setIconos();
 
     }
 
@@ -244,6 +246,22 @@ public class CarritoAñadirView extends JInternalFrame {
 
     public JLabel getLblCodigo() {
         return lblCodigo;
+    }
+
+
+    public void setIconos() {
+        setIconoEscalado(btnBuscar, "/ios-search.png", 20, 20);
+        setIconoEscalado(btnAnadir, "/md-add-circle.png", 20, 20);
+        setIconoEscalado(btnGuardar, "/md-done-all.png", 20, 20);
+        setIconoEscalado(btnBorrar, "/ios-trash.png", 20, 20);
+    }
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
     }
 
 

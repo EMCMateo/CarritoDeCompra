@@ -6,6 +6,7 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
+import java.net.URL;
 
 public class ProductoEliminarView extends JInternalFrame {
 
@@ -26,6 +27,7 @@ public class ProductoEliminarView extends JInternalFrame {
         initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
+        setIconos();
     }
 
     private void initComponents() {
@@ -62,6 +64,22 @@ public class ProductoEliminarView extends JInternalFrame {
     }
 
 
+    public void setIconos(){
+
+        setIconoEscalado(btnBuscar, "/ios-search.png", 20, 20);
+        setIconoEscalado(btnEliminar, "/ios-trash.png", 20, 20);
+    }
+
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
+    }
+
+
     public void actualizarInternacionalizacion(MensajeInternacionalizacionHandler nuevoHandler) {
         this.mensajeHandler = nuevoHandler;
         setTextos(nuevoHandler);
@@ -89,9 +107,12 @@ public class ProductoEliminarView extends JInternalFrame {
         txtPrecio.setText("");
     }
 
+
     public JTextField getTxtCodigo() { return txtCodigo; }
     public JTextField getTxtNombre() { return txtNombre; }
     public JTextField getTxtPrecio() { return txtPrecio; }
     public JButton getBtnBuscar() { return btnBuscar; }
     public JButton getBtnEliminar() { return btnEliminar; }
+
+
 }

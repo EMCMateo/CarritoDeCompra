@@ -10,6 +10,7 @@ import javax.swing.border.TitledBorder;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.net.URL;
 import java.util.List;
 
 public class ListarUsuarioView extends JInternalFrame {
@@ -197,6 +198,22 @@ public class ListarUsuarioView extends JInternalFrame {
     public void actualizarMensajeHandler(MensajeInternacionalizacionHandler nuevoHandler) {
         this.mensajeHandler = nuevoHandler;
         setTextos();
+    }
+
+
+    public void setIconos() {
+        setIconoEscalado(btnBuscar, "/ios-search.png", 20, 20);
+        setIconoEscalado(btnListarTodos, "/md-paper.png", 20, 20);
+        setIconoEscalado(btnAdmin, "/md-star-outline.png", 20, 20);
+        setIconoEscalado(btnClientes, "/ios-man.png", 20, 20);
+    }
+    private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(ancho, alto, Image.SCALE_SMOOTH);
+            boton.setIcon(new ImageIcon(imagenEscalada));
+        }
     }
 
 

@@ -1,13 +1,11 @@
 package ec.edu.ups.vista;
 
-import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JPanel;
+import javax.swing.*;
 
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
+import java.awt.*;
+import java.net.URL;
 
 public class PrincipalView extends JFrame {
 
@@ -146,20 +144,62 @@ public class PrincipalView extends JFrame {
 
     // ==== Getters para controladores ====
 
-    public JMenuItem getMenuItemCrearProducto() { return menuItemCrearProducto; }
-    public JMenuItem getMenuItemEliminarProducto() { return menuItemEliminarProducto; }
-    public JMenuItem getMenuItemActualizarProducto() { return menuItemActualizarProducto; }
-    public JMenuItem getMenuItemBuscarProducto() { return menuItemBuscarProducto; }
-    public JMenuItem getMenuItemCrearCarrito() { return menuItemCrearCarrito; }
-    public JMenuItem getMenuItemListarCarrito() { return menuItemListarCarrito; }
-    public JMenuItem getMenuItemListarUsuarios() { return menuItemListarUsuarios; }
-    public JMenuItem getMenuItemCerrarSesion() { return menuItemCerrarSesion; }
-    public JMenuItem getMenuItemSalir() { return menuItemSalir; }
-    public JMenuItem getMenuItemES() { return menuItemES; }
-    public JMenuItem getMenuItemEN() { return menuItemEN; }
-    public JMenuItem getMenuItemIT() { return menuItemIT; }
-    public JMenuItem getMenutItemListarCarritoUsuario() {return menutItemListarCarritoUsuario; }
-    public JMenuItem getMenuItemYo(){return menuItemYo;}
+    public JMenuItem getMenuItemCrearProducto() {
+        return menuItemCrearProducto;
+    }
+
+    public JMenuItem getMenuItemEliminarProducto() {
+        return menuItemEliminarProducto;
+    }
+
+    public JMenuItem getMenuItemActualizarProducto() {
+        return menuItemActualizarProducto;
+    }
+
+    public JMenuItem getMenuItemBuscarProducto() {
+        return menuItemBuscarProducto;
+    }
+
+    public JMenuItem getMenuItemCrearCarrito() {
+        return menuItemCrearCarrito;
+    }
+
+    public JMenuItem getMenuItemListarCarrito() {
+        return menuItemListarCarrito;
+    }
+
+    public JMenuItem getMenuItemListarUsuarios() {
+        return menuItemListarUsuarios;
+    }
+
+    public JMenuItem getMenuItemCerrarSesion() {
+        return menuItemCerrarSesion;
+    }
+
+    public JMenuItem getMenuItemSalir() {
+        return menuItemSalir;
+    }
+
+    public JMenuItem getMenuItemES() {
+        return menuItemES;
+    }
+
+    public JMenuItem getMenuItemEN() {
+        return menuItemEN;
+    }
+
+    public JMenuItem getMenuItemIT() {
+        return menuItemIT;
+    }
+
+    public JMenuItem getMenutItemListarCarritoUsuario() {
+        return menutItemListarCarritoUsuario;
+    }
+
+    public JMenuItem getMenuItemYo() {
+        return menuItemYo;
+    }
+
     public MiJDesktopPane getDesktop() {
         return desktop;
     }
@@ -167,4 +207,34 @@ public class PrincipalView extends JFrame {
     public JMenuItem getMenuItemEditarCarrito() {
         return menuItemEditarCarrito;
     }
+
+
+    public void setIconos() {
+        setIcono(menuItemCrearProducto, "/ios-add-circle.png");
+        setIcono(menuItemEliminarProducto, "/ios-trash.png");
+        setIcono(menuItemActualizarProducto, "/ios-create.png");
+        setIcono(menuItemBuscarProducto, "/ios-search.png");
+        setIcono(menuItemCrearCarrito, "/md-add-circle.png");
+        setIcono(menuItemListarCarrito, "/md-paper.png");
+        setIcono(menuItemEditarCarrito, "/ios-create.png");
+        setIcono(menuItemListarUsuarios, "/md-paper.png");
+        setIcono(menuItemCerrarSesion, "/md-log-out.png");
+        setIcono(menuItemSalir, "/md-close.png");
+        setIcono(menuItemES, "/ios-airplane.png");
+        setIcono(menuItemEN, "/ios-airplane.png");
+        setIcono(menuItemIT, "/ios-airplane.png");
+        setIcono(menuItemYo, "/md-person.png");
+        setIcono(menutItemListarCarritoUsuario, "/md-paper.png");
+    }
+
+    private void setIcono(JMenuItem menuItem, String ruta) {
+        URL url = getClass().getResource(ruta);
+        if (url != null) {
+            ImageIcon iconoOriginal = new ImageIcon(url);
+            Image imagenEscalada = iconoOriginal.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            menuItem.setIcon(new ImageIcon(imagenEscalada));
+        }
+    }
+
+
 }
