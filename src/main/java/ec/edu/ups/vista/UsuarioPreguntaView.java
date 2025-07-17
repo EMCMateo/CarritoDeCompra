@@ -7,9 +7,6 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-import java.util.List;
-import java.util.Map;
-import java.util.HashMap;
 
 public class UsuarioPreguntaView extends JFrame {
 

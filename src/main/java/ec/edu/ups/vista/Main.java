@@ -6,17 +6,20 @@ import ec.edu.ups.controlador.UsuarioController;
 import ec.edu.ups.dao.*;
 import ec.edu.ups.dao.impl.*;
 import ec.edu.ups.modelo.*;
+import ec.edu.ups.util.ConfiguracionAlmacenamiento;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.net.URL;
+import java.io.File;
 
 public class Main {
 
-    private static final UsuarioDAO usuarioDAO = new UsuarioDAOMemoria();
-    private static final ProductoDAO productoDAO = new ProductoDAOMemoria();
-    private static final CarritoDAO carritoDAO = new CarritoDAOMemoria();
-    private static final PreguntaDAO preguntaDAO = new PreguntaDAOMemoria();
+    // Cambiamos de final para poder reasignar según la selección
+    private static UsuarioDAO usuarioDAO;
+    private static ProductoDAO productoDAO;
+    private static CarritoDAO carritoDAO;
+    private static PreguntaDAO preguntaDAO;
 
     private static String lang = "es";
     private static String country = "EC";
@@ -28,30 +31,112 @@ public class Main {
     private static UserRegistroView userRegistroView;
     private static ListarUsuarioView listarUsuarioView;
     private static UsuarioController usuarioController;
+    private static ListarCarritoView listarCarritoView;
+    private static ListarCarritoUsuarioView listarCarritoUsuarioView;
+    private static CarritoController carritoController;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             mensajeHandler = new MensajeInternacionalizacionHandler(lang, country);
 
-            if (!preguntasCargadas) {
-                for (int i = 1; i <= 10; i++) {
-                    ((PreguntaDAOMemoria) preguntaDAO).agregarPregunta(
-                            new Pregunta(i, mensajeHandler.get("pregunta.seguridad." + i))
-                    );
+            // Mostrar siempre la ventana de selección al inicio
+            SeleccionAlmacenamientoView seleccionView = new SeleccionAlmacenamientoView();
+            seleccionView.setVisible(true);
+
+            seleccionView.getBtnContinuar().addActionListener(e -> {
+                String tipo = (String) seleccionView.getCmbTipoAlmacenamiento().getSelectedItem();
+                String ruta = seleccionView.getRutaSeleccionada();
+
+                // Validar que se tenga una ruta si no es almacenamiento en memoria
+                if (!tipo.equals("En memoria") && (ruta == null || ruta.isEmpty())) {
+                    JOptionPane.showMessageDialog(seleccionView,
+                        "Debe seleccionar una carpeta para el almacenamiento",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                    return;
                 }
-                preguntasCargadas = true;
-            }
 
-            loginView = new LoginView(mensajeHandler);
-            userRegistroView = new UserRegistroView(mensajeHandler);
-            listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
+                // Crear la carpeta si no existe
+                if (!tipo.equals("En memoria")) {
+                    File carpeta = new File(ruta);
+                    if (!carpeta.exists()) {
+                        if (!carpeta.mkdirs()) {
+                            JOptionPane.showMessageDialog(seleccionView,
+                                "No se pudo crear la carpeta en la ruta especificada",
+                                "Error",
+                                JOptionPane.ERROR_MESSAGE);
+                            return;
+                        }
+                    }
+                }
 
-            usuarioController = new UsuarioController(usuarioDAO, loginView, userRegistroView, listarUsuarioView, mensajeHandler, preguntaDAO);
+                // Guardar la configuración para futuras ejecuciones
+                ConfiguracionAlmacenamiento.guardarConfiguracion(tipo, ruta);
 
-            loginView.setVisible(true);
-            userRegistroView.setVisible(false);
+                // Inicializar DAOs con la selección
+                inicializarDAOs(tipo, ruta);
+
+                seleccionView.dispose();
+                iniciarVentanaLogin();
+            });
         });
     }
+
+    private static void inicializarDAOs(String tipo, String ruta) {
+        if (tipo.equals("En memoria")) {
+            usuarioDAO = new UsuarioDAOMemoria();
+            productoDAO = new ProductoDAOMemoria();
+            carritoDAO = new CarritoDAOMemoria();
+            preguntaDAO = new PreguntaDAOMemoria();
+        } else if (tipo.equals("Archivo de texto")) {
+            usuarioDAO = new UsuarioDAOArchivoTexto(ruta);
+            productoDAO = new ProductoDAOArchivoTexto(ruta);
+            carritoDAO = new CarritoDAOArchivoTexto(ruta);
+            preguntaDAO = new PreguntaDAOArchivoTexto(ruta);
+        } else { // Archivo binario
+            usuarioDAO = new UsuarioDAOArchivoBinario(ruta);
+            productoDAO = new ProductoDAOArchivoBinario(ruta);
+            carritoDAO = new CarritoDAOArchivoBinario(ruta);
+            preguntaDAO = new PreguntaDAOArchivoBinario(ruta);
+        }
+
+        // Refrescar vistas de carritos si existen y están inicializadas
+        if (listarCarritoView != null) {
+            listarCarritoView.cargarDatosConFormato(carritoDAO.listarTodos(), mensajeHandler);
+        }
+        if (listarCarritoUsuarioView != null) {
+            listarCarritoUsuarioView.cargarDatosConFormato(carritoDAO.listarTodos(), mensajeHandler);
+        }
+        // Forzar recarga de datos en el controlador si existe
+        if (carritoController != null) {
+            carritoController.listarCarrito();
+        }
+
+        if (!preguntasCargadas) {
+            for (int i = 1; i <= 10; i++) {
+                preguntaDAO.agregarPregunta(
+                    new Pregunta(i, mensajeHandler.get("pregunta.seguridad." + i))
+                );
+            }
+            preguntasCargadas = true;
+        }
+    }
+
+    private static void iniciarVentanaLogin() {
+        loginView = new LoginView(mensajeHandler);
+        userRegistroView = new UserRegistroView(mensajeHandler);
+        listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
+        usuarioController = new UsuarioController(usuarioDAO, loginView, userRegistroView, listarUsuarioView, mensajeHandler, preguntaDAO);
+        loginView.setVisible(true);
+    }
+
+    /**
+     * Inicia la aplicación con el usuario autenticado y el idioma seleccionado.
+     *
+     * @param usuario El usuario autenticado.
+     * @param idioma  El idioma seleccionado.
+     * @param pais    El país seleccionado.
+     */
 
     public static void iniciarApp(Usuario usuario, String idioma, String pais) {
         lang = idioma;
@@ -76,8 +161,8 @@ public class Main {
         ProductoEliminarView productoEliminarView = new ProductoEliminarView(mensajeHandler);
         ProductoActualizarView productoActualizarView = new ProductoActualizarView(mensajeHandler);
         CarritoAñadirView carritoAnadirView = new CarritoAñadirView(mensajeHandler);
-        ListarCarritoView listarCarritoView = new ListarCarritoView(mensajeHandler);
-        ListarCarritoUsuarioView listarCarritoUsuarioView = new ListarCarritoUsuarioView(mensajeHandler);
+        listarCarritoView = new ListarCarritoView(mensajeHandler);
+        listarCarritoUsuarioView = new ListarCarritoUsuarioView(mensajeHandler);
         listarUsuarioView = new ListarUsuarioView(usuarioDAO, mensajeHandler);
         UsuarioView usuarioView = new UsuarioView(mensajeHandler);
         CarritoEditarView carritoEditarView = new CarritoEditarView(mensajeHandler);
@@ -86,7 +171,7 @@ public class Main {
         new ProductoController(productoDAO, productoAnadirView, productoListaView,
                 carritoAnadirView, productoEliminarView, productoActualizarView, mensajeHandler);
 
-        CarritoController carritoController = new CarritoController(
+        carritoController = new CarritoController(
                 carritoDAO,
                 carritoAnadirView,
                 productoDAO,

@@ -10,11 +10,11 @@ import java.net.URL;
 public class LoginView extends JFrame {
     private JPanel panelPrincipal;
     private JPasswordField txtPassword;
-    private JTextField txtUsername;
+    private JTextField txtCedula; // Cambiado: era txtUsername, ahora es txtCedula
     private JButton btnIniciarSesion;
     private JButton btnRegistro;
     private JLabel lblPasswordLogin;
-    private JLabel lblUsernameLogin;
+    private JLabel lblCedulaLogin; // Cambiado: era lblUsernameLogin, ahora es lblCedulaLogin
     private JLabel lblRecuperacion;
     private JButton btnRecuperar;
 
@@ -50,12 +50,12 @@ public class LoginView extends JFrame {
     }
 
     public void limpiarCampos() {
-        txtUsername.setText("");
+        txtCedula.setText("");
         txtPassword.setText("");
     }
 
-    public JTextField getTxtUsername() {
-        return txtUsername;
+    public JTextField getTxtCedula() { // Cambiado: era getTxtUsername
+        return txtCedula;
     }
 
     public JPasswordField getTxtPassword() {
@@ -78,8 +78,8 @@ public class LoginView extends JFrame {
         return lblRecuperacion;
     }
 
-    public JLabel getLblUsernameLogin() {
-        return lblUsernameLogin;
+    public JLabel getLblCedulaLogin() { // Cambiado: era getLblUsernameLogin
+        return lblCedulaLogin;
     }
 
     public JLabel getLblPasswordLogin() {
@@ -88,7 +88,7 @@ public class LoginView extends JFrame {
 
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         setTitle(mensajeHandler.get("login.titulo"));
-        lblUsernameLogin.setText(mensajeHandler.get("login.lbl.usuario"));
+        lblCedulaLogin.setText(mensajeHandler.get("login.lbl.usuario")); // Cambiado: era "Usuario", ahora "Cédula"
         lblPasswordLogin.setText(mensajeHandler.get("login.lbl.contrasena"));
         btnIniciarSesion.setText(mensajeHandler.get("login.btn.iniciar"));
         btnRegistro.setText(mensajeHandler.get("login.btn.registrarse"));

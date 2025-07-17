@@ -16,14 +16,14 @@ import java.util.List;
 public class ListarUsuarioView extends JInternalFrame {
 
     private JPanel panelPrincipal;
-    private JTextField txtUsername;
+    private JTextField txtCedula; // Cambiado: era txtUsername
     private JTable tblUsuarios;
     private JButton btnBuscar;
     private JButton btnClientes;
     private JButton btnAdmin;
     private JButton btnListarTodos;
     private JLabel lblListar;
-    private JLabel lblUsernameUsuarioView;
+    private JLabel lblCedulaUsuarioView; // Cambiado: era lblUsernameUsuarioView
     private DefaultTableModel modelo;
     private UsuarioDAO usuarioDAO;
     private MensajeInternacionalizacionHandler mensajeHandler;
@@ -71,18 +71,18 @@ public class ListarUsuarioView extends JInternalFrame {
                 int row = tblUsuarios.rowAtPoint(e.getPoint());
                 int column = tblUsuarios.columnAtPoint(e.getPoint());
                 if (row >= 0 && column == 2) {
-                    String username = tblUsuarios.getValueAt(row, 0).toString();
+                    String cedula = tblUsuarios.getValueAt(row, 0).toString();
                     Rol rol = Rol.valueOf(tblUsuarios.getValueAt(row, 1).toString());
 
                     if (rol == Rol.CLIENTE) {
                         int confirm = JOptionPane.showConfirmDialog(
                                 ListarUsuarioView.this,
-                                mensajeHandler.get("usuario.eliminar.confirmacion").replace("{0}", username),
+                                mensajeHandler.get("usuario.eliminar.confirmacion").replace("{0}", cedula),
                                 mensajeHandler.get("usuario.eliminar.titulo"),
                                 JOptionPane.YES_NO_OPTION
                         );
                         if (confirm == JOptionPane.YES_OPTION) {
-                            usuarioDAO.eliminar(username);
+                            usuarioDAO.eliminar(cedula);
                             cargarDatos(usuarioDAO.listarTodos());
                         }
                     } else {
@@ -100,8 +100,8 @@ public class ListarUsuarioView extends JInternalFrame {
         btnClientes.addActionListener(e -> cargarDatos(usuarioDAO.listarClientes()));
         btnAdmin.addActionListener(e -> cargarDatos(usuarioDAO.listarAdmin()));
         btnBuscar.addActionListener(e -> {
-            String username = txtUsername.getText().trim();
-            Usuario u = usuarioDAO.buscarPorUsername(username);
+            String cedula = txtCedula.getText().trim();
+            Usuario u = usuarioDAO.buscarPorUsername(cedula);
             if (u != null) {
                 cargarDatos(List.of(u));
             } else {
@@ -119,7 +119,7 @@ public class ListarUsuarioView extends JInternalFrame {
     public void setTextos() {
         setTitle(mensajeHandler.get("usuario.listar.titulo"));
         if (lblListar != null) lblListar.setText(mensajeHandler.get("usuario.listar.lbl.titulo"));
-        if (lblUsernameUsuarioView != null) lblUsernameUsuarioView.setText(mensajeHandler.get("usuario.listar.lbl.usuario"));
+        if (lblCedulaUsuarioView != null) lblCedulaUsuarioView.setText(mensajeHandler.get("usuario.listar.lbl.usuario")); // Cambiado: era lblUsernameUsuarioView, ahora lblCedulaUsuarioView
         if (btnBuscar != null) btnBuscar.setText(mensajeHandler.get("usuario.listar.btn.buscar"));
         if (btnClientes != null) btnClientes.setText(mensajeHandler.get("usuario.listar.btn.clientes"));
         if (btnAdmin != null) btnAdmin.setText(mensajeHandler.get("usuario.listar.btn.admin"));
@@ -137,8 +137,8 @@ public class ListarUsuarioView extends JInternalFrame {
         });
     }
 
-    public JTextField getTxtUsername() {
-        return txtUsername;
+    public JTextField getTxtCedula() { // Cambiado: era getTxtUsername
+        return txtCedula;
     }
 
     public JTable getTblUsuarios() {
@@ -164,7 +164,7 @@ public class ListarUsuarioView extends JInternalFrame {
     public void cargarDatos(List<Usuario> listaUsuarios) {
         modelo.setRowCount(0);
         for (Usuario usuario : listaUsuarios) {
-            modelo.addRow(new Object[]{usuario.getUsername(), usuario.getRol().name(), mensajeHandler.get("usuario.listar.tabla.eliminar")});
+            modelo.addRow(new Object[]{usuario.getCedula(), usuario.getRol().name(), mensajeHandler.get("usuario.listar.tabla.eliminar")});
         }
     }
 

@@ -79,7 +79,7 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
         Locale locale = mensajeHandler.getLocale();
         for (Carrito c : lista) {
             modelo.addRow(new Object[]{
-                    c.getUsuario() != null ? c.getUsuario().getUsername() : mensajeHandler.get("carrito.listar.desconocido"),
+                    c.getUsuario() != null ? c.getUsuario().getCedula() : mensajeHandler.get("carrito.listar.desconocido"),
                     c.getCodigo(),
                     sdf.format(c.getFechaCreacion().getTime()),  // ¡corregido!
                     FormateadorUtils.formatearMonedaConSimbolo(c.calcularTotal(), locale)
@@ -131,7 +131,7 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
 
         for (Carrito c : carritos) {
             Object[] fila = new Object[]{
-                    c.getUsuario() != null ? c.getUsuario().getUsername() : handler.get("carrito.listar.desconocido"),
+                    c.getUsuario() != null ? c.getUsuario().getCedula() : handler.get("carrito.listar.desconocido"),
                     c.getCodigo(),
                     dateFormat.format(c.getFechaCreacion().getTime()), // ¡corregido!
                     currencyFormat.format(c.calcularTotal())

@@ -48,8 +48,21 @@ public class UsuarioController {
 
     private void cargarEventosLogin() {
         loginView.getBtnIniciarSesion().addActionListener(e -> {
-            if (autenticar()) {
+            // Cambiado: ahora se usa la cédula en vez de username
+            String cedula = loginView.getTxtCedula().getText().trim();
+            String password = new String(loginView.getTxtPassword().getPassword());
+            if (cedula.isEmpty() || password.isEmpty()) {
+                loginView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.camposVacios"));
+                return;
+            }
+            if (!validarCedula(cedula)) {
+                loginView.mostrarMensaje("Cédula ecuatoriana no válida");
+                return;
+            }
+            Usuario usuarioAutenticado = usuarioDAO.autenticar(cedula, password);
+            if (usuarioAutenticado != null) {
                 loginView.dispose();
+                Main.iniciarApp(usuarioAutenticado, "es", "EC"); // Cambio: mostrar PrincipalView tras login
             } else {
                 loginView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.login.error"));
             }
@@ -66,18 +79,23 @@ public class UsuarioController {
 
     private void cargarEventosRegistro() {
         userRegistroView.getBtnConfirmar().addActionListener(e -> {
-            String username = userRegistroView.getTxtUsername().getText().trim();
+            // Cambiado: ahora se usa la cédula en vez de username
+            String cedula = userRegistroView.getTxtCedula().getText().trim();
             String contrasena1 = new String(userRegistroView.getPswContra().getPassword());
             String contrasena2 = new String(userRegistroView.getPswContra2().getPassword());
-
             String nombreCompleto = userRegistroView.getTxtNombreCompleto().getText().trim();
             String correo = userRegistroView.getTxtCorreo().getText().trim();
             String telefono = userRegistroView.getTxtTelefono().getText().trim();
             String fechaNacimiento = userRegistroView.getTxtFechaNacimiento().getText().trim();
 
-            if (username.isEmpty() || contrasena1.isEmpty() || contrasena2.isEmpty()
+            if (cedula.isEmpty() || contrasena1.isEmpty() || contrasena2.isEmpty()
                     || nombreCompleto.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNacimiento.isEmpty()) {
                 userRegistroView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.camposVacios"));
+                return;
+            }
+
+            if (!validarCedula(cedula)) {
+                userRegistroView.mostrarMensaje("Cédula ecuatoriana no válida");
                 return;
             }
 
@@ -86,7 +104,7 @@ public class UsuarioController {
                 return;
             }
 
-            if (usuarioDAO.buscarPorUsername(username) != null) {
+            if (usuarioDAO.buscarPorUsername(cedula) != null) {
                 userRegistroView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.nombreUsado"));
                 return;
             }
@@ -106,7 +124,7 @@ public class UsuarioController {
                 return;
             }
 
-            Usuario nuevoUsuario = new Usuario(username, contrasena1, Rol.CLIENTE);
+            Usuario nuevoUsuario = new Usuario(cedula, contrasena1, Rol.CLIENTE);
             nuevoUsuario.setNombreCompleto(nombreCompleto);
             nuevoUsuario.setCorreo(correo);
             nuevoUsuario.setTelefono(telefono);
@@ -165,6 +183,24 @@ public class UsuarioController {
         }
     }
 
+    // Validación de cédula ecuatoriana
+    private boolean validarCedula(String cedula) {
+        if (cedula == null || cedula.length() != 10) return false;
+        int provincia = Integer.parseInt(cedula.substring(0, 2));
+        if (provincia < 1 || provincia > 24) return false;
+        int tercerDigito = Integer.parseInt(cedula.substring(2, 3));
+        if (tercerDigito > 6) return false;
+        int[] coef = {2,1,2,1,2,1,2,1,2};
+        int suma = 0;
+        for (int i = 0; i < coef.length; i++) {
+            int val = coef[i] * Integer.parseInt(cedula.substring(i, i+1));
+            suma += val > 9 ? val - 9 : val;
+        }
+        int ultimo = Integer.parseInt(cedula.substring(9, 10));
+        int decena = ((suma + 9) / 10) * 10;
+        return (decena - suma) == ultimo;
+    }
+
     private void cargarEventosListarUsuarios() {
         listarUsuarioView.getBtnListarTodos().addActionListener(e ->
                 listarUsuarioView.cargarDatos(usuarioDAO.listarTodos())
@@ -179,8 +215,9 @@ public class UsuarioController {
         );
 
         listarUsuarioView.getBtnBuscar().addActionListener(e -> {
-            String username = listarUsuarioView.getTxtUsername().getText().trim();
-            Usuario u = usuarioDAO.buscarPorUsername(username);
+            // Cambiado: ahora se usa la cédula en vez de username
+            String cedula = listarUsuarioView.getTxtCedula().getText().trim();
+            Usuario u = usuarioDAO.buscarPorUsername(cedula);
             if (u != null) {
                 listarUsuarioView.cargarDatos(List.of(u));
             } else {
@@ -190,10 +227,10 @@ public class UsuarioController {
     }
 
     public boolean autenticar() {
-        String username = loginView.getTxtUsername().getText().trim();
+        // Cambiado: ahora se usa la cédula en vez de username
+        String cedula = loginView.getTxtCedula().getText().trim();
         String password = new String(loginView.getTxtPassword().getPassword());
-        usuario = usuarioDAO.autenticar(username, password);
-
+        usuario = usuarioDAO.autenticar(cedula, password);
         if (usuario == null) {
             return false;
         } else {

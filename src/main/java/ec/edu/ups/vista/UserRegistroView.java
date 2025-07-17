@@ -16,14 +16,16 @@ public class UserRegistroView extends JFrame {
     private JTextField txtTelefono;
     private JLabel lblFechaNacimiento;
     private JTextField txtFechaNacimiento;
-    private JLabel lblUsername;
-    private JTextField txtUsername;
+    private JLabel lblCedula; // Cambiado: era lblUsername
+    private JTextField txtCedula; // Cambiado: era txtUsername
     private JLabel lblPassword;
     private JPasswordField pswContra;
     private JLabel lblPasswordConfirm;
     private JPasswordField pswContra2;
     private JButton btnConfirmar;
     private JButton btnCancelar;
+    private JComboBox cmbGenero;
+    private JLabel lblGenero;
 
     private MensajeInternacionalizacionHandler mensajeHandler;
 
@@ -46,8 +48,8 @@ public class UserRegistroView extends JFrame {
         lblCorreo.setText(mensajeHandler.get("usuario.view.correo"));
         lblTelefono.setText(mensajeHandler.get("usuario.view.telefono"));
         lblFechaNacimiento.setText(mensajeHandler.get("usuario.view.fechaNac"));
+        lblCedula.setText("Cédula"); // Cambiado: era lblUsername, ahora lblCedula
 
-        lblUsername.setText(mensajeHandler.get("login.view.username"));
         lblPassword.setText(mensajeHandler.get("login.view.password"));
         lblPasswordConfirm.setText(mensajeHandler.get("login.view.repetir.password"));
 
@@ -75,8 +77,8 @@ public class UserRegistroView extends JFrame {
         return txtFechaNacimiento;
     }
 
-    public JTextField getTxtUsername() {
-        return txtUsername;
+    public JTextField getTxtCedula() { // Cambiado: era getTxtUsername
+        return txtCedula;
     }
 
     public JPasswordField getPswContra() {
@@ -98,7 +100,7 @@ public class UserRegistroView extends JFrame {
 
 
     public void limpiarTodo(){
-        txtUsername.setText("");
+        txtCedula.setText(""); // Cambiado: era txtUsername
         txtCorreo.setText("");
         txtTelefono.setText("");
         txtFechaNacimiento.setText("");

@@ -438,7 +438,7 @@ public class CarritoController {
                     }
 
                     if (usuarioActual.getRol() != Rol.ADMINISTRADOR &&
-                            !usuarioActual.getUsername().equals(c.getUsuario().getUsername())) {
+                            !usuarioActual.getCedula().equals(c.getUsuario().getCedula())) {
                         listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.visualizacion.denegada"));
                         return;
                     }
@@ -523,7 +523,7 @@ public class CarritoController {
         limpiarTotales();
     }
 
-    private void listarCarrito() {
+    public void listarCarrito() {
         List<Carrito> carritos = carritoDAO.listarTodos();
         listarCarritoView.cargarDatosConFormato(carritos, mensajeHandler);
     }

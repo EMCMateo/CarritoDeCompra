@@ -85,7 +85,7 @@ public class ListarCarritoView extends JInternalFrame {
 
         for (Carrito c : lista) {
             modelo.addRow(new Object[]{
-                    c.getUsuario() != null ? c.getUsuario().getUsername() : mensajeHandler.get("carrito.listar.desconocido"),
+                    c.getUsuario() != null ? c.getUsuario().getCedula() : mensajeHandler.get("carrito.listar.desconocido"),
                     c.getCodigo(),
                     sdf.format(c.getFechaCreacion().getTime()),
                     FormateadorUtils.formatearMonedaConSimbolo(c.calcularTotal(), locale)
@@ -101,7 +101,7 @@ public class ListarCarritoView extends JInternalFrame {
 
         for (Carrito c : carritos) {
             Object[] fila = new Object[]{
-                    c.getUsuario() != null ? c.getUsuario().getUsername() : handler.get("carrito.listar.desconocido"),
+                    c.getUsuario() != null ? c.getUsuario().getCedula() : handler.get("carrito.listar.desconocido"),
                     c.getCodigo(),
                     dateFormat.format(c.getFechaCreacion().getTime()),
                     currencyFormat.format(c.calcularTotal())

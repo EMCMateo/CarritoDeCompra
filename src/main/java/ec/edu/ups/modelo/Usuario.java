@@ -3,10 +3,11 @@ package ec.edu.ups.modelo;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.io.Serializable;
 
-public class Usuario {
+public class Usuario implements Serializable {
 
-    private String username;
+    private String cedula;
     private String password;
     private Rol rol;
     private List<RespuestaSeguridad> respuestasSeguridad;
@@ -15,8 +16,8 @@ public class Usuario {
     private String correo;
     private String telefono;
 
-    public Usuario(String username, String password, Rol rol) {
-        this.username = username;
+    public Usuario(String cedula, String password, Rol rol) {
+        this.cedula = cedula;
         this.password = password;
         this.rol = rol;
         this.respuestasSeguridad = new ArrayList<>();
@@ -36,12 +37,33 @@ public class Usuario {
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
 
-    public String getUsername() {
-        return username;
+    public String getCedula() {
+        return cedula;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setCedula(String cedula) {
+        if (!validarCedulaEcuatoriana(cedula)) {
+            throw new IllegalArgumentException("Cédula ecuatoriana no válida");
+        }
+        this.cedula = cedula;
+    }
+
+    // Validación de cédula ecuatoriana
+    private boolean validarCedulaEcuatoriana(String cedula) {
+        if (cedula == null || cedula.length() != 10) return false;
+        int provincia = Integer.parseInt(cedula.substring(0, 2));
+        if (provincia < 1 || provincia > 24) return false;
+        int tercerDigito = Integer.parseInt(cedula.substring(2, 3));
+        if (tercerDigito > 6) return false;
+        int[] coef = {2,1,2,1,2,1,2,1,2};
+        int suma = 0;
+        for (int i = 0; i < coef.length; i++) {
+            int val = coef[i] * Integer.parseInt(cedula.substring(i, i+1));
+            suma += val > 9 ? val - 9 : val;
+        }
+        int ultimo = Integer.parseInt(cedula.substring(9, 10));
+        int decena = ((suma + 9) / 10) * 10;
+        return (decena - suma) == ultimo;
     }
 
     public String getPassword() {
@@ -83,7 +105,7 @@ public class Usuario {
     @Override
     public String toString() {
         return "Usuario{" +
-                "username='" + username + '\'' +
+                "cedula='" + cedula + '\'' +
                 ", rol=" + rol +
                 ", password='" + password + '\'' +
                 ", respuestasSeguridad=" + respuestasSeguridad +
@@ -95,11 +117,11 @@ public class Usuario {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Usuario usuario = (Usuario) o;
-        return Objects.equals(username, usuario.username);
+        return Objects.equals(cedula, usuario.cedula);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(username);
+        return Objects.hash(cedula);
     }
 }

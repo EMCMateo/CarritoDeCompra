@@ -23,6 +23,7 @@ public class UsuarioView extends JInternalFrame {
     private JTextField txtFechaNac;
     private JButton btnGuardar;
     private JButton btnRecuperar;
+    private JTextField textField1;
 
     private MensajeInternacionalizacionHandler mensajeHandler;
 
@@ -51,23 +52,16 @@ public class UsuarioView extends JInternalFrame {
         btnRecuperar.setText(mensajeHandler.get("usuario.view.recuperar"));
     }
 
+    /**
+     * Carga los datos del usuario en los campos del formulario.
+     * Llama este método desde el controlador después de crear UsuarioView y antes de mostrarla.
+     */
     public void cargarDatosUsuario(Usuario usuario) {
+        if (usuario == null) return;
         txtNombre.setText(usuario.getNombreCompleto());
         txtTelefono.setText(usuario.getTelefono());
         txtCorreoUser.setText(usuario.getCorreo());
-
-        String fechaFormateada = usuario.getFechaNacimiento();
-
-        if (fechaFormateada != null && !fechaFormateada.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                Date fecha = sdf.parse(usuario.getFechaNacimiento());
-                fechaFormateada = FormateadorUtils.formatearFecha(fecha, mensajeHandler.getLocale());
-            } catch (ParseException e) {
-            }
-        }
-
-        txtFechaNac.setText(fechaFormateada);
+        txtFechaNac.setText(usuario.getFechaNacimiento());
     }
 
     public JLabel getLblNombre() {
