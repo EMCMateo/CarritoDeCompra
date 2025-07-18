@@ -8,6 +8,10 @@ import ec.edu.ups.vista.*;
 
 import javax.swing.*;
 import java.util.List;
+/**
+ * Controlador para gestionar las operaciones relacionadas con los productos.
+ * Permite añadir, listar, buscar, actualizar y eliminar productos.
+ */
 
 public class ProductoController {
 
@@ -22,7 +26,17 @@ public class ProductoController {
     private boolean procesandoAnadir = false;
     private boolean procesandoActualizar = false;
     private boolean procesandoEliminar = false;
-
+    /**
+     * Constructor que inicializa el controlador con las vistas y el DAO de productos.
+     *
+     * @param productoDAO           DAO para operaciones de productos
+     * @param productoAnadirView    Vista para añadir productos
+     * @param productoListaView     Vista para listar y buscar productos
+     * @param carritoAñadirView     Vista para añadir productos al carrito
+     * @param productoEliminarView  Vista para eliminar productos
+     * @param productoActualizarView Vista para actualizar productos
+     * @param mensajeHandler        Handler para mensajes de internacionalización
+     */
     public ProductoController(
             ProductoDAO productoDAO,
             ProductoAnadirView productoAnadirView,
@@ -42,6 +56,10 @@ public class ProductoController {
 
         inicializarEventos();
     }
+    /**
+     * Inicializa los eventos de las vistas.
+     * Configura los listeners para añadir, listar, buscar, actualizar y eliminar productos.
+     */
 
     private void inicializarEventos() {
         configurarEventosAnadir();
@@ -49,6 +67,10 @@ public class ProductoController {
         configurarEventosActualizar();
         configurarEventosEliminar();
     }
+    /**
+     * Configura los eventos para añadir productos.
+     * Incluye validaciones y manejo de errores.
+     */
 
     private void configurarEventosAnadir() {
         productoAnadirView.getBtnAceptar().addActionListener(e -> {
@@ -91,18 +113,30 @@ public class ProductoController {
     }
 
 
-    // Eventos Listar / Buscar
+    /**
+     * Configura los eventos para listar y buscar productos.
+     * Incluye la carga de datos y manejo de errores.
+     */
 
     private void configurarEventosLista() {
         productoListaView.getBtnListar().addActionListener(e -> listarTodosProductos());
         productoListaView.getBtnBuscar().addActionListener(e -> buscarProductoPorCodigo());
     }
+    /**
+     * Lista todos los productos y los muestra en la vista.
+     * Utiliza el DAO para obtener la lista de productos.
+     */
 
     private void listarTodosProductos() {
         List<Producto> productos = productoDAO.listarTodos();
         productoListaView.cargarDatos(productos, mensajeHandler.getLocale());
     }
 
+    /**
+     * Busca un producto por su código y lo muestra en la vista.
+     * Si no se encuentra, muestra un mensaje de error.
+     * Utiliza el DAO para buscar el producto.
+     */
     private void buscarProductoPorCodigo() {
         try {
             int codigo = Integer.parseInt(productoListaView.getTxtBuscar().getText());
@@ -119,7 +153,11 @@ public class ProductoController {
     }
 
 
-    // Eventos Actualizar Producto
+    /**
+     * Configura los eventos para actualizar productos.
+     * Incluye la búsqueda del producto y la actualización de sus datos.
+     * Maneja errores y validaciones.
+     */
 
     private void configurarEventosActualizar() {
         productoActualizarView.getBtnBuscar().addActionListener(e -> {
@@ -164,9 +202,11 @@ public class ProductoController {
             }
         });
     }
-
-
-    // Eventos Eliminar Producto
+    /**
+     * Configura los eventos para eliminar productos.
+     * Incluye la búsqueda del producto y la confirmación de eliminación.
+     * Maneja errores y validaciones.
+     */
 
     private void configurarEventosEliminar() {
         productoEliminarView.getBtnBuscar().addActionListener(e -> {

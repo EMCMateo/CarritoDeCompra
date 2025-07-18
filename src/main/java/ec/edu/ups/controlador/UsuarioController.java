@@ -16,6 +16,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.regex.Pattern;
+/**
+ * Controlador encargado de gestionar la lógica relacionada con los usuarios del sistema:
+ * login, registro, recuperación de contraseña, y edición de datos personales.
+ */
 
 public class UsuarioController {
 
@@ -28,7 +32,17 @@ public class UsuarioController {
     private UsuarioView usuarioView;
 
     private Usuario usuario;
-
+    /**
+     * Constructor principal del controlador.
+     * Inicializa todas las vistas y DAOs relacionados con usuario, y carga los eventos necesarios.
+     *
+     * @param usuarioDAO DAO para operaciones con usuarios
+     * @param loginView Vista de login
+     * @param userRegistroView Vista de registro
+     * @param listarUsuarioView Vista de listado de usuarios
+     * @param mensajeHandler Manejador de mensajes internacionalizados
+     * @param preguntaDAO DAO para preguntas de seguridad
+     */
     public UsuarioController(UsuarioDAO usuarioDAO,
                              LoginView loginView,
                              UserRegistroView userRegistroView,
@@ -47,6 +61,10 @@ public class UsuarioController {
         cargarEventosListarUsuarios();
         cargarEventoGuardarDatos();
     }
+
+    /**
+     * Carga los eventos asociados a la vista de login (iniciar sesión, registrarse, recuperar contraseña).
+     */
 
     private void cargarEventosLogin() {
         loginView.getBtnIniciarSesion().addActionListener(e -> {
@@ -87,7 +105,10 @@ public class UsuarioController {
             }
         });
     }
-
+    /**
+     * Carga los eventos asociados a la vista de registro de usuario (confirmar, cancelar).
+     * Valida los campos ingresados y crea un nuevo usuario si todo es correcto.
+     */
     private void cargarEventosRegistro() {
         userRegistroView.getBtnConfirmar().addActionListener(e -> {
             // Cambiado: ahora se usa la cédula en vez de username
@@ -189,15 +210,33 @@ public class UsuarioController {
             loginView.setVisible(true);
         });
     }
-        //METODOS DE VALIDACION
+    /**
+     * Valida el formato del correo electrónico.
+     *
+     * @param correo El correo electrónico a validar.
+     * @return true si el correo es válido, false en caso contrario.
+     */
     private boolean validarCorreo(String correo) {
         String regex = "^[\\w-\\.]+@([\\w-]+\\.)+[\\w-]{2,4}$";
         return Pattern.matches(regex, correo);
     }
-
+    /**
+     * Valida el formato del número de teléfono.
+     * Debe tener entre 7 y 10 dígitos.
+     *
+     * @param telefono El número de teléfono a validar.
+     * @return true si el teléfono es válido, false en caso contrario.
+     */
     private boolean validarTelefono(String telefono) {
         return telefono.matches("^\\d{7,10}$");
     }
+    /**
+     * Valida el formato de la fecha.
+     * Debe ser en formato "dd/MM/yyyy".
+     *
+     * @param fecha La fecha a validar.
+     * @return true si la fecha es válida, false en caso contrario.
+     */
 
     private boolean validarFecha(String fecha) {
         try {
@@ -210,7 +249,13 @@ public class UsuarioController {
         }
     }
 
-    // Validación de cédula ecuatoriana
+    /**
+     * Valida el formato de la cédula ecuatoriana.
+     * Debe tener 10 dígitos y cumplir con el algoritmo de validación.
+     *
+     * @param cedula La cédula a validar.
+     * @return true si la cédula es válida, false en caso contrario.
+     */
     private boolean validarCedula(String cedula) {
         if (cedula == null || cedula.length() != 10) return false;
         int provincia = Integer.parseInt(cedula.substring(0, 2));
@@ -227,7 +272,10 @@ public class UsuarioController {
         int decena = ((suma + 9) / 10) * 10;
         return (decena - suma) == ultimo;
     }
-
+    /**
+     * Carga los eventos asociados a la vista de listado de usuarios (listar todos, clientes, administradores, buscar por cédula).
+     * Actualiza la vista con los datos obtenidos del DAO.
+     */
     private void cargarEventosListarUsuarios() {
         listarUsuarioView.getBtnListarTodos().addActionListener(e ->
                 listarUsuarioView.cargarDatos(usuarioDAO.listarTodos())
@@ -252,6 +300,12 @@ public class UsuarioController {
             }
         });
     }
+    /**
+     * Autentica al usuario con la cédula y contraseña ingresadas en la vista de login.
+     * Si la autenticación es exitosa, inicia la aplicación principal.
+     *
+     * @return true si la autenticación fue exitosa, false en caso contrario.
+     */
 
     public boolean autenticar() {
         // Cambiado: ahora se usa la cédula en vez de username
@@ -265,6 +319,10 @@ public class UsuarioController {
             return true;
         }
     }
+    /**
+     * Carga los datos del usuario autenticado en la vista de usuario.
+     * Si el usuario o la vista son nulos, no realiza ninguna acción.
+     */
 
     public void cargarDatosUsuarioEnVista() {
         if (usuarioView == null || usuario == null) return;
@@ -272,7 +330,11 @@ public class UsuarioController {
     }
 
 
-
+    /**
+     * Carga el evento de guardar datos del usuario en la vista de usuario.
+     * Valida los campos ingresados y actualiza el usuario en el DAO si todo es correcto.
+     * Incluye correcciones para evitar NullPointerException y validar la sesión del usuario.
+     */
     private void cargarEventoGuardarDatos() {
         if (usuarioView == null) return;
 
@@ -342,6 +404,14 @@ public class UsuarioController {
                     mensajeHandler.get("mensaje.usuario.datosActualizados"));
         });
     }
+    /**
+     * Carga las preguntas de seguridad en la vista de usuario pregunta.
+     * Limpia el combo box y agrega las preguntas obtenidas del DAO.
+     * Configura el área de texto de respuestas como no editable y vacío.
+     *
+     * @param view La vista donde se cargarán las preguntas.
+     * @param preguntas Lista de preguntas a mostrar.
+     */
 
     public void cargarPreguntasEnVista(UsuarioPreguntaView view, List<Pregunta> preguntas) {
         view.getCmbPreguntas().removeAllItems();
@@ -351,6 +421,15 @@ public class UsuarioController {
         view.getTxtAreaRespuestas().setEditable(false);
         view.getTxtAreaRespuestas().setText("");
     }
+    /**
+     * Carga los eventos de la vista de usuario pregunta.
+     * Maneja la lógica para guardar respuestas a preguntas de seguridad y finalizar el proceso.
+     *
+     * @param view La vista donde se cargarán los eventos.
+     * @param preguntas Lista de preguntas disponibles.
+     * @param usuario El usuario al que se le están configurando las preguntas.
+     * @param callback Acción a ejecutar al finalizar el proceso.
+     */
 
     public void cargarEventosUsuarioPregunta(UsuarioPreguntaView view, List<Pregunta> preguntas, Usuario usuario, Runnable callback) {
         Map<String, Pregunta> preguntaMap = new HashMap<>();
@@ -402,6 +481,14 @@ public class UsuarioController {
         });
     }
 
+    /**
+     * Actualiza el área de texto de respuestas en la vista de usuario pregunta.
+     * Muestra todas las respuestas de seguridad del usuario en un formato legible.
+     *
+     * @param view La vista donde se actualizarán las respuestas.
+     * @param usuario El usuario cuyas respuestas se mostrarán.
+     */
+
     private void actualizarAreaRespuestas(UsuarioPreguntaView view, Usuario usuario) {
         StringBuilder sb = new StringBuilder();
         for (RespuestaSeguridad r : usuario.getRespuestasSeguridad()) {
@@ -410,6 +497,14 @@ public class UsuarioController {
         }
         view.getTxtAreaRespuestas().setText(sb.toString());
     }
+    /**
+     * Recupera la contraseña del usuario mediante preguntas de seguridad.
+     * Solicita al usuario su nombre de usuario, valida si existe, y verifica la respuesta a una pregunta de seguridad.
+     * Si la respuesta es correcta, permite al usuario establecer una nueva contraseña.
+     *
+     * @throws ValidacionException Si hay un error de validación en el proceso.
+     * @throws PersistenciaException Si hay un error al persistir los datos del usuario.
+     */
 
     private void recuperarContrasenia() throws ValidacionException, PersistenciaException {
         String username = JOptionPane.showInputDialog(loginView, mensajeHandler.get("mensaje.recuperar.ingreseUsuario"));
@@ -458,15 +553,27 @@ public class UsuarioController {
     }
 
 
+
+
     public Usuario getUsuarioAutenticado() {
         return usuario;
     }
+    /**
+     * Establece la vista de usuario y carga los eventos necesarios.
+     * Permite que el controlador maneje la lógica de la vista de usuario.
+     *
+     * @param usuarioView La vista de usuario a establecer.
+     */
 
     public void setUsuarioView(UsuarioView usuarioView) {
         this.usuarioView = usuarioView;
         cargarEventoGuardarDatos();
         cargarEventoRecuperar();
     }
+    /**
+     * Carga el evento de recuperación de contraseña en la vista de usuario.
+     * Permite al usuario establecer una nueva contraseña tras responder correctamente a una pregunta de seguridad.
+     */
     private void cargarEventoRecuperar() {
         if (usuarioView == null || usuario == null) return;
 

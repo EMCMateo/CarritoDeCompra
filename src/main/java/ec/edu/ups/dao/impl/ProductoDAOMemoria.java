@@ -7,12 +7,18 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Implementación de {@link ProductoDAO} que almacena los productos en memoria usando una lista.
+ */
 public class ProductoDAOMemoria implements ProductoDAO {
 
     private List<Producto> productos;
 
+    /**
+     * Constructor que inicializa la lista de productos.
+     */
     public ProductoDAOMemoria() {
-        productos = new ArrayList<Producto>();
+        productos = new ArrayList<>();
     }
 
     @Override
@@ -57,6 +63,7 @@ public class ProductoDAOMemoria implements ProductoDAO {
             Producto producto = iterator.next();
             if (producto.getCodigo() == codigo) {
                 iterator.remove();
+                break;
             }
         }
     }

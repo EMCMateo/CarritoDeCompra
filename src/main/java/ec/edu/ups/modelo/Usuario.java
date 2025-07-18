@@ -1,33 +1,51 @@
-    package ec.edu.ups.modelo;
+package ec.edu.ups.modelo;
 
-    import java.util.ArrayList;
-    import java.util.List;
-    import java.util.Objects;
-    import java.io.Serializable;
-    import ec.edu.ups.excepciones.ValidacionException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.io.Serializable;
+import ec.edu.ups.excepciones.ValidacionException;
 
-    public class Usuario implements Serializable {
+/**
+ * Representa un usuario del sistema, ya sea cliente o administrador.
+ * Contiene datos personales, credenciales y preguntas de seguridad.
+ */
+public class Usuario implements Serializable {
 
-        private String cedula;
-        private String password;
-        private Rol rol;
-        private List<RespuestaSeguridad> respuestasSeguridad;
-        private String nombreCompleto;
-        private String fechaNacimiento;
-        private String correo;
-        private String telefono;
-        private String genero;
+    private String cedula;
+    private String password;
+    private Rol rol;
+    private List<RespuestaSeguridad> respuestasSeguridad;
+    private String nombreCompleto;
+    private String fechaNacimiento;
+    private String correo;
+    private String telefono;
+    private String genero;
 
-        public Usuario(String cedula, String password, Rol rol) throws ValidacionException {
-            this.cedula = cedula;
-            this.setPassword(password); // validación incluida
-            this.rol = rol;
-            this.respuestasSeguridad = new ArrayList<>();
-        }
+    /**
+     * Crea un nuevo usuario con cédula, contraseña y rol definidos.
+     * Valida la contraseña bajo ciertos requisitos de seguridad.
+     *
+     * @param cedula Número de cédula del usuario.
+     * @param password Contraseña del usuario.
+     * @param rol Rol del usuario (ADMINISTRADOR o CLIENTE).
+     * @throws ValidacionException Si la contraseña no cumple con los requisitos mínimos.
+     */
+    public Usuario(String cedula, String password, Rol rol) throws ValidacionException {
+        this.cedula = cedula;
+        this.setPassword(password); // validación incluida
+        this.rol = rol;
+        this.respuestasSeguridad = new ArrayList<>();
+    }
 
-        public Usuario() {
-            this.respuestasSeguridad = new ArrayList<>();
-        }
+    /**
+     * Constructor vacío requerido para serialización u otras operaciones por defecto.
+     */
+    public Usuario() {
+        this.respuestasSeguridad = new ArrayList<>();
+    }
+
+    // --- Getters y Setters
 
     public String getNombreCompleto() { return nombreCompleto; }
     public void setNombreCompleto(String nombreCompleto) { this.nombreCompleto = nombreCompleto; }
@@ -41,16 +59,17 @@
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
 
-
     public String getGenero() { return genero; }
-
     public void setGenero(String genero) { this.genero = genero; }
 
+    public String getCedula() { return cedula; }
 
-    public String getCedula() {
-        return cedula;
-    }
-
+    /**
+     * Establece la cédula del usuario validando que cumpla con el formato ecuatoriano.
+     *
+     * @param cedula La cédula a validar y establecer.
+     * @throws IllegalArgumentException Si la cédula no es válida.
+     */
     public void setCedula(String cedula) {
         if (!validarCedulaEcuatoriana(cedula)) {
             throw new IllegalArgumentException("Cédula ecuatoriana no válida");
@@ -58,7 +77,12 @@
         this.cedula = cedula;
     }
 
-    // Validación de cédula ecuatoriana
+    /**
+     * Valida si una cédula ingresada cumple con el algoritmo de validación ecuatoriano.
+     *
+     * @param cedula Cédula a validar.
+     * @return true si es válida, false en caso contrario.
+     */
     private boolean validarCedulaEcuatoriana(String cedula) {
         if (cedula == null || cedula.length() != 10) return false;
         int provincia = Integer.parseInt(cedula.substring(0, 2));
@@ -80,21 +104,28 @@
         return password;
     }
 
-        public void setPassword(String password) throws ValidacionException {
-            if (password == null || password.length() < 6) {
-                throw new ValidacionException("mensaje.error.contrasena.longitud");
-            }
-            if (!password.matches(".*[A-Z].*")) {
-                throw new ValidacionException("mensaje.error.contrasena.mayuscula");
-            }
-            if (!password.matches(".*[a-z].*")) {
-                throw new ValidacionException("mensaje.error.contrasena.minuscula");
-            }
-            if (!password.matches(".*[@_-].*")) {
-                throw new ValidacionException("mensaje.error.contrasena.caracter");
-            }
-            this.password = password;
+    /**
+     * Establece la contraseña validando que cumpla con los requisitos de seguridad.
+     * Requiere mínimo 6 caracteres, una mayúscula, una minúscula y un símbolo especial.
+     *
+     * @param password Contraseña del usuario.
+     * @throws ValidacionException Si no cumple con los criterios de seguridad.
+     */
+    public void setPassword(String password) throws ValidacionException {
+        if (password == null || password.length() < 6) {
+            throw new ValidacionException("mensaje.error.contrasena.longitud");
         }
+        if (!password.matches(".*[A-Z].*")) {
+            throw new ValidacionException("mensaje.error.contrasena.mayuscula");
+        }
+        if (!password.matches(".*[a-z].*")) {
+            throw new ValidacionException("mensaje.error.contrasena.minuscula");
+        }
+        if (!password.matches(".*[@_-].*")) {
+            throw new ValidacionException("mensaje.error.contrasena.caracter");
+        }
+        this.password = password;
+    }
 
     public Rol getRol() {
         return rol;
@@ -112,7 +143,12 @@
         this.respuestasSeguridad = respuestasSeguridad;
     }
 
-
+    /**
+     * Añade una respuesta de seguridad asociada a una pregunta.
+     *
+     * @param pregunta La pregunta de seguridad.
+     * @param respuestaTexto La respuesta del usuario.
+     */
     public void addRespuesta(Pregunta pregunta, String respuestaTexto) {
         if (this.respuestasSeguridad == null) {
             this.respuestasSeguridad = new ArrayList<>();
@@ -120,6 +156,11 @@
         this.respuestasSeguridad.add(new RespuestaSeguridad(pregunta, respuestaTexto));
     }
 
+    /**
+     * Devuelve la cantidad de preguntas de seguridad asignadas al usuario.
+     *
+     * @return Número de respuestas asignadas.
+     */
     public int preguntasAsignadas(){
         return this.respuestasSeguridad.size();
     }

@@ -9,12 +9,20 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+/**
+ * Implementación de {@link UsuarioDAO} que almacena los usuarios en memoria usando una lista.
+ */
 public class UsuarioDAOMemoria implements UsuarioDAO {
 
     private List<Usuario> usuarios;
 
+    /**
+     * Constructor que inicializa la lista de usuarios con algunos administradores por defecto.
+     *
+     * @throws ValidacionException si alguno de los usuarios iniciales es inválido.
+     */
     public UsuarioDAOMemoria() throws ValidacionException {
-        usuarios = new ArrayList<Usuario>();
+        usuarios = new ArrayList<>();
         crear(new Usuario("0150363232", "yp8dfN5q_10", Rol.ADMINISTRADOR));
         crear(new Usuario("0701277634", "yp8dfN5q_10", Rol.ADMINISTRADOR));
     }
@@ -24,7 +32,6 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         usuarios.add(usuario);
     }
 
-    // Cambiado: ahora se usa la cédula como identificador único en vez de username
     @Override
     public Usuario autenticar(String cedula, String password) {
         for (Usuario usuario : usuarios) {
@@ -36,7 +43,6 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         return null;
     }
 
-    // Cambiado: búsqueda por cédula
     @Override
     public Usuario buscarPorUsername(String cedula) {
         for (Usuario usuario : usuarios) {
@@ -47,7 +53,6 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         return null;
     }
 
-    // Cambiado: actualización por cédula
     @Override
     public void actualizar(Usuario usuario) {
         for (int i = 0; i < usuarios.size(); i++) {
@@ -58,7 +63,6 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         }
     }
 
-    // Cambiado: eliminación por cédula
     @Override
     public void eliminar(String cedula) {
         Iterator<Usuario> iterator = usuarios.iterator();
@@ -98,3 +102,4 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
         return clientes;
     }
 }
+

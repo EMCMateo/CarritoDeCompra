@@ -13,6 +13,10 @@ import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Vista para listar productos.
+ * Permite buscar productos por nombre y listar todos los productos.
+ */
 public class ProductoListaView extends JInternalFrame {
 
     private JPanel panelPrincipal;
@@ -24,6 +28,13 @@ public class ProductoListaView extends JInternalFrame {
     private JLabel lblNombre;
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mensajes;
+    /**
+     * Constructor de la vista ProductoListaView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     * @param productoDAO    DAO para acceder a los productos.
+     */
 
     public ProductoListaView(MensajeInternacionalizacionHandler mensajeHandler, ProductoDAO productoDAO) {
         this.productoDAO = productoDAO;
@@ -35,12 +46,20 @@ public class ProductoListaView extends JInternalFrame {
         setIconos();
     }
 
+    /**
+     * Inicializa los componentes de la vista.
+     * Configura el modelo de la tabla y sus columnas.
+     */
     private void initComponents() {
         modelo = new DefaultTableModel();
         tblProductos.setModel(modelo);
         modelo.setColumnIdentifiers(new String[]{"Código", "Nombre", "Precio"});
     }
 
+    /**
+     * Configura la ventana interna.
+     * Establece el título, comportamiento de cierre, iconificación y tamaño.
+     */
     private void configurarVentana() {
         setTitle("Lista de Productos");
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
@@ -50,6 +69,11 @@ public class ProductoListaView extends JInternalFrame {
         setVisible(true);
     }
 
+    /**
+     * Establece los textos de los componentes de la vista utilizando el manejador de mensajes.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         setTitle(mensajeHandler.get("producto.lista.titulo"));
         lblNombre.setText(mensajeHandler.get("producto.lista.lbl.nombre"));
@@ -68,6 +92,13 @@ public class ProductoListaView extends JInternalFrame {
         });
     }
 
+    /**
+     * Carga los datos de los productos en la tabla.
+     *
+     * @param listaProductos Lista de productos a mostrar.
+     * @param locale         Locale para formatear el precio.
+     */
+
     public void cargarDatos(List<Producto> listaProductos, Locale locale) {
         modelo.setRowCount(0);
         for (Producto p : listaProductos) {
@@ -78,11 +109,20 @@ public class ProductoListaView extends JInternalFrame {
             });
         }
     }
+    /**
+     * Limpia los campos de búsqueda.
+     */
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
+    /**
+     * Actualiza los datos de la tabla con los productos del DAO.
+     * Utiliza el manejador de mensajes para obtener el locale.
+     *
+     * @param mensajeHandler Manejador de mensajes para obtener el locale.
+     */
     public void actualizarDatos(MensajeInternacionalizacionHandler mensajeHandler) {
         List<Producto> productos = productoDAO.listarTodos();
         cargarDatos(productos, mensajeHandler.getLocale());

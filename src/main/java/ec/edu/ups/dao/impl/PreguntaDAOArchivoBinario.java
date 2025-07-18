@@ -33,6 +33,10 @@ public class PreguntaDAOArchivoBinario implements PreguntaDAO {
         }
         cargarPreguntas();
     }
+    /**
+     * Carga las preguntas desde el archivo binario al inicio.
+     * Si el archivo está vacío, no hace nada.
+     */
 
     private void cargarPreguntas() {
         try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(ruta + "/preguntas.bin"))) {
@@ -47,6 +51,10 @@ public class PreguntaDAOArchivoBinario implements PreguntaDAO {
             e.printStackTrace();
         }
     }
+    /**
+     * Guarda las preguntas en el archivo binario.
+     * Se llama cada vez que se agrega una nueva pregunta.
+     */
 
     private void guardarPreguntas() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ruta + "/preguntas.bin"))) {
@@ -56,10 +64,12 @@ public class PreguntaDAOArchivoBinario implements PreguntaDAO {
         }
     }
 
+
     @Override
     public List<Pregunta> listarTodas() {
         return new ArrayList<>(preguntas);
     }
+
 
     @Override
     public void agregarPregunta(Pregunta pregunta) {

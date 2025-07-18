@@ -4,6 +4,9 @@ import ec.edu.ups.modelo.Producto;
 
 import java.util.List;
 
+/**
+ * Interfaz que define las operaciones CRUD para productos.
+ */
 public interface ProductoDAO {
 
     void crear(Producto producto);
@@ -17,5 +20,4 @@ public interface ProductoDAO {
     void eliminar(int codigo);
 
     List<Producto> listarTodos();
-
 }

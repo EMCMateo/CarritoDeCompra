@@ -6,15 +6,26 @@ import java.io.*;
 import java.util.*;
 
 /**
- * ProductoDAOArchivoTexto
- * Implementa el guardado/lectura de productos en archivo de texto (CSV)
- * usando los métodos exactos de la interfaz ProductoDAO.
- * Formato: codigo,nombre,precio
+ * Implementación de {@link ProductoDAO} que utiliza archivos de texto (formato CSV)
+ * para almacenar los productos de forma persistente.
+ * <p>
+ * Cada producto se guarda en el archivo productos.txt con el formato:
+ * {@code codigo,nombre,precio}
  */
 public class ProductoDAOArchivoTexto implements ProductoDAO {
+
+    /** Ruta base donde se almacenará el archivo productos.txt */
     private final String ruta;
+
+    /** Lista en memoria que contiene todos los productos cargados o por guardar */
     private final List<Producto> productos = new ArrayList<>();
 
+    /**
+     * Crea una nueva instancia del DAO que almacena los productos en texto plano.
+     *
+     * @param ruta Carpeta donde se ubicará el archivo productos.txt
+     * @throws IllegalArgumentException si la ruta es nula o vacía
+     */
     public ProductoDAOArchivoTexto(String ruta) {
         if (ruta == null || ruta.trim().isEmpty()) {
             throw new IllegalArgumentException("La ruta no puede ser nula o vacía.");
@@ -35,6 +46,9 @@ public class ProductoDAOArchivoTexto implements ProductoDAO {
         cargarProductos();
     }
 
+    /**
+     * Carga los productos existentes desde el archivo productos.txt.
+     */
     private void cargarProductos() {
         try (BufferedReader br = new BufferedReader(new FileReader(ruta + "/productos.txt"))) {
             String linea;
@@ -53,25 +67,40 @@ public class ProductoDAOArchivoTexto implements ProductoDAO {
         }
     }
 
+    /**
+     * Guarda todos los productos actuales en el archivo productos.txt.
+     */
     private void guardarProductos() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(ruta + "/productos.txt"))) {
             for (Producto p : productos) {
                 pw.println(String.format("%d,%s,%.2f",
-                    p.getCodigo(),
-                    p.getNombre(),
-                    p.getPrecio()
+                        p.getCodigo(),
+                        p.getNombre(),
+                        p.getPrecio()
                 ));
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
+    /** * Implementación del método crear de ProductoDAO.
+     * Agrega un nuevo producto a la lista y lo guarda en el archivo.
+     *
+     * @param producto Producto a agregar
+     */
 
     @Override
     public void crear(Producto producto) {
         productos.add(producto);
         guardarProductos();
     }
+
+    /**
+     * Busca un producto por su código.
+     *
+     * @param codigo Código del producto a buscar
+     * @return Producto encontrado o null si no existe
+     */
 
     @Override
     public Producto buscarPorCodigo(int codigo) {
@@ -82,6 +111,12 @@ public class ProductoDAOArchivoTexto implements ProductoDAO {
         }
         return null;
     }
+    /**
+     * Busca productos por su nombre, ignorando mayúsculas y minúsculas.
+     *
+     * @param nombre Nombre o parte del nombre del producto a buscar
+     * @return Lista de productos que coinciden con el nombre
+     */
 
     @Override
     public List<Producto> buscarPorNombre(String nombre) {
@@ -93,6 +128,11 @@ public class ProductoDAOArchivoTexto implements ProductoDAO {
         }
         return encontrados;
     }
+    /**
+     * Actualiza un producto existente en la lista y lo guarda en el archivo.
+     *
+     * @param producto Producto con datos actualizados
+     */
 
     @Override
     public void actualizar(Producto producto) {
@@ -104,12 +144,22 @@ public class ProductoDAOArchivoTexto implements ProductoDAO {
             }
         }
     }
+    /**
+     * Elimina un producto de la lista según su código y actualiza el archivo.
+     *
+     * @param codigo Código del producto a eliminar
+     */
 
     @Override
     public void eliminar(int codigo) {
         productos.removeIf(p -> p.getCodigo() == codigo);
         guardarProductos();
     }
+    /**
+     * Retorna una copia de la lista de todos los productos.
+     *
+     * @return Lista de productos
+     */
 
     @Override
     public List<Producto> listarTodos() {

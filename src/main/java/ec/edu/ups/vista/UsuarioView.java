@@ -7,6 +7,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista para gestionar la información del usuario.
+ * Permite visualizar y editar los datos del usuario.
+ */
+
 public class UsuarioView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JLabel lblNombre;
@@ -24,6 +29,12 @@ public class UsuarioView extends JInternalFrame {
 
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+    /**
+     * Constructor de la vista UsuarioView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
     public UsuarioView(MensajeInternacionalizacionHandler mensajeHandler) {
         setContentPane(panelPrincipal);
         setClosable(true);
@@ -36,8 +47,12 @@ public class UsuarioView extends JInternalFrame {
         setIconos();
 
 
-    }
 
+    }
+/**
+     * Inicializa los componentes de la vista.
+     * Configura el tamaño, operación de cierre, y textos de los componentes.
+     */
 
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;

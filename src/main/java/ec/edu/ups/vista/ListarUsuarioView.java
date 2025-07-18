@@ -14,6 +14,11 @@ import java.awt.*;
 import java.net.URL;
 import java.util.List;
 
+
+/**
+ * Vista para listar usuarios en el sistema.
+ * Permite buscar, filtrar y eliminar usuarios.
+ */
 public class ListarUsuarioView extends JInternalFrame {
 
     private JPanel panelPrincipal;
@@ -29,6 +34,14 @@ public class ListarUsuarioView extends JInternalFrame {
     private UsuarioDAO usuarioDAO;
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+
+    /**
+     * Constructor de la vista ListarUsuarioView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param usuarioDAO DAO para acceder a los datos de usuario.
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
     public ListarUsuarioView(UsuarioDAO usuarioDAO, MensajeInternacionalizacionHandler mensajeHandler) {
         this.usuarioDAO = usuarioDAO;
         this.mensajeHandler = mensajeHandler;
@@ -47,10 +60,7 @@ public class ListarUsuarioView extends JInternalFrame {
             throw new IllegalStateException("panelPrincipal no está inicializado. Verifica el archivo .form.");
         }
 
-        // Establecer el contentPane
 
-
-        // Inicializar el modelo de la tabla
         modelo = new DefaultTableModel(new Object[]{
                 mensajeHandler.get("usuario.listar.tabla.usuario"),
                 mensajeHandler.get("usuario.listar.tabla.rol"),
@@ -62,6 +72,8 @@ public class ListarUsuarioView extends JInternalFrame {
             }
         };
 
+
+        // Configurar el JTable
         tblUsuarios.setModel(modelo);
         tblUsuarios.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
 
@@ -121,6 +133,10 @@ public class ListarUsuarioView extends JInternalFrame {
         setVisible(true);
     }
 
+    /**
+     * Establece los textos de la interfaz utilizando el mensajeHandler.
+     * Actualiza títulos, etiquetas y botones con los mensajes correspondientes.
+     */
     public void setTextos() {
         setTitle(mensajeHandler.get("usuario.listar.titulo"));
         if (lblListar != null) lblListar.setText(mensajeHandler.get("usuario.listar.lbl.titulo"));

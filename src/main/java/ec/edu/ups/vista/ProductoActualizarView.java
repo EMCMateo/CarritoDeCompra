@@ -9,6 +9,10 @@ import java.awt.*;
 import java.net.URL;
 import java.util.Locale;
 
+/**
+ * Vista para actualizar un producto.
+ * Permite buscar un producto por código, mostrar sus detalles y actualizar su información.
+ */
 public class ProductoActualizarView extends JInternalFrame {
 
     private JTextField txtCodigo;
@@ -21,18 +25,24 @@ public class ProductoActualizarView extends JInternalFrame {
     private JLabel lblNombre;
     private JLabel lblPrecio;
     private MensajeInternacionalizacionHandler mensajeHandler;
+    /**
+     * Constructor de la vista ProductoActualizarView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
 
     public ProductoActualizarView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
-        initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
     }
 
-    private void initComponents() {
-        // Aquí deberías inicializar tus componentes si no lo estás haciendo en el GUI builder
-    }
+    /**
+     * Configura la ventana con título, tamaño y comportamiento.
+     * También establece los iconos de los botones.
+     */
 
     private void configurarVentana() {
         setTitle(mensajeHandler.get("producto.actualizar.titulo"));
@@ -43,6 +53,11 @@ public class ProductoActualizarView extends JInternalFrame {
         setVisible(true);
         setIconos();
     }
+
+    /**
+     * Establece los textos de los componentes de la vista utilizando el manejador de mensajes.
+     * @param mensajeHandler Manejador de mensajes para obtener los textos internacionalizados.
+     */
 
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         setTitle(mensajeHandler.get("producto.actualizar.titulo"));
@@ -57,17 +72,31 @@ public class ProductoActualizarView extends JInternalFrame {
             panelPrincipal.repaint();
         }
     }
+    /**
+     * Muestra los detalles del producto en los campos de texto.
+     * @param nombre Nombre del producto.
+     * @param precio Precio del producto.
+     * @param locale Locale para formatear el precio.
+     */
 
     public void mostrarProducto(String nombre, double precio, Locale locale) {
         txtNombre.setText(nombre);
         txtPrecio.setText(FormateadorUtils.formatearMoneda(precio, locale));
     }
 
+    /**
+     * Muestra un mensaje al usuario en un cuadro de diálogo.
+     * @param mensaje El mensaje a mostrar.
+     */
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
 
+    /**
+     * Limpia los campos de entrada del formulario.
+     * Resetea los campos de código, nombre y precio.
+     */
     public void limpiarCampos() {
         txtNombre.setText("");
         txtPrecio.setText("");
@@ -79,6 +108,10 @@ public class ProductoActualizarView extends JInternalFrame {
     public JButton getBtnBuscar() { return btnBuscar; }
     public JButton getBtnActualizar() { return btnActualizar; }
 
+    /**
+     * Actualiza la internacionalización de los textos y formatea el campo de precio.
+     * @param nuevoHandler Nuevo manejador de mensajes para internacionalización.
+     */
     public void actualizarInternacionalizacion(MensajeInternacionalizacionHandler nuevoHandler) {
         this.mensajeHandler = nuevoHandler;
         setTextos(nuevoHandler);
@@ -95,12 +128,27 @@ public class ProductoActualizarView extends JInternalFrame {
         }
     }
 
+    /**
+     * Establece los iconos de los botones con imágenes escaladas.
+     * Utiliza recursos locales para cargar las imágenes.
+     */
+
 
     public void setIconos(){
 
         setIconoEscalado(btnBuscar, "/ios-search.png", 20, 20);
         setIconoEscalado(btnActualizar, "/ios-create.png", 20, 20);
     }
+
+    /**
+     * Establece un icono escalado para un botón.
+     * Carga la imagen desde los recursos y la escala al tamaño especificado.
+     *
+     * @param boton El botón al que se le asignará el icono.
+     * @param ruta La ruta del recurso de la imagen.
+     * @param ancho El ancho deseado para el icono.
+     * @param alto El alto deseado para el icono.
+     */
 
     private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
         URL url = getClass().getResource(ruta);

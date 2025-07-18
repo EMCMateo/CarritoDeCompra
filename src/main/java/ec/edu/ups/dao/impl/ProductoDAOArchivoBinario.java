@@ -5,10 +5,23 @@ import ec.edu.ups.modelo.Producto;
 import java.io.*;
 import java.util.*;
 
+/**
+ * Implementación de {@link ProductoDAO} que utiliza archivos binarios
+ * para almacenar los productos de forma persistente.
+ */
 public class ProductoDAOArchivoBinario implements ProductoDAO {
+
+    /** Ruta base donde se almacenará el archivo productos.bin */
     private final String ruta;
+
+    /** Lista de productos en memoria que se serializa/deserializa */
     private final List<Producto> productos = new ArrayList<>();
 
+    /**
+     * Crea una instancia del DAO binario con la ruta especificada.
+     *
+     * @param ruta Carpeta donde se ubicará el archivo productos.bin
+     */
     public ProductoDAOArchivoBinario(String ruta) {
         this.ruta = ruta;
         File carpeta = new File(ruta);
@@ -26,6 +39,9 @@ public class ProductoDAOArchivoBinario implements ProductoDAO {
         cargarProductos();
     }
 
+    /**
+     * Carga los productos desde el archivo binario.
+     */
     private void cargarProductos() {
         File archivo = new File(ruta + "/productos.bin");
         if (!archivo.exists() || archivo.length() == 0) {
@@ -44,6 +60,9 @@ public class ProductoDAOArchivoBinario implements ProductoDAO {
         }
     }
 
+    /**
+     * Guarda la lista actual de productos en archivo binario.
+     */
     private void guardarProductos() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ruta + "/productos.bin"))) {
             oos.writeObject(productos);
@@ -51,12 +70,23 @@ public class ProductoDAOArchivoBinario implements ProductoDAO {
             e.printStackTrace();
         }
     }
+    /**
+     * Crea un nuevo producto y lo guarda en el archivo.
+     *
+     * @param producto Producto a crear.
+     */
 
     @Override
     public void crear(Producto producto) {
         productos.add(producto);
         guardarProductos();
     }
+    /**
+     * Busca un producto por su código.
+     *
+     * @param codigo Código del producto a buscar.
+     * @return Producto encontrado o null si no existe.
+     */
 
     @Override
     public Producto buscarPorCodigo(int codigo) {
@@ -79,18 +109,34 @@ public class ProductoDAOArchivoBinario implements ProductoDAO {
             }
         }
     }
+    /**
+     * Elimina un producto por su código.
+     *
+     * @param codigo Código del producto a eliminar.
+     */
 
     @Override
     public void eliminar(int codigo) {
         productos.removeIf(p -> p.getCodigo() == codigo);
         guardarProductos();
     }
+    /**
+     * Lista todos los productos almacenados.
+     *
+     * @return Lista de productos.
+     */
 
     @Override
     public List<Producto> listarTodos() {
         cargarProductos();
         return new ArrayList<>(productos);
     }
+    /**
+     * Busca productos por nombre, ignorando mayúsculas/minúsculas.
+     *
+     * @param nombre Nombre o parte del nombre a buscar.
+     * @return Lista de productos que coinciden con el nombre.
+     */
 
     @Override
     public List<Producto> buscarPorNombre(String nombre) {

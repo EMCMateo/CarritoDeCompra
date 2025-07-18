@@ -13,12 +13,12 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
- * CarritoDAOArchivoTexto
- * Implementa el guardado/lectura de carritos en archivo de texto (CSV)
- * Formato del archivo carritos.txt:
- * codigo,fechaCreacion,usuarioCedula
- * Formato del archivo items_carrito.txt:
- * carritoId,productoCodigo,cantidad
+ * Implementación de {@link CarritoDAO} que guarda los carritos y sus items en archivos de texto (formato CSV).
+ * <p>Se usa para persistencia ligera basada en archivos planos.
+ * <ul>
+ *   <li>Archivo <b>carritos.txt</b>: contiene código, fecha de creación y cédula del usuario.</li>
+ *   <li>Archivo <b>items_carrito.txt</b>: contiene código del carrito, código del producto y cantidad.</li>
+ * </ul>
  */
 public class CarritoDAOArchivoTexto implements CarritoDAO {
 
@@ -27,6 +27,13 @@ public class CarritoDAOArchivoTexto implements CarritoDAO {
     private final UsuarioDAO usuarioDAO;
     private final ProductoDAO productoDAO;
 
+    /**
+     * Constructor con inyección de dependencias y ruta del directorio de almacenamiento.
+     *
+     * @param ruta Ruta del directorio donde se guardan los archivos
+     * @param usuarioDAO DAO de usuarios
+     * @param productoDAO DAO de productos
+     */
     public CarritoDAOArchivoTexto(String ruta, UsuarioDAO usuarioDAO, ProductoDAO productoDAO) {
         this.ruta = ruta;
         this.usuarioDAO = usuarioDAO;
@@ -39,6 +46,9 @@ public class CarritoDAOArchivoTexto implements CarritoDAO {
         cargarCarritos();
     }
 
+    /**
+     * Carga los carritos desde el archivo carritos.txt y luego sus items desde items_carrito.txt.
+     */
     private void cargarCarritos() {
         carritos.clear();
         File archivo = new File(ruta + "/carritos.txt");
@@ -80,6 +90,9 @@ public class CarritoDAOArchivoTexto implements CarritoDAO {
         }
     }
 
+    /**
+     * Carga los items de cada carrito desde el archivo items_carrito.txt.
+     */
     private void cargarItemsCarrito() {
         File archivo = new File(ruta + "/items_carrito.txt");
         if (!archivo.exists()) {
@@ -112,6 +125,9 @@ public class CarritoDAOArchivoTexto implements CarritoDAO {
         }
     }
 
+    /**
+     * Guarda los carritos y sus items en los archivos correspondientes.
+     */
     private void guardarCarritos() {
         try (PrintWriter pw = new PrintWriter(new FileWriter(ruta + "/carritos.txt"))) {
             for (Carrito c : carritos) {

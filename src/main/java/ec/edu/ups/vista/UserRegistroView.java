@@ -6,6 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista para el registro de usuarios.
+ * Permite ingresar datos personales y de acceso del usuario.
+ */
 public class UserRegistroView extends JFrame {
     private JPanel panelPrincipal;
     private JLabel lblNombreCompleto;
@@ -29,6 +33,13 @@ public class UserRegistroView extends JFrame {
 
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+    /**
+     * Constructor de la vista UserRegistroView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
+
     public UserRegistroView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
@@ -40,6 +51,11 @@ public class UserRegistroView extends JFrame {
         setIconos();
         cargarGeneros();
     }
+
+    /**
+     * Configura los textos de los componentes de la vista.
+     * Utiliza el manejador de mensajes para obtener los textos internacionalizados.
+     */
 
 
     public void setTextos() {
@@ -58,6 +74,11 @@ public class UserRegistroView extends JFrame {
         btnCancelar.setText(mensajeHandler.get("boton.cancelar"));
     }
 
+    /**
+     * Carga los géneros disponibles en el JComboBox cmbGenero.
+     * Utiliza el manejador de mensajes para obtener los nombres de los géneros.
+     */
+
     private void cargarGeneros() {
         cmbGenero.removeAllItems();
         cmbGenero.addItem(mensajeHandler.get("genero.masculino"));
@@ -65,6 +86,11 @@ public class UserRegistroView extends JFrame {
         cmbGenero.addItem(mensajeHandler.get("genero.nobinario"));
     }
 
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     *
+     * @param mensaje El mensaje a mostrar.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }

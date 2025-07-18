@@ -7,11 +7,28 @@ import ec.edu.ups.modelo.Usuario;
 import java.io.*;
 import java.util.*;
 
+
+/**
+ * Implementación de UsuarioDAO que almacena los usuarios en un archivo binario.
+ * Se crea un archivo "usuarios.bin" en la ruta indicada.
+ * Esta clase también se encarga de crear usuarios por defecto si el archivo está vacío.
+ */
+
 public class UsuarioDAOArchivoBinario implements UsuarioDAO {
     private final String ruta;
+
+    /**
+     * Lista en memoria de usuarios cargados desde el archivo binario.
+     */
+
     private final List<Usuario> usuarios = new ArrayList<>();
 
-    // Cada entidad se guarda en su propio archivo binario: usuarios.bin
+    /**
+     * Constructor que inicializa el DAO, carga los usuarios y crea el archivo si no existe.
+     * @param ruta Carpeta donde se encuentra o se creará el archivo.
+     * @throws ValidacionException si ocurre un error al crear usuarios por defecto.
+     */
+
     public UsuarioDAOArchivoBinario(String ruta) throws ValidacionException {
         this.ruta = ruta;
         File carpeta = new File(ruta);
@@ -27,13 +44,14 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
             }
         }
         cargarUsuarios();
-        // Si no hay usuarios, creamos los de prueba
         if (usuarios.isEmpty()) {
             crear(new Usuario("0150363232", "yp8dfN5q_10", Rol.ADMINISTRADOR));
             crear(new Usuario("0701277634", "yp8dfN5q_10", Rol.ADMINISTRADOR));
         }
     }
-
+    /**
+     * Carga la lista de usuarios desde el archivo binario.
+     */
     private void cargarUsuarios() {
         File archivo = new File(ruta + "/usuarios.bin");
         if (!archivo.exists()) return;
@@ -50,6 +68,9 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
         }
     }
 
+    /**
+     * Guarda la lista actual de usuarios en el archivo binario.
+     */
     private void guardarUsuarios() {
         File carpeta = new File(ruta);
         if (!carpeta.exists()) {
@@ -61,7 +82,12 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
             e.printStackTrace();
         }
     }
-
+    /**
+     * Autentica a un usuario comparando cédula y contraseña.
+     * @param cedula Cédula del usuario.
+     * @param password Contraseña del usuario.
+     * @return Usuario autenticado o null si no coincide.
+     */
     @Override
     public Usuario autenticar(String cedula, String password) {
         for (Usuario u : usuarios) {
@@ -72,11 +98,20 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
         return null;
     }
 
+    /**
+     * Agrega un nuevo usuario a la lista y lo guarda en el archivo.
+     * @param usuario Usuario a crear.
+     */
     @Override
     public void crear(Usuario usuario) {
         usuarios.add(usuario);
         guardarUsuarios();
     }
+    /**
+     * Busca un usuario por su cédula.
+     * @param cedula Cédula del usuario.
+     * @return Usuario encontrado o null.
+     */
 
     @Override
     public Usuario buscarPorUsername(String cedula) {
@@ -88,13 +123,19 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
         }
         return null;
     }
-
+    /**
+     * Elimina un usuario según su cédula.
+     * @param cedula Cédula del usuario.
+     */
     @Override
     public void eliminar(String cedula) {
         usuarios.removeIf(u -> u.getCedula().equals(cedula));
         guardarUsuarios();
     }
-
+    /**
+     * Actualiza los datos de un usuario existente.
+     * @param usuario Usuario con datos actualizados.
+     */
     @Override
     public void actualizar(Usuario usuario) {
         for (int i = 0; i < usuarios.size(); i++) {
@@ -105,13 +146,19 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
             }
         }
     }
-
+    /**
+     * Retorna una copia de la lista de todos los usuarios.
+     * @return Lista de usuarios.
+     */
     @Override
     public List<Usuario> listarTodos() {
         cargarUsuarios();
         return new ArrayList<>(usuarios);
     }
-
+    /**
+     * Lista todos los usuarios con rol ADMIN.
+     * @return Lista de administradores.
+     */
     @Override
     public List<Usuario> listarAdmin() {
         cargarUsuarios();
@@ -123,7 +170,10 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
         }
         return admins;
     }
-
+    /**
+     * Lista todos los usuarios con rol CLIENTE.
+     * @return Lista de clientes.
+     */
     @Override
     public List<Usuario> listarClientes() {
         cargarUsuarios();

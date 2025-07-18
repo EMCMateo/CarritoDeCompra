@@ -8,6 +8,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista para que el usuario responda preguntas de seguridad.
+ * Permite seleccionar una pregunta y proporcionar una respuesta.
+ */
+
 public class UsuarioPreguntaView extends JFrame {
 
     private JPanel panelPrincipal;
@@ -23,6 +28,12 @@ public class UsuarioPreguntaView extends JFrame {
 
     private final MensajeInternacionalizacionHandler mensajeHandler;
 
+    /**
+     * Constructor de la vista UsuarioPreguntaView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
     public UsuarioPreguntaView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
 
@@ -34,6 +45,10 @@ public class UsuarioPreguntaView extends JFrame {
         setTextos();
         setIconos();
     }
+    /**
+     * Inicializa los componentes de la vista.
+     * Configura los textos y los iconos de los botones.
+     */
 
     private void setTextos() {
         lblPregunta1.setText(mensajeHandler.get("preguntas.titulo"));

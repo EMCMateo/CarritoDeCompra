@@ -2,27 +2,31 @@ package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.CarritoDAO;
 import ec.edu.ups.dao.UsuarioDAO;
+import ec.edu.ups.dao.ProductoDAO;
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.Usuario;
-
-import ec.edu.ups.dao.ProductoDAO;
 
 import java.io.*;
 import java.util.*;
 
 /**
- * CarritoDAOArchivoBinario
- * Implementa el guardado/lectura de carritos en archivo binario.
- * Aunque el Usuario ya viene serializado dentro del objeto Carrito,
- * se mantiene la referencia a UsuarioDAO para consistencia arquitectónica.
+ * Implementación de {@link CarritoDAO} que guarda los carritos en un archivo binario usando serialización.
+ * <p> Los objetos Carrito deben implementar Serializable.
  */
 public class CarritoDAOArchivoBinario implements CarritoDAO {
 
     private final String ruta;
-    private final UsuarioDAO usuarioDAO; // Dependencia inyectada
+    private final UsuarioDAO usuarioDAO;
     private final List<Carrito> carritos = new ArrayList<>();
     private final ProductoDAO productoDAO;
 
+    /**
+     * Constructor con ruta de almacenamiento e inyección de DAOs necesarios.
+     *
+     * @param ruta Ruta del archivo binario
+     * @param usuarioDAO DAO de usuario
+     * @param productoDAO DAO de producto
+     */
     public CarritoDAOArchivoBinario(String ruta, UsuarioDAO usuarioDAO, ProductoDAO productoDAO) {
         if (ruta == null || ruta.trim().isEmpty()) {
             throw new IllegalArgumentException("La ruta no puede ser nula o vacía.");
@@ -36,6 +40,7 @@ public class CarritoDAOArchivoBinario implements CarritoDAO {
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
+
         File archivo = new File(ruta + "/carritos.bin");
         if (!archivo.exists()) {
             try {
@@ -47,6 +52,9 @@ public class CarritoDAOArchivoBinario implements CarritoDAO {
         cargarCarritos();
     }
 
+    /**
+     * Carga los carritos desde el archivo binario.
+     */
     private void cargarCarritos() {
         carritos.clear();
         File archivo = new File(ruta + "/carritos.bin");
@@ -59,12 +67,15 @@ public class CarritoDAOArchivoBinario implements CarritoDAO {
                 carritos.addAll((List<Carrito>) obj);
             }
         } catch (EOFException eof) {
-            // Archivo vacío al inicio: normal
+            // Archivo vacío, se ignora
         } catch (Exception e) {
             System.out.println("Error al cargar carritos binarios: " + e.getMessage());
         }
     }
 
+    /**
+     * Guarda todos los carritos en el archivo binario.
+     */
     private void guardarCarritos() {
         try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(ruta + "/carritos.bin"))) {
             oos.writeObject(carritos);

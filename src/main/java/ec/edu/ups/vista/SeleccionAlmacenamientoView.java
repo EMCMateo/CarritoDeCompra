@@ -4,6 +4,10 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 
+/**
+ * Vista para seleccionar el tipo de almacenamiento para los datos.
+ * Permite elegir entre memoria, texto o binario, y configurar la ruta si es necesario.
+ */
 public class SeleccionAlmacenamientoView extends JFrame {
     private JPanel panelPrincipal;
     private JComboBox<AlmacenamientoOpcion> cmbTipoAlmacenamiento;
@@ -12,6 +16,12 @@ public class SeleccionAlmacenamientoView extends JFrame {
     private JFileChooser fileChooser;
     private String rutaSeleccionada;
     private MensajeInternacionalizacionHandler mensajeHandler;
+    /**
+     * Constructor de la vista SeleccionAlmacenamientoView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
 
     public SeleccionAlmacenamientoView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
@@ -50,6 +60,7 @@ public class SeleccionAlmacenamientoView extends JFrame {
 
             this.pack();
         });
+        // Si el usuario selecciona "En memoria", el JFileChooser no se muestra y el botón "Continuar" se habilita.
 
 
         // 3. Listener del JFileChooser para re-habilitar el botón "Continuar"
@@ -78,6 +89,10 @@ public class SeleccionAlmacenamientoView extends JFrame {
         pack();
     }
 
+    /**
+     * Configura los textos de la interfaz utilizando el manejador de mensajes.
+     * Esto permite la internacionalización de los textos mostrados en la vista.
+     */
 
     private void setTextos() {
         setTitle(mensajeHandler.get("seleccion.titulo"));
@@ -114,6 +129,11 @@ public class SeleccionAlmacenamientoView extends JFrame {
         }
     }
 
+    /**
+     * Obtiene la opción de almacenamiento seleccionada en el JComboBox.
+     *
+     * @return La opción de almacenamiento seleccionada.
+     */
     public AlmacenamientoOpcion getSeleccion() {
         return (AlmacenamientoOpcion) cmbTipoAlmacenamiento.getSelectedItem();
     }

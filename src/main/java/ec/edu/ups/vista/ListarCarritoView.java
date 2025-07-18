@@ -14,6 +14,10 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Vista para listar carritos de compras.
+ * Permite buscar carritos por código y listar todos los carritos existentes.
+ */
 public class ListarCarritoView extends JInternalFrame {
     private JPanel panelPrincipal;
     private JTable tblCarrito;
@@ -25,6 +29,13 @@ public class ListarCarritoView extends JInternalFrame {
     private JLabel lblConsejo;
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mensajeHandler;
+
+    /**
+     * Constructor de la vista ListarCarritoView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mh Manejador de mensajes para internacionalización.
+     */
 
     public ListarCarritoView(MensajeInternacionalizacionHandler mh) {
         this.mensajeHandler = mh;
@@ -41,6 +52,11 @@ public class ListarCarritoView extends JInternalFrame {
         setIconos();
     }
 
+    /**
+     * Inicializa los componentes de la vista.
+     * Configura el modelo de la tabla y sus columnas.
+     */
+
     private void inicializarComponentes() {
         modelo = new DefaultTableModel() {
             @Override
@@ -56,6 +72,13 @@ public class ListarCarritoView extends JInternalFrame {
                 "Total"
         });
     }
+
+    /**
+     * Configura los textos de la vista utilizando el manejador de mensajes.
+     * Actualiza títulos, etiquetas y botones con los textos correspondientes.
+     *
+     * @param mh Manejador de mensajes para internacionalización.
+     */
 
     public void setTextos(MensajeInternacionalizacionHandler mh) {
         setTitle(mh.get("carrito.listar.titulo"));
@@ -78,6 +101,12 @@ public class ListarCarritoView extends JInternalFrame {
         });
     }
 
+    /**
+     * Carga los datos de los carritos en la tabla.
+     * Utiliza un formato de fecha y moneda según la configuración regional.
+     *
+     * @param lista Lista de carritos a mostrar en la tabla.
+     */
     public void cargarDatos(List<Carrito> lista) {
         modelo.setRowCount(0);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
@@ -92,6 +121,14 @@ public class ListarCarritoView extends JInternalFrame {
             });
         }
     }
+
+    /**
+     * Carga los datos de los carritos en la tabla con formato específico.
+     * Utiliza el manejador de mensajes para obtener el formato de fecha y moneda.
+     *
+     * @param carritos Lista de carritos a mostrar en la tabla.
+     * @param handler Manejador de mensajes para internacionalización.
+     */
 
     public void cargarDatosConFormato(List<Carrito> carritos, MensajeInternacionalizacionHandler handler) {
         modelo.setRowCount(0);

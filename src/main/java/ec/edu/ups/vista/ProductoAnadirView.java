@@ -10,6 +10,11 @@ import java.awt.*;
 import java.net.URL;
 import java.util.List;
 
+/**
+ * Vista para añadir un producto.
+ * Permite ingresar los datos del producto y limpiarlos.
+ */
+
 public class ProductoAnadirView extends JInternalFrame {
 
     private JPanel panelPrincipal;
@@ -23,20 +28,25 @@ public class ProductoAnadirView extends JInternalFrame {
     private JLabel lblPrecio;
 
     private MensajeInternacionalizacionHandler mensajeHandler;
+    /**
+     * Constructor de la vista ProductoAnadirView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
 
     public ProductoAnadirView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
-        initComponents();
         btnLimpiar.addActionListener(e -> limpiarCampos());
         setTextos(mensajeHandler);
         configurarVentana();
         setIconos();
     }
 
-    private void initComponents() {
-        // Aquí deberías inicializar tus componentes si no usas GUI builder
-    }
+
+
+
 
     private void configurarVentana() {
         setTitle("Datos del Producto");
@@ -46,6 +56,12 @@ public class ProductoAnadirView extends JInternalFrame {
         setSize(500, 500);
         setVisible(true);
     }
+
+    /**
+     * Establece los textos de los componentes de la vista según el manejador de mensajes.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
 
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         setTitle(mensajeHandler.get("producto.anadir.titulo"));
@@ -61,6 +77,14 @@ public class ProductoAnadirView extends JInternalFrame {
         }
     }
 
+    /**
+     * Muestra los datos del producto en los campos de texto.
+     *
+     * @param codigo Código del producto.
+     * @param nombre Nombre del producto.
+     * @param precio Precio del producto.
+     */
+
     public void mostrarProducto(String codigo, String nombre, double precio) {
         txtCodigo.setText(codigo);
         txtNombre.setText(nombre);
@@ -68,11 +92,22 @@ public class ProductoAnadirView extends JInternalFrame {
         txtPrecio.setText(precioFormateado);
     }
 
+    /**
+     * Limpia los campos de entrada del formulario.
+     * Resetea los campos de código, nombre y precio.
+     */
+
     public void limpiarCampos() {
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
     }
+
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     *
+     * @param mensaje Mensaje a mostrar al usuario.
+     */
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
@@ -83,6 +118,12 @@ public class ProductoAnadirView extends JInternalFrame {
             System.out.println(producto);
         }
     }
+    /**
+     * Actualiza la internacionalización de los textos de la vista.
+     * Reestablece los textos y re-formatea el precio si ya hay datos en pantalla.
+     *
+     * @param nuevoHandler Nuevo manejador de mensajes para internacionalización.
+     */
 
     public void actualizarInternacionalizacion(MensajeInternacionalizacionHandler nuevoHandler) {
         this.mensajeHandler = nuevoHandler;
@@ -111,12 +152,25 @@ public class ProductoAnadirView extends JInternalFrame {
 
 
 
+    /**
+     * Establece los iconos para los botones de aceptar y limpiar.
+     * Utiliza iconos escalados desde recursos.
+     */
     public void setIconos(){
 
         setIconoEscalado(btnAceptar, "/md-done-all.png", 20, 20);
         setIconoEscalado(btnLimpiar, "/ios-trash.png", 20, 20);
     }
 
+    /**
+     * Establece un icono escalado para un botón.
+     * Utiliza una ruta de recurso para cargar el icono y lo escala al tamaño especificado.
+     *
+     * @param boton Botón al que se le asignará el icono.
+     * @param ruta Ruta del recurso del icono.
+     * @param ancho Ancho deseado del icono.
+     * @param alto Alto deseado del icono.
+     */
     private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
         URL url = getClass().getResource(ruta);
         if (url != null) {
