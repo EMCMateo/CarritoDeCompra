@@ -23,6 +23,11 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Controlador para gestionar las operaciones relacionadas con el carrito de compras.
+ * Permite añadir productos, listar carritos, editar carritos y manejar eventos de la vista.
+ */
+
 public class CarritoController {
     private final JDesktopPane desktopPane;
     private final ProductoDAO productoDAO;
@@ -40,6 +45,22 @@ public class CarritoController {
     private final ListarCarritoUsuarioView listarCarritoUsuarioView;
     private final CarritoEditarView carritoEditarView;
 
+    /**
+     * Constructor que inicializa el controlador con las vistas y DAOs necesarios.
+     *
+     * @param carritoDAO DAO para operaciones de carrito
+     * @param carritoAñadirView Vista para añadir productos al carrito
+     * @param productoDAO DAO para operaciones de productos
+     * @param carrito Carrito actual a gestionar
+     * @param listarCarritoView Vista para listar carritos
+     * @param usuarioActual Usuario actual que interactúa con el sistema
+     * @param mensajeHandler Manejador de mensajes de internacionalización
+     * @param listarCarritoUsuarioView Vista para listar carritos por usuario
+     * @param usuarioDAO DAO para operaciones de usuario
+     * @param carritoEditarView Vista para editar carritos
+     * @param desktopPane Panel donde se mostrarán las vistas
+     */
+
     public CarritoController(CarritoDAO carritoDAO, CarritoAñadirView carritoAñadirView,
                              ProductoDAO productoDAO, Carrito carrito, ListarCarritoView listarCarritoView,
                              Usuario usuarioActual, MensajeInternacionalizacionHandler mensajeHandler,
@@ -55,6 +76,10 @@ public class CarritoController {
         this.carritoEditarView = carritoEditarView;
         this.desktopPane = desktopPane;
     }
+    /**
+     * Registra los eventos necesarios para las vistas del carrito.
+     * Se asegura de que los eventos solo se registren una vez.
+     */
 
     public void carritoEventos() {
         if (eventosRegistrados) return;
@@ -66,7 +91,10 @@ public class CarritoController {
     }
 
 
-
+    /**
+     * Muestra la vista para añadir productos al carrito.
+     * Si ya hay un carrito activo, lo reutiliza.
+     */
     public void mostrarVentanaEditarDesdeMenu() {
         // Cierra la vista si ya está abierta (por seguridad)
         if (carritoEditarView.isVisible()) {
@@ -76,7 +104,10 @@ public class CarritoController {
         // Selecciona carrito desde comboBox
         seleccionarCarritoDesdeComboBox();
     }
-
+    /**
+     * Muestra la vista para añadir productos al carrito.
+     * Si ya hay un carrito activo, lo reutiliza.
+     */
     private void seleccionarCarritoDesdeComboBox() {
         carrito = null;
         visualizarCarritoEditar = false;
@@ -114,6 +145,10 @@ public class CarritoController {
     }
 
 
+    /**
+     * Muestra la vista para añadir productos al carrito.
+     * Si ya hay un carrito activo, lo reutiliza.
+     */
 
     private void inicializarEventosEditarCarritoView() {
         carritoEditarView.getBtnBuscar().addActionListener(e -> {
@@ -218,6 +253,12 @@ public class CarritoController {
         });
     }
 
+    /**
+     * Abre la vista de edición del carrito, permitiendo visualizar o editar según el parámetro.
+     *
+     * @param soloVisualizar Si es true, la vista será solo de visualización; si es false, se podrá editar.
+     */
+
     private void abrirCarritoEditarView(boolean soloVisualizar) {
         visualizarCarritoEditar = soloVisualizar;
 
@@ -253,7 +294,10 @@ public class CarritoController {
         carritoEditarView.toFront();
     }
 
-
+    /**
+     * Muestra los totales del carrito en la vista de edición.
+     * Formatea los valores según la configuración regional del mensajeHandler.
+     */
     private void mostrarTotalesEditar() {
         Locale locale = mensajeHandler.getLocale();
         carritoEditarView.getTxtSubtotal().setText(
@@ -263,6 +307,10 @@ public class CarritoController {
         carritoEditarView.getTxtTotal().setText(
                 FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale));
     }
+    /**
+     * Inicializa los eventos de la vista para añadir productos al carrito.
+     * Configura los botones y acciones necesarias para interactuar con el carrito.
+     */
 
     private void inicializarEventosAñadirView() {
         carritoAñadirView.getBtnBuscar().addActionListener(e -> {
@@ -348,6 +396,10 @@ public class CarritoController {
     }
 
 
+    /**
+     * Inicializa los eventos de la vista para listar carritos.
+     * Configura los botones y acciones necesarias para interactuar con la lista de carritos.
+     */
 
 
     private void inicializarEventosListarCarritoView() {
@@ -400,6 +452,10 @@ public class CarritoController {
         });
     }
 
+    /**
+     * Inicializa los eventos de la vista para listar carritos por usuario.
+     * Configura los botones y acciones necesarias para interactuar con la lista de carritos del usuario.
+     */
     private void inicializarEventosListarCarritoUsuarioView() {
         listarCarritoUsuarioView.getBtnBuscar().setEnabled(usuarioActual.getRol() == Rol.ADMINISTRADOR);
 
@@ -438,7 +494,7 @@ public class CarritoController {
                     }
 
                     if (usuarioActual.getRol() != Rol.ADMINISTRADOR &&
-                            !usuarioActual.getUsername().equals(c.getUsuario().getUsername())) {
+                            !usuarioActual.getCedula().equals(c.getUsuario().getCedula())) {
                         listarCarritoUsuarioView.mostrarMensaje(mensajeHandler.get("carrito.visualizacion.denegada"));
                         return;
                     }
@@ -479,6 +535,11 @@ public class CarritoController {
     }
 
 
+    /**
+     * Añade un producto al carrito actual.
+     * Si el carrito no existe, lo crea.
+     * Actualiza la vista con los datos del carrito y los totales.
+     */
 
     private void añadirProductoAlCarrito() {
         if (carrito == null) {
@@ -498,6 +559,11 @@ public class CarritoController {
         }
     }
 
+    /**
+     * Guarda el carrito actual en la base de datos.
+     * Si el carrito es nuevo, lo crea; si ya existe, lo actualiza.
+     * Muestra un mensaje de éxito y limpia los campos de la vista.
+     */
     private void mostrarTotales() {
         Locale locale = mensajeHandler.getLocale();
         carritoAñadirView.getTxtSubtotal().setText(
@@ -508,12 +574,21 @@ public class CarritoController {
                 FormateadorUtils.formatearMoneda(carrito.calcularTotal(), locale));
     }
 
+    /**
+     * Limpia los totales en la vista de añadir carrito.
+     * Resetea los campos de subtotal, IVA y total a vacío.
+     */
     private void limpiarTotales() {
         carritoAñadirView.getTxtSubtotal().setText("");
         carritoAñadirView.getTxtIVA().setText("");
         carritoAñadirView.getTxtTotal().setText("");
     }
 
+    /**
+     * Guarda el carrito actual en la base de datos.
+     * Si el carrito es nuevo, lo crea; si ya existe, lo actualiza.
+     * Muestra un mensaje de éxito y limpia los campos de la vista.
+     */
     private void guardarCarrito() {
         carritoDAO.crear(carrito);
         carritoAñadirView.mostrarMensaje(mensajeHandler.get("carrito.guardado.ok"));
@@ -523,10 +598,20 @@ public class CarritoController {
         limpiarTotales();
     }
 
-    private void listarCarrito() {
+    /**
+     * Lista todos los carritos en la vista de listar carrito.
+     * Obtiene los carritos del DAO y los muestra con formato.
+     */
+
+    public void listarCarrito() {
         List<Carrito> carritos = carritoDAO.listarTodos();
         listarCarritoView.cargarDatosConFormato(carritos, mensajeHandler);
     }
+    /**
+     * Busca un carrito por código o por nombre de usuario.
+     * Si es administrador, puede buscar por ambos; si no, solo por código.
+     * Muestra los resultados en la vista de listar carrito de usuario.
+     */
 
     private void buscarCarrito() {
         String texto = listarCarritoUsuarioView.getTxtCodigo().getText().trim();
@@ -571,7 +656,12 @@ public class CarritoController {
             }
         }
     }
-
+    /**
+     * Elimina un carrito por su código.
+     * Muestra un mensaje de éxito y actualiza la lista de carritos.
+     *
+     * @param codigo Código del carrito a eliminar
+     */
 
     private void eliminarCarrito(int codigo) {
         carritoDAO.eliminar(codigo);

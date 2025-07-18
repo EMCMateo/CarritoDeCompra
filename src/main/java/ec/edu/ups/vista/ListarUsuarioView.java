@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.dao.UsuarioDAO;
+import ec.edu.ups.excepciones.PersistenciaException;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
@@ -13,21 +14,34 @@ import java.awt.*;
 import java.net.URL;
 import java.util.List;
 
+
+/**
+ * Vista para listar usuarios en el sistema.
+ * Permite buscar, filtrar y eliminar usuarios.
+ */
 public class ListarUsuarioView extends JInternalFrame {
 
     private JPanel panelPrincipal;
-    private JTextField txtUsername;
+    private JTextField txtCedula; // Cambiado: era txtUsername
     private JTable tblUsuarios;
     private JButton btnBuscar;
     private JButton btnClientes;
     private JButton btnAdmin;
     private JButton btnListarTodos;
     private JLabel lblListar;
-    private JLabel lblUsernameUsuarioView;
+    private JLabel lblCedulaUsuarioView; // Cambiado: era lblUsernameUsuarioView
     private DefaultTableModel modelo;
     private UsuarioDAO usuarioDAO;
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+
+    /**
+     * Constructor de la vista ListarUsuarioView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param usuarioDAO DAO para acceder a los datos de usuario.
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
     public ListarUsuarioView(UsuarioDAO usuarioDAO, MensajeInternacionalizacionHandler mensajeHandler) {
         this.usuarioDAO = usuarioDAO;
         this.mensajeHandler = mensajeHandler;
@@ -46,10 +60,7 @@ public class ListarUsuarioView extends JInternalFrame {
             throw new IllegalStateException("panelPrincipal no está inicializado. Verifica el archivo .form.");
         }
 
-        // Establecer el contentPane
 
-
-        // Inicializar el modelo de la tabla
         modelo = new DefaultTableModel(new Object[]{
                 mensajeHandler.get("usuario.listar.tabla.usuario"),
                 mensajeHandler.get("usuario.listar.tabla.rol"),
@@ -61,6 +72,8 @@ public class ListarUsuarioView extends JInternalFrame {
             }
         };
 
+
+        // Configurar el JTable
         tblUsuarios.setModel(modelo);
         tblUsuarios.getColumnModel().getColumn(2).setCellRenderer(new ButtonRenderer());
 
@@ -71,18 +84,22 @@ public class ListarUsuarioView extends JInternalFrame {
                 int row = tblUsuarios.rowAtPoint(e.getPoint());
                 int column = tblUsuarios.columnAtPoint(e.getPoint());
                 if (row >= 0 && column == 2) {
-                    String username = tblUsuarios.getValueAt(row, 0).toString();
+                    String cedula = tblUsuarios.getValueAt(row, 0).toString();
                     Rol rol = Rol.valueOf(tblUsuarios.getValueAt(row, 1).toString());
 
                     if (rol == Rol.CLIENTE) {
                         int confirm = JOptionPane.showConfirmDialog(
                                 ListarUsuarioView.this,
-                                mensajeHandler.get("usuario.eliminar.confirmacion").replace("{0}", username),
+                                mensajeHandler.get("usuario.eliminar.confirmacion").replace("{0}", cedula),
                                 mensajeHandler.get("usuario.eliminar.titulo"),
                                 JOptionPane.YES_NO_OPTION
                         );
                         if (confirm == JOptionPane.YES_OPTION) {
-                            usuarioDAO.eliminar(username);
+                            try {
+                                usuarioDAO.eliminar(cedula);
+                            } catch (PersistenciaException ex) {
+                                throw new RuntimeException(ex);
+                            }
                             cargarDatos(usuarioDAO.listarTodos());
                         }
                     } else {
@@ -100,8 +117,8 @@ public class ListarUsuarioView extends JInternalFrame {
         btnClientes.addActionListener(e -> cargarDatos(usuarioDAO.listarClientes()));
         btnAdmin.addActionListener(e -> cargarDatos(usuarioDAO.listarAdmin()));
         btnBuscar.addActionListener(e -> {
-            String username = txtUsername.getText().trim();
-            Usuario u = usuarioDAO.buscarPorUsername(username);
+            String cedula = txtCedula.getText().trim();
+            Usuario u = usuarioDAO.buscarPorUsername(cedula);
             if (u != null) {
                 cargarDatos(List.of(u));
             } else {
@@ -116,10 +133,14 @@ public class ListarUsuarioView extends JInternalFrame {
         setVisible(true);
     }
 
+    /**
+     * Establece los textos de la interfaz utilizando el mensajeHandler.
+     * Actualiza títulos, etiquetas y botones con los mensajes correspondientes.
+     */
     public void setTextos() {
         setTitle(mensajeHandler.get("usuario.listar.titulo"));
         if (lblListar != null) lblListar.setText(mensajeHandler.get("usuario.listar.lbl.titulo"));
-        if (lblUsernameUsuarioView != null) lblUsernameUsuarioView.setText(mensajeHandler.get("usuario.listar.lbl.usuario"));
+        if (lblCedulaUsuarioView != null) lblCedulaUsuarioView.setText(mensajeHandler.get("usuario.listar.lbl.usuario")); // Cambiado: era lblUsernameUsuarioView, ahora lblCedulaUsuarioView
         if (btnBuscar != null) btnBuscar.setText(mensajeHandler.get("usuario.listar.btn.buscar"));
         if (btnClientes != null) btnClientes.setText(mensajeHandler.get("usuario.listar.btn.clientes"));
         if (btnAdmin != null) btnAdmin.setText(mensajeHandler.get("usuario.listar.btn.admin"));
@@ -137,8 +158,8 @@ public class ListarUsuarioView extends JInternalFrame {
         });
     }
 
-    public JTextField getTxtUsername() {
-        return txtUsername;
+    public JTextField getTxtCedula() { // Cambiado: era getTxtUsername
+        return txtCedula;
     }
 
     public JTable getTblUsuarios() {
@@ -164,7 +185,7 @@ public class ListarUsuarioView extends JInternalFrame {
     public void cargarDatos(List<Usuario> listaUsuarios) {
         modelo.setRowCount(0);
         for (Usuario usuario : listaUsuarios) {
-            modelo.addRow(new Object[]{usuario.getUsername(), usuario.getRol().name(), mensajeHandler.get("usuario.listar.tabla.eliminar")});
+            modelo.addRow(new Object[]{usuario.getCedula(), usuario.getRol().name(), mensajeHandler.get("usuario.listar.tabla.eliminar")});
         }
     }
 
@@ -217,5 +238,5 @@ public class ListarUsuarioView extends JInternalFrame {
     }
 
 
-    // Eliminar el método duplicado setTextos(MensajeInternacionalizacionHandler)
+
 }

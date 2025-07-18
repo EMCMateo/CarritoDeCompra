@@ -7,6 +7,10 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.net.URL;
+/**
+ * Vista para eliminar un producto.
+ * Permite buscar un producto por código y eliminarlo del sistema.
+ */
 
 public class ProductoEliminarView extends JInternalFrame {
 
@@ -21,19 +25,24 @@ public class ProductoEliminarView extends JInternalFrame {
     private JLabel lblPrecio;
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+    /**
+     * Constructor de la vista ProductoEliminarView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
     public ProductoEliminarView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
-        initComponents();
         configurarVentana();
         setTextos(mensajeHandler);
         setIconos();
     }
 
-    private void initComponents() {
-        // Aquí deberías inicializar tus componentes si no usas GUI builder
-    }
-
+    /**
+     * Configura las propiedades de la ventana interna.
+     * Establece título, tamaño, comportamiento de cierre y visibilidad.
+     */
     private void configurarVentana() {
         setTitle(mensajeHandler.get("producto.eliminar.titulo"));
         setDefaultCloseOperation(JInternalFrame.HIDE_ON_CLOSE);
@@ -42,6 +51,13 @@ public class ProductoEliminarView extends JInternalFrame {
         setSize(400, 200);
         setVisible(true);
     }
+
+    /**
+     * Establece los textos de los componentes de la vista
+     * usando el manejador de mensajes para internacionalización.
+     *
+     * @param mensajeHandler Manejador de mensajes para obtener los textos.
+     */
 
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         setTitle(mensajeHandler.get("producto.eliminar.titulo"));
@@ -57,18 +73,40 @@ public class ProductoEliminarView extends JInternalFrame {
         }
     }
 
+    /**
+     * Muestra los detalles del producto encontrado.
+     * Actualiza los campos de nombre y precio con la información del producto.
+     *
+     * @param nombre Nombre del producto.
+     * @param precio Precio del producto.
+     */
+
     public void mostrarProducto(String nombre, double precio) {
         txtNombre.setText(nombre);
         String precioFormateado = FormateadorUtils.formatearMoneda(precio, mensajeHandler.getLocale());
         txtPrecio.setText(precioFormateado);
     }
 
+    /**
+     * Establece los iconos de los botones de búsqueda y eliminación.
+     * Los iconos se escalan a un tamaño específico.
+     */
 
     public void setIconos(){
 
         setIconoEscalado(btnBuscar, "/ios-search.png", 20, 20);
         setIconoEscalado(btnEliminar, "/ios-trash.png", 20, 20);
     }
+
+    /**
+     * Establece un icono escalado para un botón.
+     * Carga el icono desde la ruta especificada y lo escala al tamaño dado.
+     *
+     * @param boton Botón al que se le asignará el icono.
+     * @param ruta Ruta del icono a cargar.
+     * @param ancho Ancho deseado del icono.
+     * @param alto Alto deseado del icono.
+     */
 
     private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
         URL url = getClass().getResource(ruta);
@@ -78,6 +116,14 @@ public class ProductoEliminarView extends JInternalFrame {
             boton.setIcon(new ImageIcon(imagenEscalada));
         }
     }
+
+    /**
+     * Actualiza la internacionalización de la vista.
+     * Cambia el manejador de mensajes y actualiza los textos de los componentes.
+     * Si ya hay un precio en pantalla, lo re-formatea según el nuevo locale.
+     *
+     * @param nuevoHandler Nuevo manejador de mensajes para internacionalización.
+     */
 
 
     public void actualizarInternacionalizacion(MensajeInternacionalizacionHandler nuevoHandler) {
@@ -95,6 +141,13 @@ public class ProductoEliminarView extends JInternalFrame {
             }
         }
     }
+
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     * Utiliza el manejador de mensajes para mostrar el texto adecuado.
+     *
+     * @param mensaje Mensaje a mostrar en el cuadro de diálogo.
+     */
 
 
     public void mostrarMensaje(String mensaje) {

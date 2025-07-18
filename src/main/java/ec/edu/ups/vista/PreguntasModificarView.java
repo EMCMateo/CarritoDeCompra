@@ -12,6 +12,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Vista para modificar las preguntas de seguridad del usuario.
+ * Permite visualizar y editar las respuestas a las preguntas de seguridad.
+ */
 public class PreguntasModificarView extends JFrame {
 
     private JPanel panelPrincipal;
@@ -23,6 +27,13 @@ public class PreguntasModificarView extends JFrame {
     private final MensajeInternacionalizacionHandler mensajes;
     private final Map<Pregunta, JTextField> camposDeRespuesta;
     private List<RespuestaSeguridad> respuestasActuales;
+
+    /**
+     * Constructor de la vista PreguntasModificarView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajes Manejador de mensajes para internacionalización.
+     */
 
     public PreguntasModificarView(MensajeInternacionalizacionHandler mensajes) {
         this.mensajes = mensajes;
@@ -42,6 +53,13 @@ public class PreguntasModificarView extends JFrame {
         URL urlVerificar = getClass().getResource("/md-done-all.png");
         btnVerificar.setIcon(new ImageIcon(urlVerificar));
     }
+
+    /**
+     * Muestra las preguntas de seguridad del usuario en el panel.
+     * Limpia los campos existentes y los reemplaza con las nuevas preguntas.
+     *
+     * @param respuestasDelUsuario Lista de respuestas de seguridad del usuario.
+     */
 
     public void mostrarPreguntasDelUsuario(List<RespuestaSeguridad> respuestasDelUsuario) {
         this.respuestasActuales = respuestasDelUsuario;
@@ -70,6 +88,10 @@ public class PreguntasModificarView extends JFrame {
         containerPanel.revalidate();
         containerPanel.repaint();
     }
+    /**
+     * Actualiza los textos de los componentes de la vista según el manejador de mensajes.
+     * Utiliza claves para obtener los textos internacionalizados.
+     */
 
     public void actualizarTextos() {
         lblTitulo.setText(mensajes.get("pregunta.recuperar.titulo"));
@@ -95,10 +117,24 @@ public class PreguntasModificarView extends JFrame {
         }
     }
 
+    /**
+     * Establece los iconos de los botones de la vista.
+     * Escala el icono del botón de verificación a un tamaño específico.
+     */
+
     public void setIconos() {
 
         setIconoEscalado(btnVerificar, "/md-done-all.png", 20, 20);
     }
+
+    /**
+     * Escala un icono y lo asigna a un botón.
+     *
+     * @param boton El botón al que se le asignará el icono.
+     * @param ruta  La ruta del icono a escalar.
+     * @param ancho El ancho deseado del icono.
+     * @param alto  El alto deseado del icono.
+     */
     private void setIconoEscalado(JButton boton, String ruta, int ancho, int alto) {
         URL url = getClass().getResource(ruta);
         if (url != null) {

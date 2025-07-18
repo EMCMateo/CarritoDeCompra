@@ -7,7 +7,12 @@ import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Ventana principal de la aplicación.
+ * Contiene el menú de navegación y un escritorio para mostrar vistas internas.
+ */
 public class PrincipalView extends JFrame {
+
 
     private MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler;
 
@@ -38,6 +43,12 @@ public class PrincipalView extends JFrame {
     private JMenuItem menuItemEditarCarrito;
     private JPanel panelPrincipal;
 
+    /**
+     * Constructor de la vista principal.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeInternacionalizacionHandler Manejador de mensajes para internacionalización.
+     */
 
     public PrincipalView(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
         this.mensajeInternacionalizacionHandler = mensajeInternacionalizacionHandler;
@@ -52,6 +63,11 @@ public class PrincipalView extends JFrame {
         setLocationRelativeTo(null);
         setVisible(true);
     }
+
+    /**
+     * Inicializa los componentes de la vista principal.
+     * Configura el menú y el escritorio.
+     */
 
     private void inicializarComponentes() {
         desktop = new MiJDesktopPane(mensajeInternacionalizacionHandler);
@@ -114,7 +130,11 @@ public class PrincipalView extends JFrame {
 
         setJMenuBar(menuBar);
     }
-
+    /**
+     * Actualiza los textos de la interfaz según el idioma seleccionado.
+     *
+     * @param mensajeInternacionalizacionHandler Manejador de mensajes para internacionalización.
+     */
     public void setTextos(MensajeInternacionalizacionHandler mensajeInternacionalizacionHandler) {
         setTitle(mensajeInternacionalizacionHandler.get("app.titulo"));
         desktop.actualizarTextos();
@@ -142,6 +162,11 @@ public class PrincipalView extends JFrame {
         menuItemEditarCarrito.setText(mensajeInternacionalizacionHandler.get("menuitem.editarCarrito"));
     }
 
+    /**
+     * Método para obtener el manejador de mensajes.
+     *
+     * @return Manejador de mensajes.
+     */
     // ==== Getters para controladores ====
 
     public JMenuItem getMenuItemCrearProducto() {

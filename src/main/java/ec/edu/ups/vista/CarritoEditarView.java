@@ -13,6 +13,11 @@ import java.net.URL;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Vista para editar un carrito de compras.
+ * Permite buscar productos, añadirlos al carrito y visualizar el total.
+ */
+
 public class CarritoEditarView extends JInternalFrame {
     private JTextField txtCodigo;
     private JButton btnBuscar;
@@ -43,6 +48,13 @@ public class CarritoEditarView extends JInternalFrame {
     private DefaultTableModel modelo;
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+    /**
+     * Constructor de la vista CarritoEditarView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
+
     public CarritoEditarView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
@@ -59,6 +71,11 @@ public class CarritoEditarView extends JInternalFrame {
 
     }
 
+    /**
+     * Inicializa los componentes de la vista.
+     * Configura el modelo de la tabla y carga los datos iniciales.
+     */
+
     private void inicializarComponentes() {
         modelo = new DefaultTableModel() {
             @Override
@@ -73,12 +90,23 @@ public class CarritoEditarView extends JInternalFrame {
         btnAnadir.setEnabled(false);
     }
 
+    /**
+     * Carga los datos de cantidad en el JComboBox.
+     * Añade opciones del 1 al 20.
+     */
+
     public void cargarDatos() {
         cmBoxCantidad.removeAllItems();
         for (int i = 1; i <= 20; i++) {
             cmBoxCantidad.addItem(String.valueOf(i));
         }
     }
+
+    /**
+     * Carga los datos de la tabla con los items del carrito.
+     *
+     * @param items Lista de items del carrito a mostrar en la tabla.
+     */
 
     public void cargarDatosTabla(List<ItemCarrito> items) {
         modelo.setRowCount(0);
@@ -96,22 +124,44 @@ public class CarritoEditarView extends JInternalFrame {
         }
     }
 
+    /**
+     * Establece los datos del carrito en los campos correspondientes.
+     * Muestra el código del carrito y la fecha de creación formateada.
+     *
+     * @param carrito Carrito con los datos a mostrar.
+     */
+
 
     public void setDatosCarrito(Carrito carrito) {
         txtCodigoCarrito.setText(String.valueOf(carrito.getCodigo()));
         txtFecha.setText(FormateadorUtils.formatearFecha(carrito.getFechaCreacion().getTime(), mensajeHandler.getLocale()));
     }
 
+
+    /**
+     * Limpia los campos de entrada del formulario.
+     * Resetea los campos de código, nombre y precio.
+     */
     public void limpiarCampos() {
         txtCodigo.setText("");
         txtNombre.setText("");
         txtPrecio.setText("");
     }
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     *
+     * @param message El mensaje a mostrar.
+     */
 
     public void mostrarMensaje(String message) {
         JOptionPane.showMessageDialog(this, message);
     }
 
+    /**
+     * Establece los textos de los componentes de la vista según el manejador de mensajes.
+     *
+     * @param mh Manejador de mensajes para internacionalización.
+     */
     public void setTextos(MensajeInternacionalizacionHandler mh) {
         setTitle(mh.get("carrito.editar.titulo"));
         lblCodigo.setText(mh.get("carrito.anadir.lbl.codigo"));

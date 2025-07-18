@@ -1,12 +1,23 @@
 package ec.edu.ups.modelo;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Pregunta {
+/**
+ * Representa una pregunta de seguridad o validación.
+ * Cada pregunta tiene un identificador único y su texto.
+ */
+public class Pregunta implements Serializable {
 
     private int id;
     private String texto;
 
+    /**
+     * Crea una pregunta con el ID y texto especificados.
+     *
+     * @param id    Identificador único.
+     * @param texto Texto de la pregunta.
+     */
     public Pregunta(int id, String texto) {
         this.id = id;
         this.texto = texto;
@@ -36,6 +47,12 @@ public class Pregunta {
                 '}';
     }
 
+    /**
+     * Compara dos preguntas por su ID.
+     *
+     * @param o Objeto a comparar.
+     * @return {@code true} si los IDs coinciden.
+     */
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -48,5 +65,4 @@ public class Pregunta {
     public int hashCode() {
         return Objects.hash(id);
     }
-
 }

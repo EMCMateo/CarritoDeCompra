@@ -6,6 +6,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
 
+/**
+ * Vista para el registro de usuarios.
+ * Permite ingresar datos personales y de acceso del usuario.
+ */
 public class UserRegistroView extends JFrame {
     private JPanel panelPrincipal;
     private JLabel lblNombreCompleto;
@@ -16,16 +20,25 @@ public class UserRegistroView extends JFrame {
     private JTextField txtTelefono;
     private JLabel lblFechaNacimiento;
     private JTextField txtFechaNacimiento;
-    private JLabel lblUsername;
-    private JTextField txtUsername;
+    private JLabel lblCedula; // Cambiado: era lblUsername
+    private JTextField txtCedula; // Cambiado: era txtUsername
     private JLabel lblPassword;
     private JPasswordField pswContra;
     private JLabel lblPasswordConfirm;
     private JPasswordField pswContra2;
     private JButton btnConfirmar;
     private JButton btnCancelar;
+    private JComboBox cmbGenero;
+    private JLabel lblGenero;
 
     private MensajeInternacionalizacionHandler mensajeHandler;
+
+    /**
+     * Constructor de la vista UserRegistroView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
 
     public UserRegistroView(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
@@ -36,7 +49,13 @@ public class UserRegistroView extends JFrame {
         setTitle(mensajeHandler.get("usuario.registro.panel.titulo"));
         setTextos();
         setIconos();
+        cargarGeneros();
     }
+
+    /**
+     * Configura los textos de los componentes de la vista.
+     * Utiliza el manejador de mensajes para obtener los textos internacionalizados.
+     */
 
 
     public void setTextos() {
@@ -46,8 +65,8 @@ public class UserRegistroView extends JFrame {
         lblCorreo.setText(mensajeHandler.get("usuario.view.correo"));
         lblTelefono.setText(mensajeHandler.get("usuario.view.telefono"));
         lblFechaNacimiento.setText(mensajeHandler.get("usuario.view.fechaNac"));
+        lblCedula.setText("Cédula"); // Cambiado: era lblUsername, ahora lblCedula
 
-        lblUsername.setText(mensajeHandler.get("login.view.username"));
         lblPassword.setText(mensajeHandler.get("login.view.password"));
         lblPasswordConfirm.setText(mensajeHandler.get("login.view.repetir.password"));
 
@@ -55,6 +74,23 @@ public class UserRegistroView extends JFrame {
         btnCancelar.setText(mensajeHandler.get("boton.cancelar"));
     }
 
+    /**
+     * Carga los géneros disponibles en el JComboBox cmbGenero.
+     * Utiliza el manejador de mensajes para obtener los nombres de los géneros.
+     */
+
+    private void cargarGeneros() {
+        cmbGenero.removeAllItems();
+        cmbGenero.addItem(mensajeHandler.get("genero.masculino"));
+        cmbGenero.addItem(mensajeHandler.get("genero.femenino"));
+        cmbGenero.addItem(mensajeHandler.get("genero.nobinario"));
+    }
+
+    /**
+     * Muestra un mensaje en un cuadro de diálogo.
+     *
+     * @param mensaje El mensaje a mostrar.
+     */
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
     }
@@ -75,8 +111,8 @@ public class UserRegistroView extends JFrame {
         return txtFechaNacimiento;
     }
 
-    public JTextField getTxtUsername() {
-        return txtUsername;
+    public JTextField getTxtCedula() { // Cambiado: era getTxtUsername
+        return txtCedula;
     }
 
     public JPasswordField getPswContra() {
@@ -95,10 +131,40 @@ public class UserRegistroView extends JFrame {
         return btnCancelar;
     }
 
+    public JLabel getLblNombreCompleto() {
+        return lblNombreCompleto;
+    }
 
+    public JLabel getLblCorreo() {
+        return lblCorreo;
+    }
+
+    public JLabel getLblTelefono() {
+        return lblTelefono;
+    }
+
+    public JLabel getLblFechaNacimiento() {
+        return lblFechaNacimiento;
+    }
+
+    public JLabel getLblCedula() {
+        return lblCedula;
+    }
+
+    public JLabel getLblPassword() {
+        return lblPassword;
+    }
+
+    public JLabel getLblPasswordConfirm() {
+        return lblPasswordConfirm;
+    }
+
+    public JComboBox getCmbGenero() {
+        return cmbGenero;
+    }
 
     public void limpiarTodo(){
-        txtUsername.setText("");
+        txtCedula.setText(""); // Cambiado: era txtUsername
         txtCorreo.setText("");
         txtTelefono.setText("");
         txtFechaNacimiento.setText("");

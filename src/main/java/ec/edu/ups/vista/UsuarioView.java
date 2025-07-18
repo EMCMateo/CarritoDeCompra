@@ -1,15 +1,16 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Usuario;
-import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
+
+/**
+ * Vista para gestionar la información del usuario.
+ * Permite visualizar y editar los datos del usuario.
+ */
 
 public class UsuarioView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -23,9 +24,17 @@ public class UsuarioView extends JInternalFrame {
     private JTextField txtFechaNac;
     private JButton btnGuardar;
     private JButton btnRecuperar;
+    private JTextField txtGenero;
+    private JLabel lblGenero;
 
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+    /**
+     * Constructor de la vista UsuarioView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mensajeHandler Manejador de mensajes para internacionalización.
+     */
     public UsuarioView(MensajeInternacionalizacionHandler mensajeHandler) {
         setContentPane(panelPrincipal);
         setClosable(true);
@@ -38,7 +47,12 @@ public class UsuarioView extends JInternalFrame {
         setIconos();
 
 
+
     }
+/**
+     * Inicializa los componentes de la vista.
+     * Configura el tamaño, operación de cierre, y textos de los componentes.
+     */
 
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
@@ -47,27 +61,22 @@ public class UsuarioView extends JInternalFrame {
         lblTelefono.setText(mensajeHandler.get("usuario.view.telefono"));
         lblCorreo.setText(mensajeHandler.get("usuario.view.correo"));
         lblFechaNac.setText(mensajeHandler.get("usuario.view.fechaNac"));
+        lblGenero.setText(mensajeHandler.get("usuario.genero"));
         btnGuardar.setText(mensajeHandler.get("usuario.view.guardar"));
         btnRecuperar.setText(mensajeHandler.get("usuario.view.recuperar"));
     }
 
+    /**
+     * Carga los datos del usuario en los campos del formulario.
+     * Llama este método desde el controlador después de crear UsuarioView y antes de mostrarla.
+     */
     public void cargarDatosUsuario(Usuario usuario) {
+        if (usuario == null) return;
         txtNombre.setText(usuario.getNombreCompleto());
         txtTelefono.setText(usuario.getTelefono());
         txtCorreoUser.setText(usuario.getCorreo());
-
-        String fechaFormateada = usuario.getFechaNacimiento();
-
-        if (fechaFormateada != null && !fechaFormateada.isEmpty()) {
-            try {
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-                Date fecha = sdf.parse(usuario.getFechaNacimiento());
-                fechaFormateada = FormateadorUtils.formatearFecha(fecha, mensajeHandler.getLocale());
-            } catch (ParseException e) {
-            }
-        }
-
-        txtFechaNac.setText(fechaFormateada);
+        txtFechaNac.setText(usuario.getFechaNacimiento());
+        txtGenero.setText(usuario.getGenero());
     }
 
     public JLabel getLblNombre() {
@@ -110,7 +119,9 @@ public class UsuarioView extends JInternalFrame {
         return btnRecuperar;
     }
 
-
+    public JTextField getTxtGenero() {
+        return txtGenero;
+    }
 
     public void setIconos() {
         setIconoEscalado(btnRecuperar, "/ios-undo.png", 20, 20);

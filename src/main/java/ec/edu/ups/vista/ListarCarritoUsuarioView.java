@@ -14,6 +14,10 @@ import java.text.SimpleDateFormat;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Vista para listar carritos de usuario.
+ * Permite buscar carritos por código y listar todos los carritos.
+ */
 public class ListarCarritoUsuarioView extends JInternalFrame {
     private JScrollPane scrollPane;
     private JTable tblCarrito;
@@ -27,6 +31,12 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
     private JScrollPane ScrollPane;
     private MensajeInternacionalizacionHandler mensajeHandler;
 
+    /**
+     * Constructor de la vista ListarCarritoUsuarioView.
+     * Inicializa los componentes y configura la ventana.
+     *
+     * @param mh Manejador de mensajes para internacionalización.
+     */
     public ListarCarritoUsuarioView(MensajeInternacionalizacionHandler mh) {
         this.mensajeHandler = mh;
         setContentPane(panelPrincipal);
@@ -41,6 +51,10 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
         setTextos(mh);
         setIconos();
     }
+    /**
+     * Inicializa los componentes de la vista.
+     * Configura el modelo de la tabla y sus columnas.
+     */
 
     private void inicializarComponentes() {
         modelo = new DefaultTableModel();
@@ -52,6 +66,12 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
                 "Total"
         });
     }
+
+    /**
+     * Establece los textos de los componentes de la vista utilizando el manejador de mensajes.
+     *
+     * @param mh Manejador de mensajes para internacionalización.
+     */
 
     public void setTextos(MensajeInternacionalizacionHandler mh) {
         setTitle(mh.get("carrito.listar.titulo"));
@@ -73,19 +93,32 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
         });
     }
 
+    /**
+     * Carga los datos de la lista de carritos en el modelo de la tabla.
+     * Formatea la fecha y el total según el locale del manejador de mensajes.
+     *
+     * @param lista Lista de carritos a mostrar en la tabla.
+     */
+
     public void cargarDatos(List<Carrito> lista) {
         modelo.setRowCount(0);
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
         Locale locale = mensajeHandler.getLocale();
         for (Carrito c : lista) {
             modelo.addRow(new Object[]{
-                    c.getUsuario() != null ? c.getUsuario().getUsername() : mensajeHandler.get("carrito.listar.desconocido"),
+                    c.getUsuario() != null ? c.getUsuario().getCedula() : mensajeHandler.get("carrito.listar.desconocido"),
                     c.getCodigo(),
                     sdf.format(c.getFechaCreacion().getTime()),  // ¡corregido!
                     FormateadorUtils.formatearMonedaConSimbolo(c.calcularTotal(), locale)
             });
         }
     }
+
+    /**
+     * Muestra un mensaje al usuario en un cuadro de diálogo.
+     *
+     * @param mensaje Mensaje a mostrar.
+     */
 
     public void mostrarMensaje(String mensaje) {
         JOptionPane.showMessageDialog(this, mensaje);
@@ -131,7 +164,7 @@ public class ListarCarritoUsuarioView extends JInternalFrame {
 
         for (Carrito c : carritos) {
             Object[] fila = new Object[]{
-                    c.getUsuario() != null ? c.getUsuario().getUsername() : handler.get("carrito.listar.desconocido"),
+                    c.getUsuario() != null ? c.getUsuario().getCedula() : handler.get("carrito.listar.desconocido"),
                     c.getCodigo(),
                     dateFormat.format(c.getFechaCreacion().getTime()), // ¡corregido!
                     currencyFormat.format(c.calcularTotal())
