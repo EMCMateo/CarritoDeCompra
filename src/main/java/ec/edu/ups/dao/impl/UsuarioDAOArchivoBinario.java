@@ -1,6 +1,7 @@
 package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.UsuarioDAO;
+import ec.edu.ups.excepciones.ValidacionException;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 import java.io.*;
@@ -11,7 +12,7 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
     private final List<Usuario> usuarios = new ArrayList<>();
 
     // Cada entidad se guarda en su propio archivo binario: usuarios.bin
-    public UsuarioDAOArchivoBinario(String ruta) {
+    public UsuarioDAOArchivoBinario(String ruta) throws ValidacionException {
         this.ruta = ruta;
         File carpeta = new File(ruta);
         if (!carpeta.exists()) {
@@ -28,8 +29,8 @@ public class UsuarioDAOArchivoBinario implements UsuarioDAO {
         cargarUsuarios();
         // Si no hay usuarios, creamos los de prueba
         if (usuarios.isEmpty()) {
-            crear(new Usuario("0150363232", "12345", Rol.ADMINISTRADOR));
-            crear(new Usuario("0701277634", "12345", Rol.ADMINISTRADOR));
+            crear(new Usuario("0150363232", "yp8dfN5q_10", Rol.ADMINISTRADOR));
+            crear(new Usuario("0701277634", "yp8dfN5q_10", Rol.ADMINISTRADOR));
         }
     }
 

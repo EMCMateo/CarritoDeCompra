@@ -1,30 +1,33 @@
-package ec.edu.ups.modelo;
+    package ec.edu.ups.modelo;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.io.Serializable;
+    import java.util.ArrayList;
+    import java.util.List;
+    import java.util.Objects;
+    import java.io.Serializable;
+    import ec.edu.ups.excepciones.ValidacionException;
 
-public class Usuario implements Serializable {
+    public class Usuario implements Serializable {
 
-    private String cedula;
-    private String password;
-    private Rol rol;
-    private List<RespuestaSeguridad> respuestasSeguridad;
-    private String nombreCompleto;
-    private String fechaNacimiento;
-    private String correo;
-    private String telefono;
-    private String genero;
+        private String cedula;
+        private String password;
+        private Rol rol;
+        private List<RespuestaSeguridad> respuestasSeguridad;
+        private String nombreCompleto;
+        private String fechaNacimiento;
+        private String correo;
+        private String telefono;
+        private String genero;
 
-    public Usuario(String cedula, String password, Rol rol) {
-        this.cedula = cedula;
-        this.password = password;
-        this.rol = rol;
-        this.respuestasSeguridad = new ArrayList<>();
-    }
+        public Usuario(String cedula, String password, Rol rol) throws ValidacionException {
+            this.cedula = cedula;
+            this.setPassword(password); // validación incluida
+            this.rol = rol;
+            this.respuestasSeguridad = new ArrayList<>();
+        }
 
-    public Usuario(){}
+        public Usuario() {
+            this.respuestasSeguridad = new ArrayList<>();
+        }
 
     public String getNombreCompleto() { return nombreCompleto; }
     public void setNombreCompleto(String nombreCompleto) { this.nombreCompleto = nombreCompleto; }
@@ -77,9 +80,21 @@ public class Usuario implements Serializable {
         return password;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
+        public void setPassword(String password) throws ValidacionException {
+            if (password == null || password.length() < 6) {
+                throw new ValidacionException("mensaje.error.contrasena.longitud");
+            }
+            if (!password.matches(".*[A-Z].*")) {
+                throw new ValidacionException("mensaje.error.contrasena.mayuscula");
+            }
+            if (!password.matches(".*[a-z].*")) {
+                throw new ValidacionException("mensaje.error.contrasena.minuscula");
+            }
+            if (!password.matches(".*[@_-].*")) {
+                throw new ValidacionException("mensaje.error.contrasena.caracter");
+            }
+            this.password = password;
+        }
 
     public Rol getRol() {
         return rol;

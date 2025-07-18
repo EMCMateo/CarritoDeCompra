@@ -204,7 +204,8 @@
             </constraints>
             <properties>
               <font name="Century Gothic" style="1"/>
-              <text value="Label"/>
+              <foreground color="-328449"/>
+              <text value="Género:"/>
             </properties>
           </component>
           <component id="4143f" class="javax.swing.JComboBox" binding="cmbGenero">

@@ -1,5 +1,6 @@
 package ec.edu.ups.dao;
 
+import ec.edu.ups.excepciones.PersistenciaException;
 import ec.edu.ups.modelo.Usuario;
 
 import java.awt.*;
@@ -9,13 +10,13 @@ public interface UsuarioDAO {
 
     Usuario autenticar(String username, String password);
 
-    void crear(Usuario usuario);
+    void crear(Usuario usuario) throws PersistenciaException;
 
     Usuario buscarPorUsername(String username);
 
-    void eliminar (String username);
+    void eliminar(String username) throws PersistenciaException;
 
-    void actualizar(Usuario usuario);
+    void actualizar(Usuario usuario) throws PersistenciaException;
 
     List<Usuario> listarTodos();
 

@@ -1,6 +1,7 @@
 package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.UsuarioDAO;
+import ec.edu.ups.excepciones.ValidacionException;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 
@@ -12,10 +13,10 @@ public class UsuarioDAOMemoria implements UsuarioDAO {
 
     private List<Usuario> usuarios;
 
-    public UsuarioDAOMemoria() {
+    public UsuarioDAOMemoria() throws ValidacionException {
         usuarios = new ArrayList<Usuario>();
-        crear(new Usuario("0150363232", "12345", Rol.ADMINISTRADOR));
-        crear(new Usuario("0701277634", "12345", Rol.ADMINISTRADOR));
+        crear(new Usuario("0150363232", "yp8dfN5q_10", Rol.ADMINISTRADOR));
+        crear(new Usuario("0701277634", "yp8dfN5q_10", Rol.ADMINISTRADOR));
     }
 
     @Override

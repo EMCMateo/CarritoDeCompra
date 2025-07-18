@@ -1,6 +1,8 @@
 package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.UsuarioDAO;
+import ec.edu.ups.excepciones.PersistenciaException;
+import ec.edu.ups.excepciones.ValidacionException;
 import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.modelo.Rol;
 import java.io.*;
@@ -11,7 +13,7 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
     private final List<Usuario> usuarios = new ArrayList<>();
 
     // El archivo se crea en la ruta que el usuario ingresa en SeleccionAlmacenamientoView
-    public UsuarioDAOArchivoTexto(String ruta) {
+    public UsuarioDAOArchivoTexto(String ruta) throws ValidacionException, PersistenciaException {
         if (ruta == null || ruta.trim().isEmpty()) {
             throw new IllegalArgumentException("La ruta no puede ser nula o vacía.");
         }
@@ -27,28 +29,25 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
         // Si no hay usuarios, creamos los de prueba
         if (usuarios.isEmpty()) {
             // Añadimos directamente a la lista y guardamos una sola vez
-            usuarios.add(new Usuario("0150363232", "12345", Rol.ADMINISTRADOR));
-            usuarios.add(new Usuario("0701277634", "12345", Rol.ADMINISTRADOR));
+            usuarios.add(new Usuario("0150363232", "yp8dfN5q_10", Rol.ADMINISTRADOR));
+            usuarios.add(new Usuario("0701277634", "yp8dfN5q_10", Rol.ADMINISTRADOR));
             guardarUsuarios();
         }
     }
 
-    private void cargarUsuarios() {
+    private void cargarUsuarios() throws PersistenciaException {
         File archivo = new File(ruta + "/usuarios.txt");
-        if (!archivo.exists()) {
-            // Si el archivo no existe, simplemente retornamos (la lista estará vacía)
-            return;
-        }
+        if (!archivo.exists()) return;
+
         usuarios.clear();
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
-                // Leer usuarios en formato CSV
-                String[] partes = linea.split(",", -1); // -1 para incluir campos vacíos al final
+                String[] partes = linea.split(",", -1);
                 if (partes.length >= 8) {
                     Usuario u = new Usuario();
                     u.setCedula(partes[0]);
-                    u.setPassword(partes[1]);
+                    u.setPassword(partes[1]); // puede lanzar ValidacionException
                     u.setRol(Rol.valueOf(partes[2]));
                     u.setNombreCompleto(partes[3].isEmpty() ? null : partes[3]);
                     u.setFechaNacimiento(partes[4].isEmpty() ? null : partes[4]);
@@ -58,16 +57,15 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
                     usuarios.add(u);
                 }
             }
-        } catch (IOException e) {
-            System.out.println("Error al cargar usuarios: " + e.getMessage());
+        } catch (IOException | ValidacionException e) {
+            throw new PersistenciaException("Error al cargar usuarios desde el archivo", e);
         }
     }
 
-    private void guardarUsuarios() {
+    private void guardarUsuarios() throws PersistenciaException {
         File archivo = new File(ruta + "/usuarios.txt");
         try (PrintWriter pw = new PrintWriter(new FileWriter(archivo))) {
             for (Usuario u : usuarios) {
-                // Guardamos cada usuario en una línea con formato CSV
                 pw.println(String.join(",",
                         u.getCedula(),
                         u.getPassword(),
@@ -77,11 +75,10 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
                         u.getCorreo() != null ? u.getCorreo() : "",
                         u.getTelefono() != null ? u.getTelefono() : "",
                         u.getGenero() != null ? u.getGenero() : ""
-
                 ));
             }
         } catch (IOException e) {
-            System.out.println("Error al guardar usuarios: " + e.getMessage());
+            throw new PersistenciaException("Error al guardar usuarios en el archivo", e);
         }
     }
 
@@ -96,7 +93,7 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
     }
 
     @Override
-    public void crear(Usuario usuario) {
+    public void crear(Usuario usuario) throws PersistenciaException {
         usuarios.add(usuario);
         guardarUsuarios();
     }
@@ -113,13 +110,13 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
     }
 
     @Override
-    public void eliminar(String cedula) {
+    public void eliminar(String cedula) throws PersistenciaException {
         usuarios.removeIf(u -> u.getCedula().equals(cedula));
         guardarUsuarios();
     }
 
     @Override
-    public void actualizar(Usuario usuario) {
+    public void actualizar(Usuario usuario) throws PersistenciaException {
         for (int i = 0; i < usuarios.size(); i++) {
             if (usuarios.get(i).getCedula().equals(usuario.getCedula())) {
                 usuarios.set(i, usuario);

@@ -2,6 +2,8 @@ package ec.edu.ups.controlador;
 
 import ec.edu.ups.dao.PreguntaDAO;
 import ec.edu.ups.dao.UsuarioDAO;
+import ec.edu.ups.excepciones.PersistenciaException;
+import ec.edu.ups.excepciones.ValidacionException;
 import ec.edu.ups.modelo.Pregunta;
 import ec.edu.ups.modelo.RespuestaSeguridad;
 import ec.edu.ups.modelo.Rol;
@@ -61,6 +63,9 @@ public class UsuarioController {
             }
             Usuario usuarioAutenticado = usuarioDAO.autenticar(cedula, password);
             if (usuarioAutenticado != null) {
+
+                this.usuario = usuarioAutenticado;
+
                 loginView.dispose();
                 Main.iniciarApp(usuarioAutenticado, "es", "EC"); // Cambio: mostrar PrincipalView tras login
             } else {
@@ -74,7 +79,13 @@ public class UsuarioController {
             userRegistroView.limpiarTodo();
         });
 
-        loginView.getBtnRecuperar().addActionListener(e -> recuperarContrasenia());
+        loginView.getBtnRecuperar().addActionListener(e -> {
+            try {
+                recuperarContrasenia();
+            } catch (ValidacionException | PersistenciaException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
     }
 
     private void cargarEventosRegistro() {
@@ -129,7 +140,12 @@ public class UsuarioController {
                 return;
             }
 
-            Usuario nuevoUsuario = new Usuario(cedula, contrasena1, Rol.CLIENTE);
+            Usuario nuevoUsuario = null;
+            try {
+                nuevoUsuario = new Usuario(cedula, contrasena1, Rol.CLIENTE);
+            } catch (ValidacionException ex) {
+                throw new RuntimeException(ex);
+            }
             nuevoUsuario.setNombreCompleto(nombreCompleto);
             nuevoUsuario.setCorreo(correo);
             nuevoUsuario.setTelefono(telefono);
@@ -153,9 +169,14 @@ public class UsuarioController {
 
             UsuarioPreguntaView pv = new UsuarioPreguntaView(mensajeHandler);
             cargarPreguntasEnVista(pv, new ArrayList<>(preguntasUnicas));
+            Usuario finalNuevoUsuario = nuevoUsuario;
             cargarEventosUsuarioPregunta(pv, new ArrayList<>(preguntasUnicas), nuevoUsuario,
                     () -> {
-                        usuarioDAO.crear(nuevoUsuario);
+                        try {
+                            usuarioDAO.crear(finalNuevoUsuario);
+                        } catch (PersistenciaException ex) {
+                            throw new RuntimeException(ex);
+                        }
                         JOptionPane.showMessageDialog(null, mensajeHandler.get("mensaje.usuario.registrado"));
                         loginView.setVisible(true);
                     }
@@ -250,24 +271,40 @@ public class UsuarioController {
         usuarioView.cargarDatosUsuario(usuario); // ✅ Llamada centralizada a la vista
     }
 
+
+
     private void cargarEventoGuardarDatos() {
         if (usuarioView == null) return;
 
         usuarioView.getBtnGuardar().addActionListener(e -> {
+            // --- INICIO DE LA CORRECCIÓN ---
+            // 1. VERIFICAR QUE LA SESIÓN DEL USUARIO SIGUE ACTIVA
+            if (usuario == null) {
+                // Si el objeto 'usuario' es nulo, significa que la sesión se ha perdido.
+                // Mostramos un mensaje de error claro y evitamos el NullPointerException.
+                JOptionPane.showMessageDialog(usuarioView,
+                        "La sesión ha expirado o es inválida. Por favor, inicie sesión de nuevo.",
+                        "Error de Sesión",
+                        JOptionPane.ERROR_MESSAGE);
+                // Opcionalmente, podrías cerrar esta ventana y mostrar la de login.
+                // usuarioView.dispose();
+                // loginView.setVisible(true);
+                return; // Detenemos la ejecución del método para no causar el error.
+            }
+            // --- FIN DE LA CORRECCIÓN ---
+
+            // 2. SI LA SESIÓN ES VÁLIDA, CONTINUAR CON LA LÓGICA EXISTENTE
             String nombre = usuarioView.getTxtNombre().getText().trim();
             String correo = usuarioView.getTxtCorreoUser().getText().trim();
             String telefono = usuarioView.getTxtTelefono().getText().trim();
             String fechaNac = usuarioView.getTxtFechaNac().getText().trim();
             String genero = usuarioView.getTxtGenero().getText().trim();
 
-
-
-
-                // Se añade el género a la validación de campos vacíos
-                if (nombre.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNac.isEmpty() || genero.isEmpty()) {
-                    JOptionPane.showMessageDialog(usuarioView,
-                            mensajeHandler.get("mensaje.usuario.error.camposVacios"));
-                    return;
+            // Se añade el género a la validación de campos vacíos
+            if (nombre.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNac.isEmpty() || genero.isEmpty()) {
+                JOptionPane.showMessageDialog(usuarioView,
+                        mensajeHandler.get("mensaje.usuario.error.camposVacios"));
+                return;
             }
 
             if (!validarCorreo(correo)) {
@@ -295,8 +332,11 @@ public class UsuarioController {
             // Se asigna el género al objeto usuario antes de guardarlo
             usuario.setGenero(genero);
 
-
-            usuarioDAO.actualizar(usuario);
+            try {
+                usuarioDAO.actualizar(usuario);
+            } catch (PersistenciaException ex) {
+                throw new RuntimeException(ex);
+            }
 
             JOptionPane.showMessageDialog(usuarioView,
                     mensajeHandler.get("mensaje.usuario.datosActualizados"));
@@ -371,7 +411,7 @@ public class UsuarioController {
         view.getTxtAreaRespuestas().setText(sb.toString());
     }
 
-    private void recuperarContrasenia() {
+    private void recuperarContrasenia() throws ValidacionException, PersistenciaException {
         String username = JOptionPane.showInputDialog(loginView, mensajeHandler.get("mensaje.recuperar.ingreseUsuario"));
         if (username == null || username.trim().isEmpty()) return;
 
@@ -445,8 +485,16 @@ public class UsuarioController {
                     JOptionPane.showMessageDialog(usuarioView, mensajeHandler.get("mensaje.recuperar.vacia"));
                     return;
                 }
-                usuario.setPassword(nuevaContra);
-                usuarioDAO.actualizar(usuario);
+                try {
+                    usuario.setPassword(nuevaContra);
+                } catch (ValidacionException ex) {
+                    throw new RuntimeException(ex);
+                }
+                try {
+                    usuarioDAO.actualizar(usuario);
+                } catch (PersistenciaException ex) {
+                    throw new RuntimeException(ex);
+                }
                 JOptionPane.showMessageDialog(usuarioView, mensajeHandler.get("mensaje.recuperar.exito"));
             }
         });

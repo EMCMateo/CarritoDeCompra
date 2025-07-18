@@ -1,6 +1,7 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.dao.UsuarioDAO;
+import ec.edu.ups.excepciones.PersistenciaException;
 import ec.edu.ups.modelo.Rol;
 import ec.edu.ups.modelo.Usuario;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
@@ -82,7 +83,11 @@ public class ListarUsuarioView extends JInternalFrame {
                                 JOptionPane.YES_NO_OPTION
                         );
                         if (confirm == JOptionPane.YES_OPTION) {
-                            usuarioDAO.eliminar(cedula);
+                            try {
+                                usuarioDAO.eliminar(cedula);
+                            } catch (PersistenciaException ex) {
+                                throw new RuntimeException(ex);
+                            }
                             cargarDatos(usuarioDAO.listarTodos());
                         }
                     } else {
@@ -217,5 +222,5 @@ public class ListarUsuarioView extends JInternalFrame {
     }
 
 
-    // Eliminar el método duplicado setTextos(MensajeInternacionalizacionHandler)
+
 }

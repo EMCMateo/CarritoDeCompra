@@ -5,6 +5,8 @@ import ec.edu.ups.controlador.ProductoController;
 import ec.edu.ups.controlador.UsuarioController;
 import ec.edu.ups.dao.*;
 import ec.edu.ups.dao.impl.*;
+import ec.edu.ups.excepciones.PersistenciaException;
+import ec.edu.ups.excepciones.ValidacionException;
 import ec.edu.ups.modelo.*;
 import ec.edu.ups.util.ConfiguracionAlmacenamiento;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
@@ -76,7 +78,11 @@ public class Main {
                 ConfiguracionAlmacenamiento.guardarConfiguracion(opcion.toString(), (ruta != null) ? ruta : "");
 
                 // Inicializar DAOs con la selección
-                inicializarDAOs(tipoLogico, ruta);
+                try {
+                    inicializarDAOs(tipoLogico, ruta);
+                } catch (ValidacionException | PersistenciaException ex) {
+                    throw new RuntimeException(ex);
+                }
 
                 seleccionView.dispose();
                 iniciarVentanaLogin();
@@ -84,7 +90,7 @@ public class Main {
         });
     }
 
-    private static void inicializarDAOs(String tipo, String ruta) {
+    private static void inicializarDAOs(String tipo, String ruta) throws ValidacionException, PersistenciaException {
         if (tipo.equals("MEMORIA")) {
             usuarioDAO = new UsuarioDAOMemoria();
             productoDAO = new ProductoDAOMemoria();

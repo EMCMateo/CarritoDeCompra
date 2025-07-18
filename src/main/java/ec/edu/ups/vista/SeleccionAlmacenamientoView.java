@@ -17,44 +17,67 @@ public class SeleccionAlmacenamientoView extends JFrame {
         this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setSize(600, 750);
+        setSize(800, 850);
         setLocationRelativeTo(null);
         setResizable(false);
 
         // Configurar el JFileChooser que ya está en el formulario
+        // 1. Configurar estado inicial de los controles
+        btnContinuar.setEnabled(true); // Habilitado por defecto para "En memoria"
+
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.setControlButtonsAreShown(false);
         fileChooser.setVisible(false);
 
         // Aplicar textos internacionalizados
         setTextos();
 
         // Listener del ComboBox para mostrar u ocultar el JFileChooser
+        // 2. Listener del ComboBox para habilitar/deshabilitar controles
+
         cmbTipoAlmacenamiento.addActionListener(e -> {
             AlmacenamientoOpcion seleccion = (AlmacenamientoOpcion) cmbTipoAlmacenamiento.getSelectedItem();
             boolean mostrarFileChooser = seleccion != null && !seleccion.getKey().equals("MEMORIA");
             fileChooser.setVisible(mostrarFileChooser);
+            boolean necesitaRuta = seleccion != null && !seleccion.getKey().equals("MEMORIA");
+
+            fileChooser.setVisible(necesitaRuta);
+            // Se habilita si NO necesita ruta, se deshabilita si SÍ la necesita.
+            btnContinuar.setEnabled(!necesitaRuta);
+
+            // Limpiamos la ruta seleccionada al cambiar de opción para evitar errores
+            rutaSeleccionada = null;
+            fileChooser.setSelectedFile(null);
+
             this.pack();
         });
 
-        // Listener del botón para leer la ruta del JFileChooser del formulario
-        btnContinuar.addActionListener(e -> {
-            AlmacenamientoOpcion seleccion = getSeleccion();
 
-            if (seleccion != null && !seleccion.getKey().equals("MEMORIA")) {
+        // 3. Listener del JFileChooser para re-habilitar el botón "Continuar"
+        fileChooser.addActionListener(e -> {
+            // Si el usuario presiona "Abrir" (o el botón de aprobación)
+            if (e.getActionCommand().equals(JFileChooser.APPROVE_SELECTION)) {
                 java.io.File archivoSeleccionado = fileChooser.getSelectedFile();
-                if (archivoSeleccionado == null) {
-                    rutaSeleccionada = null; // Se deja nulo para que Main lo valide
+                if (archivoSeleccionado != null) {
+                    this.rutaSeleccionada = archivoSeleccionado.getAbsolutePath();
+                    btnContinuar.setEnabled(true); // ¡Habilitamos el botón principal!
                 } else {
-                    rutaSeleccionada = archivoSeleccionado.getAbsolutePath();
+                    // Si por alguna razón el archivo es nulo, la ruta es nula y el botón se mantiene deshabilitado
+                    this.rutaSeleccionada = null;
+                    btnContinuar.setEnabled(false);
                 }
-            } else {
-                rutaSeleccionada = null;
+            } else if (e.getActionCommand().equals(JFileChooser.CANCEL_SELECTION)) {
+                // Si el usuario presiona "Cancelar" en el FileChooser, la ruta es nula y el botón sigue deshabilitado
+                this.rutaSeleccionada = null;
+                btnContinuar.setEnabled(false);
             }
         });
 
+
+        // El listener del botón "Continuar" ya no es necesario aquí,
+        // porque la clase Main añade su propio listener para gestionar la transición.
         pack();
     }
+
 
     private void setTextos() {
         setTitle(mensajeHandler.get("seleccion.titulo"));

@@ -128,6 +128,7 @@
             </constraints>
             <properties>
               <font name="Century Gothic" style="1"/>
+              <foreground color="-328449"/>
               <text value="Género"/>
             </properties>
           </component>
