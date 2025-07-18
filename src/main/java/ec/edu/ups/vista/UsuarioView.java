@@ -76,7 +76,7 @@ public class UsuarioView extends JInternalFrame {
         txtTelefono.setText(usuario.getTelefono());
         txtCorreoUser.setText(usuario.getCorreo());
         txtFechaNac.setText(usuario.getFechaNacimiento());
-        txtGenero.setText(usuario.getGenero()); // ✅ Línea añadida
+        txtGenero.setText(usuario.getGenero());
     }
 
     public JLabel getLblNombre() {

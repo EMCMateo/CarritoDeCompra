@@ -1,4 +1,4 @@
-# Práctica de Laboratorio 01: Diseño y Desarrollo de una Aplicación Orientada a Objetos en Java
+# 🛒 Práctica de Laboratorio 01: Sistema de Carrito de Compras con Persistencia Avanzada en Java
 
 ![img.png](img.png)
 ![img_1.png](img_1.png)
@@ -12,132 +12,154 @@
 
 ## 📋 Información General
 
-- **Título:** Práctica de Laboratorio 01: Diseño y desarrollo de una aplicación orientada a objetos utilizando Java
+- **Título:** Práctica de laboratorio 04: Desarrollo de una aplicación para la gestión de archivos y persistencia de datos
 - **Carrera:** Computación
 - **Asignatura:** Programación Orientada a Objetos
 - **Estudiantes:** Mateo Eduardo Molina Chamba
 - **Profesor:** Ing. Gabriel León
-- **Fecha:** 7-07-2025
+- **Fecha:** 17/07/2025
 - **Repositorio GitHub:** [CarritoDeCompra](https://github.com/EMCMateo/CarritoDeCompra.git)
 
 ---
 
 ## 🎯 Objetivos de la Práctica
 
+- Aplicar validaciones de datos robustas mediante excepciones propias y de Java.
+- Validar correctamente la cédula ecuatoriana y contraseñas según requisitos de seguridad.
+- Implementar almacenamiento configurable en memoria, archivos de texto o archivos binarios.
+- Generar el ejecutable `.jar` del sistema y la documentación Javadoc mediante Maven.
 - Aplicar el patrón MVC en el diseño de sistemas con interfaces gráficas.
 - Implementar el patrón DAO para desacoplar la lógica de acceso a datos.
 - Aplicar principios SOLID en el diseño orientado a objetos.
-- Construir interfaces gráficas avanzadas usando Java Swing (JDesktopPane, JInternalFrame, JTable, JComboBox, JMenu, JOptionPane).
-- Implementar internacionalización mediante ResourceBundle.
+- Construir interfaces gráficas avanzadas usando Java Swing (`JDesktopPane`, `JInternalFrame`, `JTable`, `JComboBox`, `JMenu`, `JOptionPane`).
+- Implementar internacionalización mediante `ResourceBundle`.
 - Formatear datos numéricos y fechas según configuración regional.
 
 ---
 
 ## 📝 Descripción del Sistema
 
-**Sistema de Gestión de Compras ERP**
+### 🧩 Sistema de Gestión de Compras ERP con Arquitectura Flexible
 
-El sistema desarrollado permite:
+La aplicación simula un sistema de carrito de compras para entornos empresariales con control de roles y persistencia flexible.
 
-- Registrar proveedores, empleados y productos (artículos, paquetes y servicios).
-- Gestionar solicitudes de compra con estados: Solicitada, En Revisión, Aprobada o Rechazada.
-- Calcular costos totales de las solicitudes basados en los productos registrados.
-- Administrar carritos de compras para usuarios, con control de roles:
-  - Usuarios solo ven sus propios carritos.
-  - Administradores pueden gestionar todos los carritos.
-- Ejecutar operaciones CRUD para usuarios y productos.
-- Validar exhaustivamente los datos ingresados, evitando duplicados e inconsistencias.
-- Soportar múltiples idiomas (Español, Inglés, Italiano), adaptando textos, formatos monetarios y fechas.
+#### ✅ Funcionalidades Generales
 
-**Características destacadas:**
+- Registro y autenticación de usuarios con recuperación de contraseña vía preguntas de seguridad.
+- Gestión CRUD de productos (artículos, paquetes y servicios).
+- Administración de carritos de compra:
+    - **Usuarios:** gestionan solo sus carritos.
+    - **Administradores:** gestionan todos los carritos y productos.
+- Control de acceso y roles (Cliente, Administrador).
+- Visualización y manipulación de datos con interfaz gráfica avanzada tipo MDI.
+- Soporte multilenguaje: Español, Inglés e Italiano.
+- Formateo de fechas y moneda según configuración regional.
 
-- Arquitectura limpia basada en MVC-DAO.
-- Personalización visual avanzada (íconos, gráficos).
-- Sistema completamente internacionalizado (i18n).
-- Uso de componentes avanzados de Swing (JTable, JComboBox, JMenu, JOptionPane).
-- Control de acceso y permisos según rol (cliente o administrador).
+#### 🔧 Mejoras Implementadas
+
+- **Validaciones Avanzadas:**
+    - Cédula ecuatoriana validada con algoritmo oficial (último dígito).
+    - Contraseñas con requisitos de seguridad: mínimo 6 caracteres, una mayúscula, una minúscula y un carácter especial (`@_-`).
+
+- **Persistencia Configurable:**
+    - Al iniciar, el usuario elige si desea usar persistencia en:
+        - Memoria
+        - Archivos de texto (`.txt`)
+        - Archivos binarios (`.dat`)
+    - Se puede especificar la ruta del archivo de persistencia.
+
+- **Manejo de Excepciones Profesional:**
+    - `ValidacionException`: errores de negocio o validaciones (ej. cédula inválida, contraseña débil).
+    - `PersistenciaException`: errores de entrada/salida desacoplados de la lógica de negocio.
 
 ---
 
 ## 🏗️ Arquitectura
 
-### Modelo
+### 🔍 Modelo
 
-- Usuario
-- Producto
-- Carrito
-- Pregunta de seguridad
+- `Usuario`, `Producto`, `Carrito`, `PreguntaSeguridad`, `RespuestaSeguridad`, `Rol`.
+- Cada modelo encapsula su lógica de validación interna lanzando excepciones si los datos son inválidos.
 
-### DAO
+### 🗃️ DAO (Data Access Object)
 
-- Interfaces:
-  - `ProductoDAO`
-  - `UsuarioDAO`
-  - `CarritoDAO`
-  - `PreguntaDAO`
-- Implementaciones en memoria
+- **Interfaces:**
+    - `ProductoDAO`
+    - `UsuarioDAO`
+    - `CarritoDAO`
+    - `PreguntaDAO`
 
-### Controladores
+- **Implementaciones:**
+    - `Memoria`: `UsuarioDAOMemoria` `PreguntaDAOMemoria` `CarritoDAOMemoria` `ProductoDAOMemoria`
+    - `Archivo de Texto`: `UsuarioDAOArchivoTexto` `ProductoDAOArchivoTexto` `CarritoDAOArchivoTexto` `PreguntaDAOArchivoTexto`
+    - `Archivo Binario`: `UsuarioDAOArchivoBinario` `ProductoDAOArchivoBinario` `CarritoDAOArchivoBinario` `PreguntaDAOArchivoBinario`
 
-- Gestionan la lógica del sistema, validaciones y control de sesión.
-- Incorporan internacionalización de mensajes mediante `MensajeInternacionalizacionHandler`.
+### 🎮 Controladores
 
-### Vistas
+- Encargados de la lógica de negocio, validación, sesión e internacionalización.
+- Manejan excepciones lanzadas desde los modelos o DAOs y muestran mensajes claros al usuario.
+- Utilizan `MensajeInternacionalizacionHandler` para traducción de mensajes.
 
-- Formularios construidos con `JInternalFrame` gestionados dentro de un `JDesktopPane` (MDI).
+### 🖼️ Vistas
+
+- Interfaz construida con `JInternalFrame` sobre un `JDesktopPane` (diseño MDI).
+- Componentes Swing avanzados: `JTable`, `JComboBox`, `JMenu`, `JOptionPane`, íconos personalizados.
 
 ---
 
 ## ⚙️ Principios SOLID Aplicados
 
-- **SRP (Responsabilidad Única):** Cada clase tiene una única responsabilidad (por ejemplo, `ProductoController` gestiona solo la lógica de productos).
-- **OCP (Abierto/Cerrado):** El diseño permite la extensión sin modificar el código existente.
-- **DIP (Inversión de Dependencias):** Los controladores dependen de interfaces DAO, facilitando cambios futuros en la tecnología de persistencia.
+- **SRP (Responsabilidad Única):**
+    - Cada clase tiene un propósito claro (ej. `UsuarioController` gestiona usuarios, `UsuarioDAOArchivoTexto` solo persistencia en texto).
+
+- **OCP (Abierto/Cerrado):**
+    - El sistema permite agregar nuevas formas de persistencia (como bases de datos) sin modificar código existente.
+
+- **DIP (Inversión de Dependencias):**
+    - Los controladores dependen de interfaces, no de implementaciones específicas, facilitando pruebas e intercambiabilidad.
 
 ---
 
-## 🚀 Ejecución del Proyecto
+## 🚀 Ejecución y Generación de Entregables
 
-1. Clonar el repositorio:
-    ```bash
-    git clone https://github.com/EMCMateo/CarritoDeCompra.git
-    ```
+El proyecto está gestionado con **Apache Maven**, lo que permite automatizar compilación, documentación y empaquetado.
 
-2. Compilar el código Java:
-    ```bash
-    javac -d bin src/**/*.java
-    ```
+### 🔧 Requisitos
 
-3. Ejecutar la aplicación:
-    ```bash
-    java -cp bin Principal
-    ```
+- Java JDK 17 o superior
+- Apache Maven (o usar Maven integrado en IntelliJ o VS Code)
 
-> **Importante:** Antes de utilizar las funciones de solicitudes de compra o listados, es necesario registrar proveedores, empleados y productos.
+### 1. Clonar el Repositorio
 
----
+```bash
+git clone https://github.com/EMCMateo/CarritoDeCompra.git
+cd CarritoDeCompra
+
+```
+
 
 ## ✅ Resultados Obtenidos
 
-- Se desarrolló una aplicación modular y escalable, completamente internacionalizada.
-- Implementación exitosa de los patrones MVC y DAO, asegurando un sistema desacoplado y mantenible.
-- Interfaz gráfica avanzada tipo ERP, con ventanas internas y componentes complejos.
-- Control de roles que garantiza la seguridad y el acceso restringido a datos según el usuario.
+- Se desarrolló una aplicación modular, robusta, mantenible y escalable.
+- Uso efectivo de patrones de diseño (MVC y DAO).
+- Sistema internacionalizado y adaptable a múltiples regiones.
+- Persistencia configurable y validaciones avanzadas mejoraron la experiencia de usuario.
+- Entregables generados automáticamente (.jar y Javadoc) con Maven.
 
 ---
 
 ## 💡 Conclusiones
 
-- El uso de MVC y DAO permite crear sistemas limpios, mantenibles y fácilmente escalables.
-- Los principios SOLID son fundamentales para diseñar software robusto y flexible.
-- La internacionalización amplía el alcance de la aplicación y mejora la experiencia del usuario.
-- Java Swing sigue siendo una herramienta poderosa para el desarrollo de aplicaciones de escritorio, especialmente con un enfoque MDI.
+- La correcta aplicación de MVC y DAO genera sistemas limpios y fácilmente ampliables.
+- Los principios SOLID son claves para sistemas profesionales y mantenibles.
+- El manejo centralizado de excepciones mejora la estabilidad y confiabilidad de la aplicación.
+- La internacionalización mejora la usabilidad en entornos multilingües.
+- Java Swing continúa siendo una herramienta poderosa en desarrollo de escritorios MDI.
 
 ---
 
 ## 📌 Recomendaciones
 
-- Integrar persistencia con bases de datos relacionales para mayor robustez y durabilidad de los datos.
-- Extender el soporte a más idiomas y monedas.
-- Explorar tecnologías modernas como JavaFX o frameworks web para evolucionar hacia una interfaz multiplataforma.
-
+- Migrar a una base de datos relacional como PostgreSQL o MySQL para mayor persistencia.
+- Evolucionar la interfaz con JavaFX o tecnologías web.
+- Integrar un sistema de logging persistente como Log4j para auditoría y depuración.
