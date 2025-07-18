@@ -15,28 +15,60 @@ import javax.swing.*;
 import java.net.URL;
 import java.io.File;
 
+/**
+ * Clase principal que actúa como punto de entrada y orquestador de la aplicación.
+ * Se encarga de:
+ * 1. Iniciar la selección del método de almacenamiento (memoria, texto, binario).
+ * 2. Inicializar las capas DAO, Controladores y Vistas.
+ * 3. Gestionar el ciclo de vida de la aplicación, desde el login hasta el cierre de sesión.
+ * 4. Manejar la internacionalización y la configuración de acceso por roles.
+ */
 public class Main {
 
-    // Cambiamos de final para poder reasignar según la selección
+    // --- DAOs (Data Access Objects) ---
+    /** DAO para la gestión de usuarios. Su implementación se decide en tiempo de ejecución. */
     private static UsuarioDAO usuarioDAO;
+    /** DAO para la gestión de productos. Su implementación se decide en tiempo de ejecución. */
     private static ProductoDAO productoDAO;
+    /** DAO para la gestión de carritos. Su implementación se decide en tiempo de ejecución. */
     private static CarritoDAO carritoDAO;
+    /** DAO para la gestión de preguntas de seguridad. Su implementación se decide en tiempo de ejecución. */
     private static PreguntaDAO preguntaDAO;
 
+    // --- Internacionalización ---
+    /** Código del idioma actual (ej. "es", "en"). */
     private static String lang = "es";
+    /** Código del país actual (ej. "EC", "US"). */
     private static String country = "EC";
+    /** Manejador central para obtener los textos internacionalizados. */
     private static MensajeInternacionalizacionHandler mensajeHandler;
 
+    /** Flag para asegurar que las preguntas de seguridad se carguen una sola vez. */
     private static boolean preguntasCargadas = false;
 
+    // --- Vistas y Controladores Principales ---
+    /** Vista de inicio de sesión. */
     private static LoginView loginView;
+    /** Vista de registro de nuevos usuarios. */
     private static UserRegistroView userRegistroView;
+    /** Vista para listar todos los usuarios (accesible por el administrador). */
     private static ListarUsuarioView listarUsuarioView;
+    /** Controlador principal para la lógica de usuarios. */
     private static UsuarioController usuarioController;
+    /** Vista para listar todos los carritos (accesible por el administrador). */
     private static ListarCarritoView listarCarritoView;
+    /** Vista para listar los carritos de un usuario específico. */
     private static ListarCarritoUsuarioView listarCarritoUsuarioView;
+    /** Controlador principal para la lógica de carritos. */
     private static CarritoController carritoController;
 
+    /**
+     * Punto de entrada principal de la aplicación.
+     * Inicia la interfaz gráfica en el hilo de despacho de eventos de Swing (EDT).
+     * Muestra la ventana de selección de almacenamiento antes de continuar.
+     *
+     * @param args Argumentos de la línea de comandos (no se utilizan).
+     */
     public static void main(String[] args) {
         SwingUtilities.invokeLater(() -> {
             mensajeHandler = new MensajeInternacionalizacionHandler(lang, country);
@@ -54,9 +86,9 @@ public class Main {
                 // Validar que se tenga una ruta si no es almacenamiento en memoria
                 if (!tipoLogico.equals("MEMORIA") && (ruta == null || ruta.isEmpty())) {
                     JOptionPane.showMessageDialog(seleccionView,
-                        mensajeHandler.get("seleccion.error.noCarpeta"),
-                        mensajeHandler.get("error.titulo"),
-                        JOptionPane.ERROR_MESSAGE);
+                            mensajeHandler.get("seleccion.error.noCarpeta"),
+                            mensajeHandler.get("error.titulo"),
+                            JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
@@ -66,9 +98,9 @@ public class Main {
                     if (!carpeta.exists()) {
                         if (!carpeta.mkdirs()) {
                             JOptionPane.showMessageDialog(seleccionView,
-                                mensajeHandler.get("seleccion.error.crearCarpeta"),
-                                mensajeHandler.get("error.titulo"),
-                                JOptionPane.ERROR_MESSAGE);
+                                    mensajeHandler.get("seleccion.error.crearCarpeta"),
+                                    mensajeHandler.get("error.titulo"),
+                                    JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                     }
@@ -90,6 +122,16 @@ public class Main {
         });
     }
 
+    /**
+     * Inicializa las implementaciones de los DAO según la selección del usuario.
+     * Este método actúa como una fábrica para la capa de persistencia.
+     * También carga las preguntas de seguridad si no han sido cargadas previamente.
+     *
+     * @param tipo El tipo de almacenamiento ("MEMORIA", "TEXTO", "BINARIO").
+     * @param ruta La ruta base para el almacenamiento en archivos (puede ser nula para memoria).
+     * @throws ValidacionException Si ocurre un error de validación durante la inicialización.
+     * @throws PersistenciaException Si ocurre un error de I/O durante la inicialización.
+     */
     private static void inicializarDAOs(String tipo, String ruta) throws ValidacionException, PersistenciaException {
         if (tipo.equals("MEMORIA")) {
             usuarioDAO = new UsuarioDAOMemoria();
@@ -126,13 +168,17 @@ public class Main {
         if (!preguntasCargadas) {
             for (int i = 1; i <= 10; i++) {
                 preguntaDAO.agregarPregunta(
-                    new Pregunta(i, mensajeHandler.get("pregunta.seguridad." + i))
+                        new Pregunta(i, mensajeHandler.get("pregunta.seguridad." + i))
                 );
             }
             preguntasCargadas = true;
         }
     }
 
+    /**
+     * Prepara e inicia la ventana de Login, junto con las vistas y el controlador necesarios
+     * para el proceso de autenticación y registro.
+     */
     private static void iniciarVentanaLogin() {
         loginView = new LoginView(mensajeHandler);
         userRegistroView = new UserRegistroView(mensajeHandler);
@@ -142,13 +188,14 @@ public class Main {
     }
 
     /**
-     * Inicia la aplicación con el usuario autenticado y el idioma seleccionado.
+     * Inicia la aplicación principal después de una autenticación exitosa.
+     * Configura la ventana principal (MDI), inicializa todas las vistas y controladores
+     * necesarios para la sesión del usuario, y establece los menús según el rol.
      *
-     * @param usuario El usuario autenticado.
-     * @param idioma  El idioma seleccionado.
-     * @param pais    El país seleccionado.
+     * @param usuario El usuario que ha iniciado sesión.
+     * @param idioma  El código del idioma para la sesión.
+     * @param pais    El código del país para la sesión.
      */
-
     public static void iniciarApp(Usuario usuario, String idioma, String pais) {
         lang = idioma;
         country = pais;
@@ -270,6 +317,14 @@ public class Main {
         escritorio.repaint();
     }
 
+    /**
+     * Método utilitario para abrir y gestionar ventanas internas (JInternalFrame)
+     * dentro del escritorio principal (JDesktopPane).
+     * Evita que se abran múltiples instancias de la misma ventana.
+     *
+     * @param escritorio El JDesktopPane contenedor.
+     * @param vista      La ventana JInternalFrame que se va a abrir.
+     */
     private static void abrirVentana(JDesktopPane escritorio, JInternalFrame vista) {
         try {
             if (vista.getParent() == null) {
@@ -291,12 +346,36 @@ public class Main {
         }
     }
 
+    /**
+     * Cambia el idioma y país actual en el manejador de internacionalización.
+     *
+     * @param idioma El nuevo código de idioma.
+     * @param pais   El nuevo código de país.
+     */
     private static void cambiarIdioma(String idioma, String pais) {
         lang = idioma;
         country = pais;
         mensajeHandler.setLenguaje(lang, country);
     }
 
+    /**
+     * Actualiza los textos de todas las vistas activas de la aplicación
+     * después de un cambio de idioma.
+     *
+     * @param principalView La ventana principal.
+     * @param productoAnadirView Vista para añadir productos.
+     * @param productoListaView Vista para listar productos.
+     * @param productoEliminarView Vista para eliminar productos.
+     * @param productoActualizarView Vista para actualizar productos.
+     * @param carritoAnadirView Vista para añadir carritos.
+     * @param listarCarritoView Vista para listar todos los carritos.
+     * @param listarCarritoUsuarioView Vista para listar carritos de un usuario.
+     * @param listarUsuarioView Vista para listar usuarios.
+     * @param loginView Vista de login (puede ser nula).
+     * @param userRegistroView Vista de registro (puede ser nula).
+     * @param usuarioView Vista de perfil de usuario.
+     * @param carritoEditarView Vista para editar carritos.
+     */
     private static void actualizarTextos(
             PrincipalView principalView,
             ProductoAnadirView productoAnadirView,
@@ -333,6 +412,13 @@ public class Main {
         listarCarritoView.actualizarMensajeHandler(mensajeHandler);
     }
 
+    /**
+     * Configura la visibilidad y el estado de los menús en la ventana principal
+     * basándose en el rol del usuario que ha iniciado sesión.
+     *
+     * @param usuario       El usuario autenticado.
+     * @param principalView La ventana principal cuyos menús se configurarán.
+     */
     private static void configurarAccesoPorRol(Usuario usuario, PrincipalView principalView) {
         if (usuario.getRol() == Rol.CLIENTE) {
             principalView.getMenuItemCrearProducto().setEnabled(false);
