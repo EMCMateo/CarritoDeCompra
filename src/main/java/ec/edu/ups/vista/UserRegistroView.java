@@ -38,6 +38,7 @@ public class UserRegistroView extends JFrame {
         setTitle(mensajeHandler.get("usuario.registro.panel.titulo"));
         setTextos();
         setIconos();
+        cargarGeneros();
     }
 
 
@@ -55,6 +56,13 @@ public class UserRegistroView extends JFrame {
 
         btnConfirmar.setText(mensajeHandler.get("usuario.view.guardar"));
         btnCancelar.setText(mensajeHandler.get("boton.cancelar"));
+    }
+
+    private void cargarGeneros() {
+        cmbGenero.removeAllItems();
+        cmbGenero.addItem(mensajeHandler.get("genero.masculino"));
+        cmbGenero.addItem(mensajeHandler.get("genero.femenino"));
+        cmbGenero.addItem(mensajeHandler.get("genero.nobinario"));
     }
 
     public void mostrarMensaje(String mensaje) {
@@ -97,7 +105,37 @@ public class UserRegistroView extends JFrame {
         return btnCancelar;
     }
 
+    public JLabel getLblNombreCompleto() {
+        return lblNombreCompleto;
+    }
 
+    public JLabel getLblCorreo() {
+        return lblCorreo;
+    }
+
+    public JLabel getLblTelefono() {
+        return lblTelefono;
+    }
+
+    public JLabel getLblFechaNacimiento() {
+        return lblFechaNacimiento;
+    }
+
+    public JLabel getLblCedula() {
+        return lblCedula;
+    }
+
+    public JLabel getLblPassword() {
+        return lblPassword;
+    }
+
+    public JLabel getLblPasswordConfirm() {
+        return lblPasswordConfirm;
+    }
+
+    public JComboBox getCmbGenero() {
+        return cmbGenero;
+    }
 
     public void limpiarTodo(){
         txtCedula.setText(""); // Cambiado: era txtUsername

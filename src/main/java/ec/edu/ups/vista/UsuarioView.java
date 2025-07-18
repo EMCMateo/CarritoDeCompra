@@ -1,15 +1,11 @@
 package ec.edu.ups.vista;
 
 import ec.edu.ups.modelo.Usuario;
-import ec.edu.ups.util.FormateadorUtils;
 import ec.edu.ups.util.MensajeInternacionalizacionHandler;
 
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class UsuarioView extends JInternalFrame {
     private JPanel panelPrincipal;
@@ -23,7 +19,8 @@ public class UsuarioView extends JInternalFrame {
     private JTextField txtFechaNac;
     private JButton btnGuardar;
     private JButton btnRecuperar;
-    private JTextField textField1;
+    private JTextField txtGenero;
+    private JLabel lblGenero;
 
     private MensajeInternacionalizacionHandler mensajeHandler;
 
@@ -41,6 +38,7 @@ public class UsuarioView extends JInternalFrame {
 
     }
 
+
     public void setTextos(MensajeInternacionalizacionHandler mensajeHandler) {
         this.mensajeHandler = mensajeHandler;
         setTitle(mensajeHandler.get("usuario.view.titulo"));
@@ -48,6 +46,7 @@ public class UsuarioView extends JInternalFrame {
         lblTelefono.setText(mensajeHandler.get("usuario.view.telefono"));
         lblCorreo.setText(mensajeHandler.get("usuario.view.correo"));
         lblFechaNac.setText(mensajeHandler.get("usuario.view.fechaNac"));
+        lblGenero.setText(mensajeHandler.get("usuario.genero"));
         btnGuardar.setText(mensajeHandler.get("usuario.view.guardar"));
         btnRecuperar.setText(mensajeHandler.get("usuario.view.recuperar"));
     }
@@ -62,6 +61,7 @@ public class UsuarioView extends JInternalFrame {
         txtTelefono.setText(usuario.getTelefono());
         txtCorreoUser.setText(usuario.getCorreo());
         txtFechaNac.setText(usuario.getFechaNacimiento());
+        txtGenero.setText(usuario.getGenero()); // ✅ Línea añadida
     }
 
     public JLabel getLblNombre() {
@@ -104,7 +104,9 @@ public class UsuarioView extends JInternalFrame {
         return btnRecuperar;
     }
 
-
+    public JTextField getTxtGenero() {
+        return txtGenero;
+    }
 
     public void setIconos() {
         setIconoEscalado(btnRecuperar, "/ios-undo.png", 20, 20);

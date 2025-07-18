@@ -45,7 +45,7 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
             while ((linea = br.readLine()) != null) {
                 // Leer usuarios en formato CSV
                 String[] partes = linea.split(",", -1); // -1 para incluir campos vacíos al final
-                if (partes.length >= 7) {
+                if (partes.length >= 8) {
                     Usuario u = new Usuario();
                     u.setCedula(partes[0]);
                     u.setPassword(partes[1]);
@@ -54,6 +54,7 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
                     u.setFechaNacimiento(partes[4].isEmpty() ? null : partes[4]);
                     u.setCorreo(partes[5].isEmpty() ? null : partes[5]);
                     u.setTelefono(partes[6].isEmpty() ? null : partes[6]);
+                    u.setGenero(partes[7].isEmpty() ? null : partes[7]);
                     usuarios.add(u);
                 }
             }
@@ -74,7 +75,9 @@ public class UsuarioDAOArchivoTexto implements UsuarioDAO {
                         u.getNombreCompleto() != null ? u.getNombreCompleto() : "",
                         u.getFechaNacimiento() != null ? u.getFechaNacimiento() : "",
                         u.getCorreo() != null ? u.getCorreo() : "",
-                        u.getTelefono() != null ? u.getTelefono() : ""
+                        u.getTelefono() != null ? u.getTelefono() : "",
+                        u.getGenero() != null ? u.getGenero() : ""
+
                 ));
             }
         } catch (IOException e) {

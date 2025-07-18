@@ -15,6 +15,7 @@ public class Usuario implements Serializable {
     private String fechaNacimiento;
     private String correo;
     private String telefono;
+    private String genero;
 
     public Usuario(String cedula, String password, Rol rol) {
         this.cedula = cedula;
@@ -36,6 +37,12 @@ public class Usuario implements Serializable {
 
     public String getTelefono() { return telefono; }
     public void setTelefono(String telefono) { this.telefono = telefono; }
+
+
+    public String getGenero() { return genero; }
+
+    public void setGenero(String genero) { this.genero = genero; }
+
 
     public String getCedula() {
         return cedula;

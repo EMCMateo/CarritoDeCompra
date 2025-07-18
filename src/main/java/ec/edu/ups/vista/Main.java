@@ -40,41 +40,43 @@ public class Main {
             mensajeHandler = new MensajeInternacionalizacionHandler(lang, country);
 
             // Mostrar siempre la ventana de selección al inicio
-            SeleccionAlmacenamientoView seleccionView = new SeleccionAlmacenamientoView();
+            SeleccionAlmacenamientoView seleccionView = new SeleccionAlmacenamientoView(mensajeHandler);
             seleccionView.setVisible(true);
 
             seleccionView.getBtnContinuar().addActionListener(e -> {
-                String tipo = (String) seleccionView.getCmbTipoAlmacenamiento().getSelectedItem();
+                // Se obtiene el objeto completo, no solo el texto
+                SeleccionAlmacenamientoView.AlmacenamientoOpcion opcion = seleccionView.getSeleccion();
+                String tipoLogico = opcion.getKey(); // "MEMORIA", "TEXTO" o "BINARIO"
                 String ruta = seleccionView.getRutaSeleccionada();
 
                 // Validar que se tenga una ruta si no es almacenamiento en memoria
-                if (!tipo.equals("En memoria") && (ruta == null || ruta.isEmpty())) {
+                if (!tipoLogico.equals("MEMORIA") && (ruta == null || ruta.isEmpty())) {
                     JOptionPane.showMessageDialog(seleccionView,
-                        "Debe seleccionar una carpeta para el almacenamiento",
-                        "Error",
+                        mensajeHandler.get("seleccion.error.noCarpeta"),
+                        mensajeHandler.get("error.titulo"),
                         JOptionPane.ERROR_MESSAGE);
                     return;
                 }
 
                 // Crear la carpeta si no existe
-                if (!tipo.equals("En memoria")) {
+                if (!tipoLogico.equals("MEMORIA")) {
                     File carpeta = new File(ruta);
                     if (!carpeta.exists()) {
                         if (!carpeta.mkdirs()) {
                             JOptionPane.showMessageDialog(seleccionView,
-                                "No se pudo crear la carpeta en la ruta especificada",
-                                "Error",
+                                mensajeHandler.get("seleccion.error.crearCarpeta"),
+                                mensajeHandler.get("error.titulo"),
                                 JOptionPane.ERROR_MESSAGE);
                             return;
                         }
                     }
                 }
 
-                // Guardar la configuración para futuras ejecuciones
-                ConfiguracionAlmacenamiento.guardarConfiguracion(tipo, ruta);
+                // Se guarda el texto visible para el usuario, pero se usa la clave lógica para el funcionamiento
+                ConfiguracionAlmacenamiento.guardarConfiguracion(opcion.toString(), (ruta != null) ? ruta : "");
 
                 // Inicializar DAOs con la selección
-                inicializarDAOs(tipo, ruta);
+                inicializarDAOs(tipoLogico, ruta);
 
                 seleccionView.dispose();
                 iniciarVentanaLogin();
@@ -83,20 +85,23 @@ public class Main {
     }
 
     private static void inicializarDAOs(String tipo, String ruta) {
-        if (tipo.equals("En memoria")) {
+        if (tipo.equals("MEMORIA")) {
             usuarioDAO = new UsuarioDAOMemoria();
             productoDAO = new ProductoDAOMemoria();
-            carritoDAO = new CarritoDAOMemoria();
+            carritoDAO = new CarritoDAOMemoria(usuarioDAO);
             preguntaDAO = new PreguntaDAOMemoria();
-        } else if (tipo.equals("Archivo de texto")) {
+        } else if (tipo.equals("TEXTO")) {
             usuarioDAO = new UsuarioDAOArchivoTexto(ruta);
             productoDAO = new ProductoDAOArchivoTexto(ruta);
-            carritoDAO = new CarritoDAOArchivoTexto(ruta);
+            carritoDAO = new CarritoDAOArchivoTexto(ruta, usuarioDAO, productoDAO);
+
+
             preguntaDAO = new PreguntaDAOArchivoTexto(ruta);
         } else { // Archivo binario
             usuarioDAO = new UsuarioDAOArchivoBinario(ruta);
             productoDAO = new ProductoDAOArchivoBinario(ruta);
-            carritoDAO = new CarritoDAOArchivoBinario(ruta);
+            carritoDAO = new CarritoDAOArchivoBinario(ruta, usuarioDAO, productoDAO);
+
             preguntaDAO = new PreguntaDAOArchivoBinario(ruta);
         }
 

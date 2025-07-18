@@ -1,11 +1,15 @@
 package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.CarritoDAO;
+import ec.edu.ups.dao.ProductoDAO;
+import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.ItemCarrito;
 import ec.edu.ups.modelo.Producto;
 import ec.edu.ups.modelo.Usuario;
+
 import java.io.*;
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 /**
@@ -13,30 +17,35 @@ import java.util.*;
  * Implementa el guardado/lectura de carritos en archivo de texto (CSV)
  * Formato del archivo carritos.txt:
  * codigo,fechaCreacion,usuarioCedula
- * Y para cada carrito, sus items en items_carrito.txt:
+ * Formato del archivo items_carrito.txt:
  * carritoId,productoCodigo,cantidad
  */
 public class CarritoDAOArchivoTexto implements CarritoDAO {
+
     private final String ruta;
     private final List<Carrito> carritos = new ArrayList<>();
+    private final UsuarioDAO usuarioDAO;
+    private final ProductoDAO productoDAO;
 
-    public CarritoDAOArchivoTexto(String ruta) {
+    public CarritoDAOArchivoTexto(String ruta, UsuarioDAO usuarioDAO, ProductoDAO productoDAO) {
         this.ruta = ruta;
-        // Solo verificamos que exista la carpeta
+        this.usuarioDAO = usuarioDAO;
+        this.productoDAO = productoDAO;
+
         File carpeta = new File(ruta);
         if (!carpeta.exists()) {
             carpeta.mkdirs();
         }
-        // Cargamos los carritos existentes
         cargarCarritos();
     }
 
     private void cargarCarritos() {
-        carritos.clear(); // Limpiar antes de cargar para evitar duplicados
+        carritos.clear();
         File archivo = new File(ruta + "/carritos.txt");
         if (!archivo.exists()) {
             return;
         }
+
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
@@ -44,22 +53,25 @@ public class CarritoDAOArchivoTexto implements CarritoDAO {
                 if (partes.length >= 3) {
                     Carrito c = new Carrito();
                     c.setCodigo(Integer.parseInt(partes[0]));
+
                     try {
-                        c.setFechaCreacion(new java.util.GregorianCalendar());
-                        c.getFechaCreacion().setTime(new java.text.SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(partes[1]));
+                        Date fecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").parse(partes[1]);
+                        GregorianCalendar calendar = new GregorianCalendar();
+                        calendar.setTime(fecha);
+                        c.setFechaCreacion(calendar);
                     } catch (Exception ex) {
-                        c.setFechaCreacion(new java.util.GregorianCalendar());
+                        c.setFechaCreacion(new GregorianCalendar());
                     }
+
                     String cedula = partes[2];
-                    // Permitir carritos aunque la cédula sea inválida o vacía
-                    Usuario usuario = new Usuario();
-                    try {
-                        usuario.setCedula(cedula);
-                    } catch (Exception ex) {
-                        usuario.setCedula("0000000000"); // Cédula dummy si es inválida
+                    Usuario usuario = usuarioDAO.buscarPorUsername(cedula);
+
+                    if (usuario != null) {
+                        c.setUsuario(usuario);
+                        carritos.add(c);
+                    } else {
+                        System.out.println("Usuario no encontrado con cédula: " + cedula);
                     }
-                    c.setUsuario(usuario);
-                    carritos.add(c);
                 }
             }
             cargarItemsCarrito();
@@ -73,6 +85,7 @@ public class CarritoDAOArchivoTexto implements CarritoDAO {
         if (!archivo.exists()) {
             return;
         }
+
         try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
             String linea;
             while ((linea = br.readLine()) != null) {
@@ -81,14 +94,16 @@ public class CarritoDAOArchivoTexto implements CarritoDAO {
                     int carritoId = Integer.parseInt(partes[0]);
                     int productoCodigo = Integer.parseInt(partes[1]);
                     int cantidad = Integer.parseInt(partes[2]);
-                    Carrito carrito = carritos.stream().filter(c -> c.getCodigo() == carritoId).findFirst().orElse(null);
-                    if (carrito != null) {
-                        ItemCarrito item = new ItemCarrito();
-                        Producto producto = new Producto();
-                        producto.setCodigo(productoCodigo);
-                        item.setProducto(producto);
-                        item.setCantidad(cantidad);
-                        carrito.getItems().add(item);
+
+                    Carrito carrito = carritos.stream()
+                            .filter(c -> c.getCodigo() == carritoId)
+                            .findFirst()
+                            .orElse(null);
+
+                    Producto productoCompleto = productoDAO.buscarPorCodigo(productoCodigo);
+
+                    if (carrito != null && productoCompleto != null) {
+                        carrito.getItems().add(new ItemCarrito(productoCompleto, cantidad));
                     }
                 }
             }
@@ -98,27 +113,27 @@ public class CarritoDAOArchivoTexto implements CarritoDAO {
     }
 
     private void guardarCarritos() {
-        // Guardar carritos
         try (PrintWriter pw = new PrintWriter(new FileWriter(ruta + "/carritos.txt"))) {
             for (Carrito c : carritos) {
+                String fecha = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss")
+                        .format(c.getFechaCreacion().getTime());
                 pw.println(String.join(",",
-                    String.valueOf(c.getCodigo()),
-                    c.getFechaCreacion().toString(),
-                    c.getUsuario() != null ? c.getUsuario().getCedula() : ""
+                        String.valueOf(c.getCodigo()),
+                        fecha,
+                        c.getUsuario() != null ? c.getUsuario().getCedula() : ""
                 ));
             }
         } catch (IOException e) {
             System.out.println("Error al guardar carritos: " + e.getMessage());
         }
 
-        // Guardar items
         try (PrintWriter pw = new PrintWriter(new FileWriter(ruta + "/items_carrito.txt"))) {
             for (Carrito c : carritos) {
-                for (ItemCarrito item : c.obtenerItems()) { // Cambiado: getItems() -> obtenerItems()
+                for (ItemCarrito item : c.obtenerItems()) {
                     pw.println(String.join(",",
-                        String.valueOf(c.getCodigo()),
-                        String.valueOf(item.getProducto().getCodigo()),
-                        String.valueOf(item.getCantidad())
+                            String.valueOf(c.getCodigo()),
+                            String.valueOf(item.getProducto().getCodigo()),
+                            String.valueOf(item.getCantidad())
                     ));
                 }
             }

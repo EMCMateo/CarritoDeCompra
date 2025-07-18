@@ -1,25 +1,37 @@
 package ec.edu.ups.dao.impl;
 
 import ec.edu.ups.dao.CarritoDAO;
+import ec.edu.ups.dao.UsuarioDAO;
 import ec.edu.ups.modelo.Carrito;
 import ec.edu.ups.modelo.Usuario;
+
+import ec.edu.ups.dao.ProductoDAO;
+
 import java.io.*;
 import java.util.*;
 
 /**
  * CarritoDAOArchivoBinario
- * Implementa el guardado/lectura de carritos en archivo binario
- * usando los métodos exactos de la interfaz CarritoDAO.
+ * Implementa el guardado/lectura de carritos en archivo binario.
+ * Aunque el Usuario ya viene serializado dentro del objeto Carrito,
+ * se mantiene la referencia a UsuarioDAO para consistencia arquitectónica.
  */
 public class CarritoDAOArchivoBinario implements CarritoDAO {
-    private final String ruta;
-    private final List<Carrito> carritos = new ArrayList<>();
 
-    public CarritoDAOArchivoBinario(String ruta) {
+    private final String ruta;
+    private final UsuarioDAO usuarioDAO; // Dependencia inyectada
+    private final List<Carrito> carritos = new ArrayList<>();
+    private final ProductoDAO productoDAO;
+
+    public CarritoDAOArchivoBinario(String ruta, UsuarioDAO usuarioDAO, ProductoDAO productoDAO) {
         if (ruta == null || ruta.trim().isEmpty()) {
             throw new IllegalArgumentException("La ruta no puede ser nula o vacía.");
         }
+
         this.ruta = ruta;
+        this.usuarioDAO = usuarioDAO;
+        this.productoDAO = productoDAO;
+
         File carpeta = new File(ruta);
         if (!carpeta.exists()) {
             carpeta.mkdirs();
@@ -36,7 +48,7 @@ public class CarritoDAOArchivoBinario implements CarritoDAO {
     }
 
     private void cargarCarritos() {
-        carritos.clear(); // Limpiar antes de cargar para evitar duplicados
+        carritos.clear();
         File archivo = new File(ruta + "/carritos.bin");
         if (!archivo.exists() || archivo.length() == 0) {
             return;
@@ -47,7 +59,7 @@ public class CarritoDAOArchivoBinario implements CarritoDAO {
                 carritos.addAll((List<Carrito>) obj);
             }
         } catch (EOFException eof) {
-            // Archivo vacío, es normal al inicio
+            // Archivo vacío al inicio: normal
         } catch (Exception e) {
             System.out.println("Error al cargar carritos binarios: " + e.getMessage());
         }

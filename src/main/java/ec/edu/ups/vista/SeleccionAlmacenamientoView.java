@@ -1,74 +1,101 @@
 package ec.edu.ups.vista;
 
+import ec.edu.ups.util.MensajeInternacionalizacionHandler;
+
 import javax.swing.*;
 
 public class SeleccionAlmacenamientoView extends JFrame {
     private JPanel panelPrincipal;
-    private JComboBox<String> cmbTipoAlmacenamiento;
+    private JComboBox<AlmacenamientoOpcion> cmbTipoAlmacenamiento;
     private JLabel lblChooseRoot;
     private JButton btnContinuar;
     private JFileChooser fileChooser;
     private String rutaSeleccionada;
+    private MensajeInternacionalizacionHandler mensajeHandler;
 
-    public SeleccionAlmacenamientoView() {
+    public SeleccionAlmacenamientoView(MensajeInternacionalizacionHandler mensajeHandler) {
+        this.mensajeHandler = mensajeHandler;
         setContentPane(panelPrincipal);
-        setTitle("Configuración de Almacenamiento");
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setSize(600, 750);
         setLocationRelativeTo(null);
         setResizable(false);
 
-        // 1. Configurar el JFileChooser que ya está en el formulario
+        // Configurar el JFileChooser que ya está en el formulario
         fileChooser.setFileSelectionMode(JFileChooser.DIRECTORIES_ONLY);
-        fileChooser.setDialogTitle("Seleccionar carpeta para almacenamiento");
-        // Ocultamos los botones "Abrir" y "Cancelar" del JFileChooser, ya que usaremos nuestro propio botón "Confirmar"
         fileChooser.setControlButtonsAreShown(false);
-        // Lo ocultamos por defecto, solo se mostrará si se elige una opción de archivo.
         fileChooser.setVisible(false);
 
-        // Inicializa opciones del comboBox
-        cmbTipoAlmacenamiento.removeAllItems();
-        cmbTipoAlmacenamiento.addItem("En memoria");
-        cmbTipoAlmacenamiento.addItem("Archivo de texto");
-        cmbTipoAlmacenamiento.addItem("Archivo binario");
+        // Aplicar textos internacionalizados
+        setTextos();
 
-        // 2. Modificar el listener del ComboBox para mostrar u ocultar el JFileChooser
+        // Listener del ComboBox para mostrar u ocultar el JFileChooser
         cmbTipoAlmacenamiento.addActionListener(e -> {
-            // Si el índice es 0 ("En memoria"), se oculta el file chooser. Si es otro, se muestra.
-            boolean mostrarFileChooser = cmbTipoAlmacenamiento.getSelectedIndex() != 0;
+            AlmacenamientoOpcion seleccion = (AlmacenamientoOpcion) cmbTipoAlmacenamiento.getSelectedItem();
+            boolean mostrarFileChooser = seleccion != null && !seleccion.getKey().equals("MEMORIA");
             fileChooser.setVisible(mostrarFileChooser);
-            // Reajustamos el tamaño de la ventana para que el JFileChooser quepa correctamente
             this.pack();
         });
 
-        // 3. Modificar el listener del botón para que lea la ruta del JFileChooser del formulario
+        // Listener del botón para leer la ruta del JFileChooser del formulario
         btnContinuar.addActionListener(e -> {
-            String tipo = (String) cmbTipoAlmacenamiento.getSelectedItem();
+            AlmacenamientoOpcion seleccion = getSeleccion();
 
-            // Si el tipo de almacenamiento requiere un archivo, validamos la selección
-            if (!tipo.equals("En memoria")) {
+            if (seleccion != null && !seleccion.getKey().equals("MEMORIA")) {
                 java.io.File archivoSeleccionado = fileChooser.getSelectedFile();
                 if (archivoSeleccionado == null) {
-                    JOptionPane.showMessageDialog(this,
-                        "Debe seleccionar una carpeta para el almacenamiento.",
-                        "Error", JOptionPane.ERROR_MESSAGE);
-                    return; // Detiene el proceso si no hay carpeta seleccionada
+                    rutaSeleccionada = null; // Se deja nulo para que Main lo valide
+                } else {
+                    rutaSeleccionada = archivoSeleccionado.getAbsolutePath();
                 }
-                // Si se seleccionó una carpeta, guardamos su ruta
-                rutaSeleccionada = archivoSeleccionado.getAbsolutePath();
             } else {
-                // Si es "En memoria", la ruta es nula
                 rutaSeleccionada = null;
             }
-            // La lógica para cerrar la ventana y continuar se encuentra en la clase Main,
-            // que también tiene un listener para este botón. No llamamos a dispose() aquí.
         });
 
-        // Ajustamos el tamaño inicial de la ventana
         pack();
     }
 
-    public JComboBox<String> getCmbTipoAlmacenamiento() {
+    private void setTextos() {
+        setTitle(mensajeHandler.get("seleccion.titulo"));
+        lblChooseRoot.setText(mensajeHandler.get("seleccion.label.tipo"));
+        btnContinuar.setText(mensajeHandler.get("seleccion.boton.continuar"));
+        fileChooser.setDialogTitle(mensajeHandler.get("seleccion.chooser.titulo"));
+
+        cmbTipoAlmacenamiento.removeAllItems();
+        cmbTipoAlmacenamiento.addItem(new AlmacenamientoOpcion("MEMORIA", mensajeHandler.get("seleccion.opcion.memoria")));
+        cmbTipoAlmacenamiento.addItem(new AlmacenamientoOpcion("TEXTO", mensajeHandler.get("seleccion.opcion.texto")));
+        cmbTipoAlmacenamiento.addItem(new AlmacenamientoOpcion("BINARIO", mensajeHandler.get("seleccion.opcion.binario")));
+    }
+
+    /**
+     * Clase interna para manejar las opciones del JComboBox,
+     * separando el valor lógico (key) del texto mostrado (displayValue).
+     */
+    public static class AlmacenamientoOpcion {
+        private final String key;
+        private final String displayValue;
+
+        public AlmacenamientoOpcion(String key, String displayValue) {
+            this.key = key;
+            this.displayValue = displayValue;
+        }
+
+        public String getKey() {
+            return key;
+        }
+
+        @Override
+        public String toString() {
+            return displayValue; // Esto es lo que JComboBox mostrará
+        }
+    }
+
+    public AlmacenamientoOpcion getSeleccion() {
+        return (AlmacenamientoOpcion) cmbTipoAlmacenamiento.getSelectedItem();
+    }
+
+    public JComboBox<AlmacenamientoOpcion> getCmbTipoAlmacenamiento() {
         return cmbTipoAlmacenamiento;
     }
 

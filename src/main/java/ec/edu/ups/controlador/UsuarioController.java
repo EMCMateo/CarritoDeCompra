@@ -56,7 +56,7 @@ public class UsuarioController {
                 return;
             }
             if (!validarCedula(cedula)) {
-                loginView.mostrarMensaje("Cédula ecuatoriana no válida");
+                loginView.mostrarMensaje(mensajeHandler.get("usuario.error.cedulaInvalida"));
                 return;
             }
             Usuario usuarioAutenticado = usuarioDAO.autenticar(cedula, password);
@@ -87,15 +87,20 @@ public class UsuarioController {
             String correo = userRegistroView.getTxtCorreo().getText().trim();
             String telefono = userRegistroView.getTxtTelefono().getText().trim();
             String fechaNacimiento = userRegistroView.getTxtFechaNacimiento().getText().trim();
+            // Se obtiene el género seleccionado del ComboBox
+            String genero = (String) userRegistroView.getCmbGenero().getSelectedItem();
+
 
             if (cedula.isEmpty() || contrasena1.isEmpty() || contrasena2.isEmpty()
-                    || nombreCompleto.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNacimiento.isEmpty()) {
+                    || nombreCompleto.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNacimiento.isEmpty()
+                    || genero == null) { // Se valida que se haya seleccionado un género
+
                 userRegistroView.mostrarMensaje(mensajeHandler.get("mensaje.usuario.error.camposVacios"));
                 return;
             }
 
             if (!validarCedula(cedula)) {
-                userRegistroView.mostrarMensaje("Cédula ecuatoriana no válida");
+                userRegistroView.mostrarMensaje(mensajeHandler.get("usuario.error.cedulaInvalida"));
                 return;
             }
 
@@ -129,6 +134,7 @@ public class UsuarioController {
             nuevoUsuario.setCorreo(correo);
             nuevoUsuario.setTelefono(telefono);
             nuevoUsuario.setFechaNacimiento(fechaNacimiento);
+            nuevoUsuario.setGenero(genero);
 
             List<Pregunta> todas = preguntaDAO.listarTodas();
             if (todas.size() < 3) {
@@ -241,11 +247,7 @@ public class UsuarioController {
 
     public void cargarDatosUsuarioEnVista() {
         if (usuarioView == null || usuario == null) return;
-
-        usuarioView.getTxtNombre().setText(usuario.getNombreCompleto());
-        usuarioView.getTxtTelefono().setText(usuario.getTelefono());
-        usuarioView.getTxtCorreoUser().setText(usuario.getCorreo());
-        usuarioView.getTxtFechaNac().setText(usuario.getFechaNacimiento());
+        usuarioView.cargarDatosUsuario(usuario); // ✅ Llamada centralizada a la vista
     }
 
     private void cargarEventoGuardarDatos() {
@@ -256,11 +258,16 @@ public class UsuarioController {
             String correo = usuarioView.getTxtCorreoUser().getText().trim();
             String telefono = usuarioView.getTxtTelefono().getText().trim();
             String fechaNac = usuarioView.getTxtFechaNac().getText().trim();
+            String genero = usuarioView.getTxtGenero().getText().trim();
 
-            if (nombre.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNac.isEmpty()) {
-                JOptionPane.showMessageDialog(usuarioView,
-                        mensajeHandler.get("mensaje.usuario.error.camposVacios"));
-                return;
+
+
+
+                // Se añade el género a la validación de campos vacíos
+                if (nombre.isEmpty() || correo.isEmpty() || telefono.isEmpty() || fechaNac.isEmpty() || genero.isEmpty()) {
+                    JOptionPane.showMessageDialog(usuarioView,
+                            mensajeHandler.get("mensaje.usuario.error.camposVacios"));
+                    return;
             }
 
             if (!validarCorreo(correo)) {
@@ -285,6 +292,9 @@ public class UsuarioController {
             usuario.setCorreo(correo);
             usuario.setTelefono(telefono);
             usuario.setFechaNacimiento(fechaNac);
+            // Se asigna el género al objeto usuario antes de guardarlo
+            usuario.setGenero(genero);
+
 
             usuarioDAO.actualizar(usuario);
 
